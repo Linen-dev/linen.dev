@@ -1,20 +1,11 @@
 import { PostHog } from 'posthog-node';
 import { serialize } from 'cookie';
-import * as Sentry from '@sentry/node';
+import { v4 } from 'uuid';
+import type { GetServerSidePropsContext } from 'next/types';
+import { userAgentFromString } from 'next/dist/server/web/spec-extension/user-agent';
+import type { IncomingHttpHeaders } from 'http';
 
-const POSTHOG_APIKEY = process.env.NEXT_PUBLIC_POSTHOG_API_KEY!;
-const SENTRY_DSN = process.env.SENTRY_DSN!;
-
-Sentry.init({
-  dsn: SENTRY_DSN,
-  integrations: [new Sentry.Integrations.Http({ tracing: true })],
-  tracesSampleRate: Number(process.env.SENTRY_SAMPLE_RATE || 0.5),
-  debug: process.env.SENTRY_DEBUG === 'true',
-  enabled: process.env.SENTRY_ENABLED === 'true',
-  shutdownTimeout: Number(process.env.SENTRY_TIMEOUT || 1000),
-});
-
-export { Sentry };
+const POSTHOG_APIKEY = process.env.SSR_POSTHOG_API_KEY!;
 
 const postHog = !!POSTHOG_APIKEY
   ? new PostHog(POSTHOG_APIKEY, {
@@ -22,20 +13,25 @@ const postHog = !!POSTHOG_APIKEY
       flushInterval: 0,
       enable: process.env.POSTHOG_SERVER_ENABLE === 'true',
       requestTimeout: Number(process.env.POSTHOG_TIMEOUT || 1000),
+      disableGeoip: false,
     })
   : undefined;
 
-const random = () => (Math.random() + 1).toString(36).substring(2);
+const random = () => v4();
 
-export const identifyUserSession = ({ req, res }: any) => {
-  const cookies = req.cookies;
-  const cookie = cookies['user-session'];
+const identifyUserSession = ({
+  req,
+  res,
+}: Partial<GetServerSidePropsContext>) => {
+  const cookies = req?.cookies;
+  const cookie = cookies?.['user-session'];
   if (cookie) {
     return cookie;
   } else {
-    let setCookieHeader = res.getHeader('Set-Cookie') ?? [];
-    if (!Array.isArray(setCookieHeader)) {
-      setCookieHeader = [setCookieHeader];
+    const setCookieHeader: string[] = [];
+    const existCookieHeader = res?.getHeader('Set-Cookie') ?? [];
+    if (Array.isArray(existCookieHeader)) {
+      setCookieHeader.push(...existCookieHeader);
     }
     const value = random();
     setCookieHeader.push(
@@ -47,14 +43,17 @@ export const identifyUserSession = ({ req, res }: any) => {
         maxAge: 30 * 24 * 60 * 60,
       })
     );
-    res.setHeader('Set-Cookie', setCookieHeader);
+    res?.setHeader('Set-Cookie', setCookieHeader);
     return value;
   }
 };
 
-const identifyUrl = ({ req, resolvedUrl }: any) => {
-  const url = `${req.headers?.host || req.headers?.origin || ''}${
-    resolvedUrl || req.url
+const identifyUrl = ({
+  req,
+  resolvedUrl,
+}: Partial<GetServerSidePropsContext>) => {
+  const url = `${req?.headers?.host || req?.headers?.origin || ''}${
+    resolvedUrl || req?.url
   }`;
   return url;
 };
@@ -63,35 +62,35 @@ const identifyUrl = ({ req, resolvedUrl }: any) => {
  * function to track page viewed plus duration of response time
  * it sends data to postHog and sentry
  */
-export const trackPageView = (context: any) => {
+export const trackPageView = async (
+  context: GetServerSidePropsContext,
+  email?: string
+) => {
   const distinctId = identifyUserSession(context);
   const url = identifyUrl(context);
-
-  const transaction = Sentry.startTransaction({ name: url });
-  Sentry.setUser({ id: distinctId });
+  const headers = context.req.headers;
+  const userAgentInfo = getUserAgentInfo(headers);
 
   postHog?.capture({
     distinctId,
     event: '$pageview',
     properties: {
       $current_url: url,
+      $referrer: headers?.referer || headers?.origin,
+      $referring_domain: headers?.referer || headers?.origin,
+      $host: headers?.host,
+      $ip: getIp(headers),
+      ...userAgentInfo,
     },
   });
 
-  return {
-    knownUser: (userId: string) => {
-      postHog?.alias({
-        distinctId,
-        alias: userId,
-      });
-    },
-    flush: async () => {
-      transaction?.finish();
-      await postHog?.shutdownAsync();
-      await Sentry.flush();
-      Sentry.setUser(null);
-    },
-  };
+  if (email)
+    postHog?.identify({
+      distinctId,
+      properties: { email },
+    });
+
+  return postHog?.shutdownAsync();
 };
 
 export enum ApiEvent {
@@ -113,23 +112,60 @@ export const trackApiEvent = (
 ) => {
   const distinctId = identifyUserSession({ req, res });
   const url = identifyUrl({ req });
+  const headers = req.headers;
+  const userAgentInfo = getUserAgentInfo(headers);
+  const ipInfo = getIp(headers);
 
   postHog?.capture({
     distinctId,
     event,
     properties: {
       $current_url: url,
+      $referrer: headers?.referer || headers?.origin,
+      $referring_domain: headers?.referer || headers?.origin,
+      $host: headers?.host,
+      ...ipInfo,
+      ...userAgentInfo,
       ...metadata,
     },
   });
 
-  const userId = req.session_user?.id || req.user?.id;
-
-  if (userId) {
-    postHog?.alias({
+  if (req.session_user?.email || req.user?.email)
+    postHog?.identify({
       distinctId,
-      alias: userId,
+      properties: { email: req.session_user?.email || req.user?.email },
     });
-  }
+
   return postHog?.shutdownAsync();
 };
+
+function getUserAgentInfo(headers: IncomingHttpHeaders) {
+  try {
+    const info = userAgentFromString(headers['user-agent']);
+    const userInfo = {
+      $os: info?.os?.name,
+      $browser: info?.browser?.name,
+      $browser_version: info?.browser?.version,
+      $device_type: info?.device?.type,
+      $search_engine: info?.isBot,
+    };
+    return userInfo;
+  } catch (error) {}
+}
+
+function getIp(headers: IncomingHttpHeaders) {
+  try {
+    let ip = headers['x-real-ip'];
+    if (!ip) {
+      const forwardedFor = headers['x-forwarded-for'];
+      if (Array.isArray(forwardedFor)) {
+        ip = forwardedFor.at(0);
+      } else {
+        ip = forwardedFor?.split(',').at(0) ?? undefined;
+      }
+    }
+    return {
+      $ip: ip,
+    };
+  } catch (error) {}
+}

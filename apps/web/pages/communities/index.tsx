@@ -10,6 +10,7 @@ import { trackPageView } from 'utilities/ssr-metrics';
 import CommunityCard from '@linen/ui/CommunityCard';
 import { getHomeUrl } from '@linen/utilities/home';
 import { getCommunitiesWithDescription } from 'services/accounts';
+import type { GetServerSideProps } from 'next/types';
 
 interface Props {
   communities: SerializedAccount[];
@@ -117,14 +118,12 @@ export default function Communities({ communities }: Props) {
   );
 }
 
-export async function getServerSideProps(context: any) {
-  const track = trackPageView(context);
-
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  await trackPageView(context);
   const communities = await getCommunitiesWithDescription();
-  await track.flush();
   return {
     props: {
       communities: communities.map(serializeAccount),
     },
   };
-}
+};

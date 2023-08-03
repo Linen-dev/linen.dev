@@ -15,7 +15,8 @@ import { timeAgo } from '@linen/utilities/date';
 import { FiMenu } from '@react-icons/all-files/fi/FiMenu';
 import { signOut, useSession } from '@linen/auth/client';
 import Link from 'next/link';
-import { NextPageContext } from 'next';
+import type { GetServerSideProps } from 'next/types';
+import { trackPageView } from 'utilities/ssr-metrics';
 
 enum ModalView {
   NONE,
@@ -293,8 +294,9 @@ export default function Feed({
   );
 }
 
-export async function getServerSideProps(_: NextPageContext) {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
+    await trackPageView(context);
     const response = await fetch(FEED_URL, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
@@ -309,4 +311,4 @@ export async function getServerSideProps(_: NextPageContext) {
       props: { threads: [], settings: [], communities: [], cursor: null },
     };
   }
-}
+};

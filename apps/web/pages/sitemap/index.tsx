@@ -6,6 +6,8 @@ import H2 from '@linen/ui/H2';
 import Link from 'components/Link';
 import List from '@linen/ui/List';
 import { getCommunitiesWithName } from 'services/accounts';
+import type { GetServerSideProps } from 'next/types';
+import { trackPageView } from 'utilities/ssr-metrics';
 
 interface Props {
   communities: SerializedAccount[];
@@ -45,12 +47,12 @@ export default function Sitemap({ communities }: Props) {
   );
 }
 
-export async function getServerSideProps() {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const communities = await getCommunitiesWithName();
-
+  await trackPageView(context);
   return {
     props: {
       communities: communities.map(serializeAccount),
     },
   };
-}
+};

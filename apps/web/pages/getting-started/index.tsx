@@ -1,5 +1,5 @@
 import { GettingStartedPage } from 'components/Pages/GettingStartedPage';
-import type { NextPageContext } from 'next';
+import type { GetServerSideProps } from 'next/types';
 import Session from 'services/session';
 import { findInvitesByEmail } from 'services/invites';
 import { trackPageView } from 'utilities/ssr-metrics';
@@ -10,10 +10,8 @@ export default function CreateCommunity(props: any) {
   return <GettingStartedPage {...props} />;
 }
 
-export async function getServerSideProps({ req, res }: NextPageContext) {
-  const track = trackPageView({ req, res });
-
-  const session = await Session.find(req as any, res as any);
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await Session.find(context.req, context.res);
 
   if (!session) {
     return {
@@ -24,13 +22,12 @@ export async function getServerSideProps({ req, res }: NextPageContext) {
       },
     };
   }
-  session.user?.id && track.knownUser(session.user.id);
 
   const auth = await findAccountsFromAuth(session?.user?.email!);
 
   const invites = await findInvitesByEmail(session?.user?.email!);
 
-  await track.flush();
+  await trackPageView(context, session.user?.email || undefined);
 
   return {
     props: {
@@ -43,7 +40,7 @@ export async function getServerSideProps({ req, res }: NextPageContext) {
         .map((e) => ({ inviteId: e.id, ...serializeAccount(e.accounts) })),
     },
   };
-}
+};
 
 const filterAccounts = (e: any) =>
   e.account?.discordDomain ||

@@ -1,14 +1,17 @@
-import { GetServerSideProps } from 'next';
+import type { GetServerSideProps } from 'next/types';
 import MatrixPage, { Props } from 'components/Pages/Matrix';
 import { getConfigurationsServerSideProps } from 'services/ssr/configurations';
+import { trackPageView } from 'utilities/ssr-metrics';
 
 export default MatrixPage;
 
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  return getConfigurationsServerSideProps(
+  const data = await getConfigurationsServerSideProps(
     context,
     context.query.customDomain === '1'
   );
+  await trackPageView(context, (data as any)?.props?.permissions?.auth?.email);
+  return data;
 };

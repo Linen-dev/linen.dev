@@ -3,7 +3,6 @@ import { getAccountById } from 'services/accounts';
 import { Forbidden, NotFound, Unauthorized } from 'server/exceptions';
 import jwtMiddleware from 'server/middlewares/jwt';
 import { AuthedRequestWithTenant, NextFunction, Response } from '@linen/types';
-import { identifyUserSession, Sentry } from 'utilities/ssr-metrics';
 
 // improvement: be able to use typed Roles from prisma
 export const Roles = {
@@ -71,12 +70,6 @@ export default function tenantMiddleware(roles?: string[]) {
           return next(new Forbidden());
         }
       }
-
-      Sentry.setUser({
-        id: req.session_user
-          ? req.session_user.id
-          : identifyUserSession({ req, res }),
-      });
 
       return next();
     } catch (error) {

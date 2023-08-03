@@ -15,10 +15,11 @@ import Link from 'next/link';
 import FadeIn from '@linen/ui/FadeIn';
 import Head from 'next/head';
 import Footer from 'components/Footer';
-import type { GetServerSidePropsContext } from 'next';
+import type { GetServerSideProps } from 'next/types';
 import { communitiesWithLogo } from 'services/accounts';
 import { serializeAccount } from '@linen/serializers/account';
 import { SerializedAccount } from '@linen/types';
+import { trackPageView } from 'utilities/ssr-metrics';
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ');
@@ -444,21 +445,22 @@ type Props = {
   accounts: SerializedAccount[];
 };
 
-export async function getServerSideProps({ res }: GetServerSidePropsContext) {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const accounts = await communitiesWithLogo();
+  await trackPageView(context);
 
   // since we use 3 columns we want it to only show numbers divisible by 3
   const remainders = accounts
     .slice(0, accounts.length - (accounts.length % 3))
     .map(serializeAccount);
 
-  res.setHeader(
+  context.res.setHeader(
     'Cache-Control',
     'public, s-maxage=43200, stale-while-revalidate=86400'
   );
   return {
     props: { accounts: remainders },
   };
-}
+};
 
 export default Home;

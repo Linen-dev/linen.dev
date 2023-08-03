@@ -1,6 +1,6 @@
 import React from 'react';
 import BlankLayout from '@linen/ui/BlankLayout';
-import { GetServerSidePropsContext } from 'next';
+import type { GetServerSideProps } from 'next/types';
 import { prisma } from '@linen/database';
 import styles from './index.module.scss';
 import CommunityService from 'services/community';
@@ -16,6 +16,7 @@ import { format as formatNumber } from '@linen/utilities/number';
 import { api } from 'utilities/requests';
 import { getHomeUrl } from '@linen/utilities/home';
 import { useJoinContext } from 'contexts/Join';
+import { trackPageView } from 'utilities/ssr-metrics';
 
 interface Props {
   currentCommunity: SerializedAccount;
@@ -94,9 +95,8 @@ export default function InvitePage({
   );
 }
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  await trackPageView(context);
   const community = await CommunityService.find(context.params);
   // we could show a page that allows you to create a community with this name
   if (!community) {

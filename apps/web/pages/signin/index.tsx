@@ -1,12 +1,12 @@
 import { createCSRFToken } from '@linen/auth/server';
-import type { NextPageContext } from 'next';
+import type { GetServerSideProps } from 'next/types';
 import { trackPageView } from 'utilities/ssr-metrics';
 import Auth from '@linen/ui/Auth';
 
 export default Auth.SignIn;
 
-export async function getServerSideProps(context: NextPageContext) {
-  await trackPageView(context).flush();
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  await trackPageView(context);
   return {
     props: {
       csrfToken: createCSRFToken(),
@@ -18,4 +18,4 @@ export async function getServerSideProps(context: NextPageContext) {
       sso: context.query.sso || null,
     },
   };
-}
+};

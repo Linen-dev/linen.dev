@@ -14,12 +14,13 @@ import { BiImport } from '@react-icons/all-files/bi/BiImport';
 import Link from 'next/link';
 import Head from 'next/head';
 import Footer from 'components/Footer';
-import type { GetServerSidePropsContext } from 'next';
+import type { GetServerSideProps } from 'next/types';
 import { communitiesWithLogo } from 'services/accounts';
 import CommunityCard from '@linen/ui/CommunityCard';
 import { serializeAccount } from '@linen/serializers/account';
 import { SerializedAccount } from '@linen/types';
 import styles from './index.module.scss';
+import { trackPageView } from 'utilities/ssr-metrics';
 
 export const config = {
   unstable_runtimeJS: false,
@@ -451,7 +452,9 @@ type Props = {
   accounts: SerializedAccount[];
 };
 
-export async function getServerSideProps({ res }: GetServerSidePropsContext) {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  await trackPageView(context);
+
   const accounts = await communitiesWithLogo();
 
   return {
@@ -464,6 +467,6 @@ export async function getServerSideProps({ res }: GetServerSidePropsContext) {
         .slice(0, 18),
     },
   };
-}
+};
 
 export default Home;

@@ -1,6 +1,6 @@
 import { ThreadProps } from '@linen/types';
 import { ThreadPage } from 'components/Pages/ThreadPage';
-import { GetServerSideProps } from 'next';
+import type { GetServerSideProps } from 'next/types';
 import { threadGetServerSideProps } from 'services/ssr/threads';
 import { trackPageView } from 'utilities/ssr-metrics';
 
@@ -9,14 +9,10 @@ export default ThreadPage;
 export const getServerSideProps: GetServerSideProps<ThreadProps> = async (
   context
 ) => {
-  const track = trackPageView(context);
   const data = await threadGetServerSideProps(
     context,
     context.query.customDomain === '1'
   );
-  if ((data as any)?.props?.permissions?.auth?.id) {
-    track.knownUser((data as any).props.permissions.auth.id);
-  }
-  await track.flush();
+  await trackPageView(context, (data as any)?.props?.permissions?.auth?.email);
   return data;
 };

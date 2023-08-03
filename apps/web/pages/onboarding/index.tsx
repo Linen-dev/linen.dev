@@ -1,6 +1,6 @@
 import React from 'react';
 import Pages from '@linen/ui/Pages';
-import { NextPageContext } from 'next';
+import type { GetServerSideProps } from 'next/types';
 import { trackPageView } from 'utilities/ssr-metrics';
 import { api } from 'utilities/requests';
 
@@ -10,9 +10,9 @@ export default function Onboarding() {
   return <OnboardingPage api={api} />;
 }
 
-export async function getServerSideProps(context: NextPageContext) {
-  await trackPageView(context).flush();
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  await trackPageView(context);
   return {
     props: {},
   };
-}
+};
