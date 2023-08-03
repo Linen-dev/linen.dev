@@ -7,15 +7,16 @@ import type { IncomingHttpHeaders } from 'http';
 
 const POSTHOG_APIKEY = process.env.SSR_POSTHOG_API_KEY!;
 
-const postHog = !!POSTHOG_APIKEY
-  ? new PostHog(POSTHOG_APIKEY, {
-      flushAt: 1,
-      flushInterval: 0,
-      enable: process.env.POSTHOG_SERVER_ENABLE === 'true',
-      requestTimeout: Number(process.env.POSTHOG_TIMEOUT || 1000),
-      disableGeoip: false,
-    })
-  : undefined;
+const postHog =
+  process.env.NODE_ENV === 'production' && !!POSTHOG_APIKEY
+    ? new PostHog(POSTHOG_APIKEY, {
+        flushAt: 1,
+        flushInterval: 0,
+        enable: process.env.POSTHOG_SERVER_ENABLE === 'true',
+        requestTimeout: Number(process.env.POSTHOG_TIMEOUT || 1000),
+        disableGeoip: false,
+      })
+    : undefined;
 
 const random = () => v4();
 
