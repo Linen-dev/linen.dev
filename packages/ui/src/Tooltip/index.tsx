@@ -8,18 +8,19 @@ interface Props {
   text: string;
   children: React.ReactNode;
   position?: 'top' | 'right';
+  offset?: number;
 }
 
-function calculateCoords(rect: DOMRect, position: string) {
+function calculateCoords(rect: DOMRect, position: string, offset: number) {
   if (position === 'right') {
     return {
-      left: rect.left + rect.width + 8,
+      left: rect.left + rect.width + offset,
       top: rect.top,
     };
   }
   return {
     left: rect.left + rect.width / 2,
-    top: rect.top - rect.height - 8,
+    top: rect.top - rect.height - offset,
   };
 }
 
@@ -28,14 +29,15 @@ export default function Tooltip({
   text,
   position,
   children,
+  offset,
 }: Props) {
   const [coords, setCoords] = useState({ left: 0, top: 0 });
   const [show, toggle] = useState(false);
 
   const onMouseEnter = (event: React.MouseEvent<HTMLDivElement>) => {
-    const node = event.target as HTMLDivElement;
+    const node = event.currentTarget as HTMLDivElement;
     const rect = node.getBoundingClientRect();
-    setCoords(calculateCoords(rect, position as string));
+    setCoords(calculateCoords(rect, position as string, offset as number));
     toggle(true);
   };
 
@@ -70,4 +72,5 @@ export default function Tooltip({
 
 Tooltip.defaultProps = {
   position: 'top',
+  offset: 8,
 };

@@ -9,6 +9,8 @@ import ReminderModal from '@/ReminderModal';
 import EmojiPickerModal from '@/EmojiPickerModal';
 import { format } from '@linen/utilities/date';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
+import { FiShield } from '@react-icons/all-files/fi/FiShield';
+import Tooltip from '@/Tooltip';
 import { Mode } from '@linen/hooks/mode';
 import useHover from '@linen/hooks/hover';
 import {
@@ -19,6 +21,7 @@ import {
   SerializedUser,
   ReminderTypes,
   onResolve,
+  Roles,
 } from '@linen/types';
 import styles from './index.module.scss';
 import Actions from '@/Actions';
@@ -209,6 +212,10 @@ function Row({
     }
   }
 
+  const isAdminOrOwner =
+    message.author?.role === Roles.ADMIN ||
+    message.author?.role === Roles.OWNER;
+
   return (
     <div
       ref={ref}
@@ -238,6 +245,13 @@ function Row({
               <p className={styles.username}>
                 {message.author?.displayName || 'user'}
               </p>
+              {isAdminOrOwner && (
+                <Tooltip text="Admin" offset={16}>
+                  <div className={styles.role}>
+                    <FiShield />
+                  </div>
+                </Tooltip>
+              )}
               {subheader || format(message.sentAt, 'Pp')}
               {info}
             </div>
