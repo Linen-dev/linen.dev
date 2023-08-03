@@ -109,6 +109,19 @@ async function addMessage(
   logger: Logger
 ) {
   const thread_ts = event.thread_ts || event.ts;
+  const accessToken = channel.account?.slackAuthorizations[0]?.accessToken!;
+
+  const externalUserId = event.bot_id || event.user;
+  if (!externalUserId) {
+    return { error: 'missing externalUserId', event };
+  }
+
+  const user = await findOrCreateUserFromUserInfo(
+    externalUserId,
+    channel.accountId!,
+    accessToken
+  );
+
   const thread = await findOrCreateThread({
     externalThreadId: thread_ts,
     channelId: channel.id,
@@ -130,7 +143,6 @@ async function addMessage(
   let mentionUsersMap = mentionUserIds.map((m) =>
     m.replace('<@', '').replace('>', '')
   );
-  const accessToken = channel.account?.slackAuthorizations[0]?.accessToken!;
   const mentionUsers = await Promise.all(
     mentionUsersMap.map((userId) =>
       findOrCreateUserFromUserInfo(userId, channel.accountId!, accessToken)
@@ -138,12 +150,6 @@ async function addMessage(
   );
 
   const mentionIds = mentionUsers.filter(Boolean).map((x) => x!.id);
-
-  let user = await findOrCreateUserFromUserInfo(
-    event.bot_id || event.user,
-    channel.accountId!,
-    accessToken
-  );
 
   const param: Prisma.messagesUncheckedCreateInput = {
     body: event.text,
