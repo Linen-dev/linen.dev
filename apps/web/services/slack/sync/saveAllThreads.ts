@@ -132,7 +132,6 @@ export async function saveAllThreads({
               channel!.externalChannelId,
               token
             ),
-            sleepSeconds: 30,
             logger,
           });
           const replyMessages: ConversationHistoryMessage[] =
