@@ -1,5 +1,6 @@
 import {
   AccountType,
+  AnonymizeType,
   CommunityType,
   MessageFormat,
   SerializedAccount,
@@ -16,6 +17,7 @@ export const mockAccount: SerializedAccount = {
   premium: false,
   syncStatus: '',
   type: AccountType.PUBLIC,
+  anonymize: AnonymizeType.NONE,
 };
 
 export const mockSettings: Settings = {
