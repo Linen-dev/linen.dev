@@ -154,20 +154,61 @@ export default function Feed({
               }}
             />
           </div>
-          <div className={styles.description}>
+          {/* <div className={styles.right}> */}
+          <div className="p-2 lg:hidden">
+            <div className={styles.actions}>
+              {session.status === 'authenticated' ? (
+                <>
+                  <Link className={styles.link} href="/getting-started">
+                    Get started
+                  </Link>
+                  <a className={styles.link} onClick={() => signOut()}>
+                    Sign out
+                  </a>
+                </>
+              ) : (
+                <>
+                  <Link
+                    className={styles.link}
+                    href="/signin?callbackUrl=/feed"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    className={styles.link}
+                    href="/signup?callbackUrl=/feed"
+                  >
+                    Sign up
+                  </Link>
+                </>
+              )}
+            </div>
+            <div className='pb-2'>
+              <h1>What is Linen?</h1>
+              <p>
+                <small>
+                  Linen is a search-engine friendly community platform. We offer
+                  two way integrations with existing Slack/Discord communities
+                  and make those conversations Google-searchable.
+                </small>
+              </p>
+            </div>
+            <h2>What is this page?</h2>
             <p>
               <small>
-                Linen is a chat platform built for communities.{' '}
-                <a
-                  className={styles.link}
-                  href="https://linen.dev"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Read more
-                </a>
+                This page aggregates conversations from across all types of
+                communities into a single feed. This way, we can showcase
+                interesting content/discussions in different communities.
               </small>
             </p>
+            <a
+              className={styles.link}
+              href="https://linen.dev/landing"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Read more
+            </a>
           </div>
           <div>
             {threads.map((thread) => {

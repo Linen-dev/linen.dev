@@ -12,7 +12,7 @@ export default function PoweredByLinen({ className }: Props) {
       className={classNames(styles.link, className)}
       target="_blank"
       rel="noreferrer"
-      href="https://www.linen.dev"
+      href="https://www.linen.dev/landing"
     >
       Powered by
       <div className={styles.image} />
