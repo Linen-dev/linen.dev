@@ -1,5 +1,5 @@
 import { AccountWithSlackAuthAndChannels, Logger } from '@linen/types';
-import { sleep } from '@linen/utilities/promises';
+import { sleep } from '@linen/utilities/sleep';
 import ChannelsService from 'services/channels';
 import { GetSlackChannelsFnType, JoinChannelFnType } from '../types';
 import { ChannelType } from '@linen/database';

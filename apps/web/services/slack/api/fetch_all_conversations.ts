@@ -8,29 +8,37 @@ import {
   ConversationRepliesBody,
   ConversationHistoryBody,
 } from '@linen/types';
-import { GetMembershipsFnType } from '../types';
+import { FetchRepliesResponseType, GetMembershipsFnType } from '../types';
 import { qs } from '@linen/utilities/url';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 interface RetryConfig extends AxiosRequestConfig {
   retry: number;
-  retryDelay: number;
 }
+
 const instance = axios.create({ baseURL: 'https://slack.com' });
+
 instance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const { config } = error;
+    const response = (error?.response as AxiosResponse) ?? {};
+    const delay =
+      Number(
+        response?.headers['Retry-After'] ??
+          response?.headers['retry-after'] ??
+          10
+      ) * 1000;
 
-    if (!config || !config.retry) {
+    if (!config || !config.retry || [404, 403, 401].includes(response.status)) {
       return Promise.reject(error);
     }
     config.retry -= 1;
     const delayRetryRequest = new Promise<void>((resolve) => {
       setTimeout(() => {
-        console.log('retry the request', config.url);
+        console.warn({ retry: config.retry, delay, url: config.url });
         resolve();
-      }, config.retryDelay || 1000);
+      }, delay);
     });
     return delayRetryRequest.then(() => instance(config));
   }
@@ -39,7 +47,6 @@ instance.interceptors.response.use(
 const callApi = async <T>(url: string, token: string) => {
   const retryConfig: RetryConfig = {
     retry: 3,
-    retryDelay: 1000,
   };
   return instance
     .get<T>(url, {
@@ -118,13 +125,8 @@ export const fetchReplies = async (
   channel: string,
   token: string
 ) => {
-  const url = 'https://slack.com/api/conversations.replies';
-
-  const response = await request
-    .get(url + '?channel=' + channel + '&ts=' + threadTs)
-    .set('Authorization', 'Bearer ' + token);
-
-  return response;
+  const url = `https://slack.com/api/conversations.replies?channel=${channel}&ts=${threadTs}`;
+  return callApi<FetchRepliesResponseType>(url, token);
 };
 
 export const fetchFile = async (fileUrl: string, token: string) => {

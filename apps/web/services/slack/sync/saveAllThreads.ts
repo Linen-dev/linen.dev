@@ -1,6 +1,5 @@
 import { findOrCreateThread, findThreadsByChannel } from 'services/threads';
-import { retryPromise } from '@linen/utilities/promises';
-import { channels, prisma } from '@linen/database';
+import { channels, prisma, threads } from '@linen/database';
 import {
   UserMap,
   MessageFormat,
@@ -130,6 +129,8 @@ export async function saveAllThreads({
   }
 
   logger.log({ channelName, 'syncingAllThreads startedAt': new Date() });
+  const tooManyRequests = [];
+
   do {
     logger.log({ channelName, cursor });
     const threads = await findThreadsByChannel({
@@ -145,39 +146,22 @@ export async function saveAllThreads({
       'saveAllThreadsTransaction startedAt': new Date(),
     });
 
-    await Promise.all(
-      threads.map(async (thread) => {
-        try {
-          const replies = await retryPromise({
-            promise: fetchReplies(
-              thread.externalThreadId,
-              channel!.externalChannelId,
-              token
-            ),
-            logger,
-          });
-          const replyMessages: ConversationHistoryMessage[] =
-            replies?.body?.messages?.filter(filterMessages).map(parseMessage) ||
-            [];
-
-          // logger.log({
-          //   [`${thread.externalThreadId}`]: thread.messageCount,
-          //   'replyMessages.length': replyMessages?.length,
-          // });
-          if (replyMessages && replyMessages.length) {
-            await saveMessagesSynchronous(
-              replyMessages,
-              thread.channelId,
-              usersInDb,
-              token,
-              logger
-            );
-          }
-        } catch (e: any) {
-          logger.error(e.message || e);
-        }
-      })
-    );
+    for (const thread of threads) {
+      try {
+        await fetchAndPersist(
+          fetchReplies,
+          thread,
+          channel,
+          token,
+          usersInDb,
+          logger
+        );
+      } catch (error) {
+        logger.error({ error });
+        // put it hold for trying later
+        tooManyRequests.push(thread);
+      }
+    }
 
     cursor = Number(threads?.[threads?.length - 1]?.sentAt);
     await updateNextPageCursor(
@@ -190,6 +174,44 @@ export async function saveAllThreads({
     });
   } while (true);
 
+  for (const thread of tooManyRequests) {
+    await fetchAndPersist(
+      fetchReplies,
+      thread,
+      channel,
+      token,
+      usersInDb,
+      logger
+    ).catch(logger.error);
+  }
+
   await updateNextPageCursor(channel.id, 'completed');
   logger.log({ channelName, 'syncingAllThreads finishedAt': new Date() });
+}
+
+async function fetchAndPersist(
+  fetchReplies: Function,
+  thread: threads,
+  channel: channels,
+  token: string,
+  usersInDb: UserMap[],
+  logger: Logger
+) {
+  const replies = await fetchReplies(
+    thread.externalThreadId,
+    channel!.externalChannelId,
+    token
+  );
+  const replyMessages: ConversationHistoryMessage[] =
+    replies?.body?.messages?.filter(filterMessages).map(parseMessage) || [];
+
+  if (replyMessages && replyMessages.length) {
+    await saveMessagesSynchronous(
+      replyMessages,
+      thread.channelId,
+      usersInDb,
+      token,
+      logger
+    );
+  }
 }

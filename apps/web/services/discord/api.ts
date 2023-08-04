@@ -1,4 +1,4 @@
-import { sleep } from '@linen/utilities/promises';
+import { sleep } from '@linen/utilities/sleep';
 import axios from 'axios';
 import { qs } from '@linen/utilities/url';
 import {

@@ -11,7 +11,7 @@ import { getBotUserId } from './getBotUserId';
 import { processReactions } from './reactions';
 import { processAttachments } from './attachments';
 import { getMentionedUsers } from './getMentionedUsers';
-import { sleep } from '@linen/utilities/promises';
+import { sleep } from '@linen/utilities/sleep';
 import { parseSlackSentAt, tsToSentAt } from '@linen/serializers/sentAt';
 import { findOrCreateThread } from 'services/threads';
 import { slugify } from '@linen/utilities/string';

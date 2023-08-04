@@ -40,10 +40,10 @@
     "./number": "./dist/number.js",
     "./object": "./dist/object.js",
     "./password": "./dist/password.js",
-    "./promises": "./dist/promises.js",
     "./randomWordSlugs": "./dist/randomWordSlugs.js",
     "./reaction": "./dist/reaction.js",
     "./scroll": "./dist/scroll.js",
+    "./sleep": "./dist/sleep.js",
     "./storage": "./dist/storage.js",
     "./string": "./dist/string.js",
     "./url": "./dist/url.js"
@@ -101,9 +101,6 @@
       "password": [
         "./dist/password.d.ts"
       ],
-      "promises": [
-        "./dist/promises.d.ts"
-      ],
       "randomWordSlugs": [
         "./dist/randomWordSlugs.d.ts"
       ],
@@ -112,6 +109,9 @@
       ],
       "scroll": [
         "./dist/scroll.d.ts"
+      ],
+      "sleep": [
+        "./dist/sleep.d.ts"
       ],
       "storage": [
         "./dist/storage.d.ts"
