@@ -7,7 +7,8 @@
     "dev": "npx tsx watch src/index.ts",
     "build": "node build.mjs",
     "postbuild": "tsc",
-    "start:prod": "pm2-runtime start ecosystem.config.js"
+    "start:prod": "pm2-runtime start ecosystem.config.js --only \"queue\"",
+    "start:prod:non-queue": "pm2-runtime start ecosystem.config.js --only \"pagination,bot1,bot2\""
   },
   "keywords": [],
   "author": "Sandro de Souza",
