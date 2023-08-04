@@ -71,25 +71,31 @@ export const trackPageView = async (
   const url = identifyUrl(context);
   const headers = context.req.headers;
   const userAgentInfo = getUserAgentInfo(headers);
+  const ipInfo = getIp(headers);
+
+  if (email) {
+    postHog?.identify({
+      distinctId: email,
+      properties: { email },
+    });
+    postHog?.alias({
+      distinctId: email,
+      alias: distinctId,
+    });
+  }
 
   postHog?.capture({
-    distinctId,
+    distinctId: email || distinctId,
     event: '$pageview',
     properties: {
       $current_url: url,
       $referrer: headers?.referer || headers?.origin,
       $referring_domain: headers?.referer || headers?.origin,
       $host: headers?.host,
-      $ip: getIp(headers),
+      ...ipInfo,
       ...userAgentInfo,
     },
   });
-
-  if (email)
-    postHog?.identify({
-      distinctId,
-      properties: { email },
-    });
 
   return postHog?.shutdownAsync();
 };
@@ -117,8 +123,20 @@ export const trackApiEvent = (
   const userAgentInfo = getUserAgentInfo(headers);
   const ipInfo = getIp(headers);
 
+  const email = req.session_user?.email || req.user?.email;
+  if (email) {
+    postHog?.identify({
+      distinctId: email,
+      properties: { email: email },
+    });
+    postHog?.alias({
+      distinctId: email,
+      alias: distinctId,
+    });
+  }
+
   postHog?.capture({
-    distinctId,
+    distinctId: email || distinctId,
     event,
     properties: {
       $current_url: url,
@@ -131,24 +149,20 @@ export const trackApiEvent = (
     },
   });
 
-  if (req.session_user?.email || req.user?.email)
-    postHog?.identify({
-      distinctId,
-      properties: { email: req.session_user?.email || req.user?.email },
-    });
-
   return postHog?.shutdownAsync();
 };
 
 function getUserAgentInfo(headers: IncomingHttpHeaders) {
   try {
-    const info = userAgentFromString(headers['user-agent']);
+    const ua = headers['user-agent'];
+    if (!ua) return;
+    const info = userAgentFromString(ua);
     const userInfo = {
       $os: info?.os?.name,
       $browser: info?.browser?.name,
       $browser_version: info?.browser?.version,
       $device_type: info?.device?.type,
-      $search_engine: info?.isBot,
+      $search_engine: info?.isBot && getBot(ua),
     };
     return userInfo;
   } catch (error) {}
@@ -169,4 +183,12 @@ function getIp(headers: IncomingHttpHeaders) {
       $ip: ip,
     };
   } catch (error) {}
+}
+
+function getBot(input: string): string | undefined {
+  const result =
+    /Googlebot|Mediapartners-Google|AdsBot-Google|googleweblight|Storebot-Google|Google-PageRenderer|Google-InspectionTool|Bingbot|BingPreview|Slurp|DuckDuckBot|baiduspider|yandex|sogou|LinkedInBot|bitlybot|tumblr|vkShare|quora link preview|facebookexternalhit|facebookcatalog|Twitterbot|applebot|redditbot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|ia_archiver/i.exec(
+      input
+    );
+  return result?.length ? result.at(0) : input;
 }
