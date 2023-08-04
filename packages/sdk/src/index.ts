@@ -6,36 +6,14 @@ export { integrationMiddleware } from './middleware';
 export default class Api {
   private instance: Axios;
 
-  private catchError = (error: any) => {
-    if (error.response) {
-      console.error(error.response.data);
-      console.error(error.response.status);
-      console.error(error.response.headers);
-    } else if (error.request) {
-      console.error(error.request);
-    } else {
-      console.error(error.message);
-    }
-    throw error;
-  };
-
   private get = (path: string) =>
-    this.instance
-      .get(path)
-      .then((res) => res.data)
-      .catch(this.catchError);
+    this.instance.get(path).then((res) => res.data);
 
   private post = (path: string, data = {}) =>
-    this.instance
-      .post(path, data)
-      .then((res) => res.data)
-      .catch(this.catchError);
+    this.instance.post(path, data).then((res) => res.data);
 
   private put = (path: string, data = {}) =>
-    this.instance
-      .put(path, data)
-      .then((res) => res.data)
-      .catch(this.catchError);
+    this.instance.put(path, data).then((res) => res.data);
 
   constructor({
     apiKey,
