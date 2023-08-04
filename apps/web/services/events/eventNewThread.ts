@@ -53,13 +53,13 @@ export async function eventNewThread({
 
   const promises: Promise<any>[] = [
     eventNewMentions({ mentions, mentionNodes, channelId, threadId }),
-    notificationListener({ ...event, communityId, mentions }),
     ...resolvePush({ channel, userId, event, communityId }),
   ];
 
   if (isLinenMessage) {
     promises.push(
       ...[
+        notificationListener({ ...event, communityId, mentions }),
         createTwoWaySyncJob({ ...event, event: 'newThread', id: messageId }),
         matrixNewThread(event),
       ]
