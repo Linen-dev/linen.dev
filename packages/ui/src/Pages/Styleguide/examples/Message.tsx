@@ -177,6 +177,8 @@ export default function MessageExample() {
             { type: 'partyparrot', count: 2, users: [] },
             { type: 'the_horns', count: 2, users: [] },
             { type: 'ory_love', count: 2, users: [] },
+            { type: ':unknown_emoji:', count: 1, users: [] },
+            { type: ':xyz-not-found-emoji:', count: 1, users: [] },
           ]}
           format={MessageFormat.LINEN}
         />
