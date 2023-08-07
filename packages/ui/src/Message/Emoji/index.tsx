@@ -2,8 +2,8 @@ import React from 'react';
 import classNames from 'classnames';
 // @ts-ignore
 import EMOJIS from './utilities/emojis.json';
-import { getColor } from '@/Avatar/utilities/color';
-import { getLetter } from '@/Avatar/utilities/string';
+import { getColor } from '@linen/utilities/colors';
+import { getLetter } from '@linen/utilities/string';
 import styles from './index.module.scss';
 
 interface Props {

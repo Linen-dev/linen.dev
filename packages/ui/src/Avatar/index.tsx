@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import styles from './index.module.scss';
 import { normalizeUrl } from './utilities/url';
-import { getColor } from './utilities/color';
-import { getLetter } from './utilities/string';
 import preload, { cache } from '@/Image/utilities/preload';
+import { getColor } from '@linen/utilities/colors';
+import { getLetter } from '@linen/utilities/string';
 
 interface Props {
   className?: string;
