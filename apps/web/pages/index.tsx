@@ -155,7 +155,7 @@ export default function Feed({
             />
           </div>
           {/* <div className={styles.right}> */}
-          <div className="p-2 lg:hidden">
+          <div className="p-6 lg:hidden">
             <div className={styles.actions}>
               {session.status === 'authenticated' ? (
                 <>
