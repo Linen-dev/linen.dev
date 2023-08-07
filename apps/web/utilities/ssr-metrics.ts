@@ -163,6 +163,7 @@ function getUserAgentInfo(headers: IncomingHttpHeaders) {
       $browser_version: info?.browser?.version,
       $device_type: info?.device?.type,
       $search_engine: info?.isBot && getBot(ua),
+      userAgent: ua,
     };
     return userInfo;
   } catch (error) {}
