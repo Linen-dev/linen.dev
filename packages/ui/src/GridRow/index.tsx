@@ -9,7 +9,7 @@ import ReminderModal from '@/ReminderModal';
 import EmojiPickerModal from '@/EmojiPickerModal';
 import { format } from '@linen/utilities/date';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
-import { FiShield } from '@react-icons/all-files/fi/FiShield';
+import { BsShield } from '@react-icons/all-files/bs/BsShield';
 import Tooltip from '@/Tooltip';
 import { Mode } from '@linen/hooks/mode';
 import useHover from '@linen/hooks/hover';
@@ -248,7 +248,7 @@ function Row({
               {isAdminOrOwner && (
                 <Tooltip text="Admin" offset={16}>
                   <div className={styles.role}>
-                    <FiShield />
+                    <BsShield />
                   </div>
                 </Tooltip>
               )}
