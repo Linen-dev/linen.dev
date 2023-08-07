@@ -10,7 +10,7 @@ const FEED_PRODUCTION_URL = 'https://static.main.linendev.com/api/feed';
 const FEED_DEVELOPMENT_URL = 'http://localhost:3000/api/feed';
 
 const FEED_URL =
-  process.env.NODE_ENV !== 'production'
+  process.env.NODE_ENV === 'production'
     ? FEED_PRODUCTION_URL
     : FEED_DEVELOPMENT_URL;
 
