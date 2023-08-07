@@ -1,6 +1,11 @@
 import React from 'react';
+import classNames from 'classnames';
 // @ts-ignore
 import EMOJIS from './utilities/emojis.json';
+import { getColor } from '@/Avatar/utilities/color';
+import { getLetter } from '@/Avatar/utilities/string';
+import styles from './index.module.scss';
+
 interface Props {
   text?: string;
 }
@@ -23,10 +28,27 @@ function unwrap(text: string): string {
   return text;
 }
 
+function title(text: string) {
+  return text.replace(/_/g, ' ').replace(/-/g, ' ');
+}
+
 export default function Emoji({ text }: Props) {
   if (!text) {
     return null;
   }
   const name = unwrap(text);
-  return <>{EMOJIS[name] || text}</>;
+  if (EMOJIS[name]) {
+    return <>{EMOJIS[name]}</>;
+  }
+  const letter = getLetter(name);
+  const color = getColor(letter);
+  return (
+    <span
+      className={classNames(styles.unknown, {
+        [styles[`color-${color}`]]: color,
+      })}
+    >
+      {title(name)}
+    </span>
+  );
 }
