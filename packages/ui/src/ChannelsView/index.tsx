@@ -5,6 +5,7 @@ import Toggle from '@/Toggle';
 import NativeSelect from '@/NativeSelect';
 import Toast from '@/Toast';
 import TextField from '@/TextField';
+import ConfirmationModal from '@/ConfirmationModal';
 import { SerializedAccount, SerializedChannel } from '@linen/types';
 import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import debounce from '@linen/utilities/debounce';
@@ -14,6 +15,7 @@ import { FiEye } from '@react-icons/all-files/fi/FiEye';
 import { FiEyeOff } from '@react-icons/all-files/fi/FiEyeOff';
 import { GrDrag } from '@react-icons/all-files/gr/GrDrag';
 import { move } from '@linen/utilities/array';
+import { FiTrash2 } from '@react-icons/all-files/fi/FiTrash2';
 
 interface Counts {
   channelId: string;
@@ -29,6 +31,11 @@ interface Props {
   counts: Counts[];
 }
 
+enum ModalView {
+  NONE,
+  CONFIRMATION,
+}
+
 export default function ChannelsView({
   currentCommunity,
   channels,
@@ -37,6 +44,8 @@ export default function ChannelsView({
   counts,
 }: Props) {
   const [currentId, setCurrentId] = useState('');
+  const [modal, setModal] = useState<ModalView>(ModalView.NONE);
+  const [modalChannel, setModalChannel] = useState<SerializedChannel | null>();
   const debouncedUpdateChannel = useCallback(
     debounce((channel: SerializedChannel) =>
       api.updateChannel({
@@ -182,6 +191,7 @@ export default function ChannelsView({
               </th>
               <th>Users</th>
               <th>Threads</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -443,11 +453,40 @@ export default function ChannelsView({
                   </td>
                   <td>{count?.usersCount}</td>
                   <td>{count?.threadsCount}</td>
+                  <td>
+                    <FiTrash2
+                      className={styles.icon}
+                      onClick={() => {
+                        setModal(ModalView.CONFIRMATION);
+                        setModalChannel(channel);
+                      }}
+                    />
+                  </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
+        <ConfirmationModal
+          title={`Delete #${modalChannel?.channelName}`}
+          description={`Permanently delete channel #${modalChannel?.channelName}?`}
+          confirm="Delete"
+          open={modal === ModalView.CONFIRMATION}
+          onConfirm={() => {
+            setChannels((channels: SerializedChannel[]) => {
+              if (!modalChannel) {
+                return channels;
+              }
+              return channels.filter(({ id }) => id !== modalChannel.id);
+            });
+            setModal(ModalView.NONE);
+            setModalChannel(null);
+          }}
+          close={() => {
+            setModal(ModalView.NONE);
+            setModalChannel(null);
+          }}
+        />
       </div>
     </div>
   );
