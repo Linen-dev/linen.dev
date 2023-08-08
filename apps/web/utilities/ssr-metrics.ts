@@ -5,6 +5,7 @@ import type { GetServerSidePropsContext } from 'next/types';
 import { userAgentFromString } from 'next/dist/server/web/spec-extension/user-agent';
 import type { IncomingHttpHeaders } from 'http';
 import { Permissions } from '@linen/types';
+import { getBot } from './getBot';
 
 const POSTHOG_APIKEY = process.env.SSR_POSTHOG_API_KEY!;
 const isProd = process.env.NODE_ENV === 'production';
@@ -96,7 +97,7 @@ export const trackPageView = async (
   const distinctId = identifyUserSession(context);
   const url = identifyUrl(context);
   const headers = context.req.headers;
-  const userAgentInfo = getUserAgentInfo(headers);
+  const userAgentInfo = getUserAgentInfo(headers['user-agent']);
   const ipInfo = getIp(headers);
 
   if (email) {
@@ -147,7 +148,7 @@ export const trackApiEvent = (
   const distinctId = identifyUserSession({ req, res });
   const url = identifyUrl({ req });
   const headers = req.headers;
-  const userAgentInfo = getUserAgentInfo(headers);
+  const userAgentInfo = getUserAgentInfo(headers['user-agent']);
   const ipInfo = getIp(headers);
 
   const email = req.session_user?.email || req.user?.email;
@@ -197,17 +198,18 @@ function setPhCookie(res: any, value: string) {
   res?.setHeader('Set-Cookie', setCookieHeader);
 }
 
-function getUserAgentInfo(headers: IncomingHttpHeaders) {
+function getUserAgentInfo(ua?: string) {
   try {
-    const ua = headers['user-agent'];
     if (!ua) return;
     const info = userAgentFromString(ua);
+    const isBot = getBot(ua);
     const userInfo = {
       $os: info?.os?.name,
       $browser: info?.browser?.name,
       $browser_version: info?.browser?.version,
       $device_type: info?.device?.type,
-      $search_engine: info?.isBot && getBot(ua),
+      $search_engine: isBot || false,
+      isBot: !!isBot,
       userAgent: ua,
     };
     return userInfo;
@@ -229,12 +231,4 @@ function getIp(headers: IncomingHttpHeaders) {
       $ip: ip,
     };
   } catch (error) {}
-}
-
-function getBot(input: string): string | undefined {
-  const result =
-    /Googlebot|Mediapartners-Google|AdsBot-Google|googleweblight|Storebot-Google|Google-PageRenderer|Google-InspectionTool|Bingbot|BingPreview|Slurp|DuckDuckBot|baiduspider|yandex|sogou|LinkedInBot|bitlybot|tumblr|vkShare|quora link preview|facebookexternalhit|facebookcatalog|Twitterbot|applebot|redditbot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|ia_archiver/i.exec(
-      input
-    );
-  return result?.length ? result.at(0) : input;
 }

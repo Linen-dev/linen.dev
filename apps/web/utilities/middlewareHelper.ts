@@ -1,7 +1,7 @@
-import { NextURL } from 'next/dist/server/web/next-url';
+import type { NextURL } from 'next/dist/server/web/next-url';
 import { isSubdomainbasedRouting } from '@linen/utilities/domain';
 import { LINEN_STATIC_CDN } from 'config';
-import { isBot as isBotFn } from 'next/dist/server/web/spec-extension/user-agent';
+import { isBot } from './getBot';
 
 export const getCommunityName = (isProd: boolean, hostname: string | null) => {
   if (isProd) {
@@ -39,14 +39,6 @@ function isTopLevelPathname(pathname: string) {
 const cleanLinenHost = (hostname: string) =>
   hostname.indexOf('linen.dev') > -1 ? 'www.linen.dev' : hostname;
 
-const isBotOrLighthouse = (userAgent: string) => {
-  return (
-    userAgent.indexOf('Chrome-Lighthouse') > -1 ||
-    userAgent.indexOf('Google-InspectionTool') > -1 ||
-    isBotFn(userAgent)
-  );
-};
-
 export function rewrite({
   hostname,
   pathname,
@@ -83,7 +75,7 @@ export function rewrite({
     };
   }
 
-  if (pathname.startsWith('/s/') && isBotOrLighthouse(userAgent || '')) {
+  if (pathname.startsWith('/s/') && isBot(userAgent || '')) {
     url.pathname = url.pathname.replace('/s/', '/ssr/');
     return { rewrite: url.toString() };
   }
@@ -99,7 +91,7 @@ export function rewrite({
     url.pathname = `/s/${communityName}${pathname}`;
     url.searchParams.append('customDomain', '1');
 
-    if (isBotOrLighthouse(userAgent || '')) {
+    if (isBot(userAgent || '')) {
       url.pathname = url.pathname.replace('/s/', '/ssr/');
       return { rewrite: url.toString() };
     }
