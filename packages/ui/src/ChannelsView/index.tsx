@@ -61,6 +61,7 @@ export default function ChannelsView({
     ),
     [currentCommunity]
   );
+  const debouncedDeleteChannel = useCallback(debounce(api.deleteChannel), []);
   const debouncedReorderChannels = useCallback(
     debounce(api.reorderChannels),
     []
@@ -472,13 +473,22 @@ export default function ChannelsView({
           description={`Permanently delete channel #${modalChannel?.channelName}?`}
           confirm="Delete"
           open={modal === ModalView.CONFIRMATION}
-          onConfirm={() => {
-            setChannels((channels: SerializedChannel[]) => {
-              if (!modalChannel) {
-                return channels;
+          onConfirm={async () => {
+            if (modalChannel) {
+              try {
+                await debouncedDeleteChannel({
+                  id: modalChannel.id,
+                  accountId: currentCommunity.id,
+                });
+              } catch (exception) {
+                Toast.error(
+                  'Something went wrong. Please refresh the page and try again.'
+                );
               }
-              return channels.filter(({ id }) => id !== modalChannel.id);
-            });
+              setChannels((channels: SerializedChannel[]) => {
+                return channels.filter(({ id }) => id !== modalChannel.id);
+              });
+            }
             setModal(ModalView.NONE);
             setModalChannel(null);
           }}

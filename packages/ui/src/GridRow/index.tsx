@@ -246,7 +246,7 @@ function Row({
                 {message.author?.displayName || 'user'}
               </p>
               {isAdminOrOwner && (
-                <Tooltip text="Admin" offset={16}>
+                <Tooltip text="Admin" offset={20}>
                   <div className={styles.role}>
                     <BsShield />
                   </div>
