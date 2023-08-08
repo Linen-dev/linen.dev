@@ -33,5 +33,9 @@ describe('#calculateDimensions', () => {
       width: 368,
       height: 209,
     });
+    expect(calculateDimensions({ width: 2172, height: 400 })).toEqual({
+      width: 271,
+      height: 50,
+    });
   });
 });
