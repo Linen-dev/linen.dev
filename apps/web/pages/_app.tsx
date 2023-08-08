@@ -14,7 +14,7 @@ import { SessionProvider } from '@linen/auth/client';
 import Toast from '@linen/ui/Toast';
 import { JoinContext } from 'contexts/Join';
 import { UsersContext } from '@linen/contexts/Users';
-import PostHogUser from 'components/PostHogUser';
+import PostHogUser, { handlePosthogId } from 'components/PostHogUser';
 import 'utilities/posthog';
 
 export default function App(props: AppProps) {
@@ -23,6 +23,7 @@ export default function App(props: AppProps) {
   const { Component, pageProps } = props;
 
   useEffect(() => {
+    handlePosthogId(router);
     const handleStart = (url: string) => {
       NProgress.start();
     };

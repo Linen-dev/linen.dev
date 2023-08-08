@@ -96,7 +96,6 @@ export default function InvitePage({
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  await trackPageView(context);
   const community = await CommunityService.find(context.params);
   // we could show a page that allows you to create a community with this name
   if (!community) {
@@ -113,6 +112,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     where: { accountsId: community.id, authsId: { not: null } },
   });
   const permissions = await PermissionsService.for(context);
+  await trackPageView(context, permissions.auth?.email);
 
   return {
     props: {

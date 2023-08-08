@@ -4,11 +4,13 @@ import { v4 } from 'uuid';
 import type { GetServerSidePropsContext } from 'next/types';
 import { userAgentFromString } from 'next/dist/server/web/spec-extension/user-agent';
 import type { IncomingHttpHeaders } from 'http';
+import { Permissions } from '@linen/types';
 
 const POSTHOG_APIKEY = process.env.SSR_POSTHOG_API_KEY!;
+const isProd = process.env.NODE_ENV === 'production';
 
 const postHog =
-  process.env.NODE_ENV === 'production' && !!POSTHOG_APIKEY
+  isProd && !!POSTHOG_APIKEY
     ? new PostHog(POSTHOG_APIKEY, {
         flushAt: 1,
         flushInterval: 0,
@@ -21,42 +23,66 @@ const postHog =
 const random = () => v4();
 
 const identifyUserSession = ({
+  query,
   req,
   res,
 }: Partial<GetServerSidePropsContext>) => {
-  const cookies = req?.cookies;
-  const cookie = cookies?.['user-session'];
-  if (cookie) {
+  const phId = Array.isArray(query?.phId) ? query?.phId.at(0) : query?.phId;
+  const cookie = req?.cookies?.['user-session'];
+  if (cookie && !phId) {
+    setPhCookie(res, cookie);
     return cookie;
-  } else {
-    const setCookieHeader: string[] = [];
-    const existCookieHeader = res?.getHeader('Set-Cookie') ?? [];
-    if (Array.isArray(existCookieHeader)) {
-      setCookieHeader.push(...existCookieHeader);
-    }
-    const value = random();
-    setCookieHeader.push(
-      serialize('user-session', value, {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 30 * 24 * 60 * 60,
-      })
-    );
-    res?.setHeader('Set-Cookie', setCookieHeader);
-    return value;
   }
+  if (cookie && phId && cookie === phId) {
+    setPhCookie(res, cookie);
+    return cookie;
+  }
+  const value = phId || random();
+  setPhCookie(res, value);
+  return value;
 };
 
 const identifyUrl = ({
   req,
   resolvedUrl,
 }: Partial<GetServerSidePropsContext>) => {
-  const url = `${req?.headers?.host || req?.headers?.origin || ''}${
-    resolvedUrl || req?.url
-  }`;
-  return url;
+  const host = req?.headers?.host || req?.headers?.origin || '';
+  const url = `${host}${resolvedUrl || req?.url}`;
+  return url.replace(`/s/${host}`, '');
+};
+
+export const trackPage = async <T>(
+  context: GetServerSidePropsContext,
+  data:
+    | {
+        redirect: {
+          destination: string;
+          permanent: boolean;
+        };
+      }
+    | { notFound: true }
+    | {
+        props: T & {
+          permissions?: Permissions;
+        };
+      }
+) => {
+  if ('notFound' in data) {
+    return data;
+  }
+
+  const email =
+    'props' in data ? data.props.permissions?.auth?.email : undefined;
+
+  const phId = await trackPageView(context, email);
+
+  if ('redirect' in data) {
+    const dest = new URL(data.redirect.destination);
+    dest.searchParams.append('phId', phId);
+    data.redirect.destination = dest.toString();
+  }
+
+  return data;
 };
 
 /**
@@ -97,7 +123,8 @@ export const trackPageView = async (
     },
   });
 
-  return postHog?.shutdownAsync();
+  await postHog?.shutdownAsync();
+  return distinctId;
 };
 
 export enum ApiEvent {
@@ -151,6 +178,24 @@ export const trackApiEvent = (
 
   return postHog?.shutdownAsync();
 };
+
+function setPhCookie(res: any, value: string) {
+  const setCookieHeader: string[] = [];
+  const existCookieHeader = res?.getHeader('Set-Cookie') ?? [];
+  if (Array.isArray(existCookieHeader)) {
+    setCookieHeader.push(...existCookieHeader);
+  }
+  setCookieHeader.push(
+    serialize('user-session', value, {
+      httpOnly: true,
+      sameSite: 'lax',
+      path: '/',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 30 * 24 * 60 * 60,
+    })
+  );
+  res?.setHeader('Set-Cookie', setCookieHeader);
+}
 
 function getUserAgentInfo(headers: IncomingHttpHeaders) {
   try {

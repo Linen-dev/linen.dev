@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { useSession } from '@linen/auth/client';
+import type { NextRouter } from 'next/router';
 
-function PostHogUser() {
+export default function PostHogUser() {
   const session = useSession();
 
   useEffect(() => {
@@ -19,4 +20,21 @@ function PostHogUser() {
   return null;
 }
 
-export default PostHogUser;
+export function handlePosthogId(router: NextRouter) {
+  if (router.query.phId) {
+    // TODO: cross match between SSR and client metrics
+    // const distinctId = (window as any)?.posthog?.get_distinct_id();
+    // distinctId &&
+    //   (window as any)?.posthog?.alias({
+    //     distinctId,
+    //     alias: router.query.phId,
+    //   });
+    const search = new URL(window.location.toString()).searchParams;
+    search.delete('phId');
+    router.replace(
+      { pathname: window.location.pathname, query: search.toString() },
+      undefined,
+      { shallow: true }
+    );
+  }
+}

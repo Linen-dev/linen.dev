@@ -1,7 +1,7 @@
 import type { GetServerSideProps } from 'next/types';
 import { ssrGetServerSideProps } from 'services/ssr/starred';
 import Starred, { Props } from 'components/Pages/Starred';
-import { trackPageView } from 'utilities/ssr-metrics';
+import { trackPage } from 'utilities/ssr-metrics';
 
 export default Starred;
 
@@ -12,6 +12,5 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     context,
     context.query.customDomain === '1'
   );
-  await trackPageView(context, (data as any)?.props?.permissions?.auth?.email);
-  return data;
+  return trackPage<Props>(context, data);
 };
