@@ -1,6 +1,12 @@
-.item {
+.link {
   display: block;
 }
+
+.link:hover .archive {
+  opacity: 1;
+  pointer-events: all;
+}
+
 
 .drop {
   background: var(--color-blue-50);
@@ -33,10 +39,18 @@
   cursor: pointer;
 }
 
-.justify {
+.item {
   align-items: center;
   display: flex;
   justify-content: space-between;
+}
+
+.item .icon {
+  display: none;
+}
+
+.item:hover .icon {
+  display: block;
 }
 
 .channel {
@@ -66,9 +80,4 @@
   transition: opacity 0.1s ease;
   opacity: 0;
   pointer-events: none;
-}
-
-.item:hover .archive {
-  opacity: 1;
-  pointer-events: all;
 }

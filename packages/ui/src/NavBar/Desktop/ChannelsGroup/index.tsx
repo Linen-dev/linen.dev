@@ -17,6 +17,7 @@ import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 import { FiSearch } from '@react-icons/all-files/fi/FiSearch';
 import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
+import { FiRadio } from '@react-icons/all-files/fi/FiRadio';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiLogOut } from '@react-icons/all-files/fi/FiLogOut';
 import { FiEdit } from '@react-icons/all-files/fi/FiEdit';
@@ -100,7 +101,7 @@ export default function ChannelsGroup({
               onSettingsClick(context.id),
           },
           {
-            icon: <FiSettings />,
+            icon: <FiRadio />,
             label: 'Integrations',
             onClick: (context: SerializedChannel) => {
               setModal(ModalView.INTEGRATIONS);
@@ -230,7 +231,7 @@ export default function ChannelsGroup({
                 }}
               >
                 <Link
-                  className={classNames(styles.item, {
+                  className={classNames(styles.link, {
                     [styles.dropzone]: mode === Mode.Drag,
                   })}
                   onDragEnter={handleDragEnter}
@@ -240,7 +241,7 @@ export default function ChannelsGroup({
                   href={`/c/${channel.channelName}`}
                 >
                   <Nav.Item
-                    className={styles.justify}
+                    className={styles.item}
                     active={active}
                     highlighted={highlighted}
                   >
@@ -257,6 +258,19 @@ export default function ChannelsGroup({
                         {channel.channelName}
                       </span>
                     </div>
+                    <FiSettings
+                      className={styles.icon}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        setClicked(true);
+                        setPoints({
+                          x: event.pageX,
+                          y: event.pageY,
+                        });
+                        setContext(channel);
+                      }}
+                    />
                   </Nav.Item>
                 </Link>
               </div>
