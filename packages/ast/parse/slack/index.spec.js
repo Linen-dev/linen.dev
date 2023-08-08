@@ -252,6 +252,12 @@ describe('parse', () => {
       expect(parse('(11/3 - 4:30pm): ok')).toEqual(
         root([text('(11/3 - 4:30pm): ok')])
       );
+      expect(parse('{"foo":"bar","baz":"qux"}')).toEqual(
+        root([text('{"foo":"bar","baz":"qux"}')])
+      );
+      expect(parse("{'foo':'bar','baz':'qux'}")).toEqual(
+        root([text("{'foo':'bar','baz':'qux'}")])
+      );
     });
   });
 

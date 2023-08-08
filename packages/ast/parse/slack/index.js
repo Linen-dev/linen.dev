@@ -67,7 +67,7 @@ const quote = topline(
 );
 
 const emoji = regexp(
-  /^:([^:<`*#@!\s()$%]+):(:(skin-tone-.+?):)?/,
+  /^:([^:<`*#@!\s()$%"']+):(:(skin-tone-.+?):)?/,
   (match, text, position) => {
     const [result, name, _, variation] = match;
 
