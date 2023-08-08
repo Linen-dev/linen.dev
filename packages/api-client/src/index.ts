@@ -4,6 +4,7 @@ import type {
   SerializedMessage,
   SerializedThread,
   createChannelType,
+  deleteChannelType,
   bulkHideChannelsType,
   bulkReorderChannelsType,
   setDefaultChannelsType,
@@ -241,6 +242,9 @@ export default class ApiClient {
 
   createChannel = (props: createChannelType) =>
     this.post<SerializedChannel>(`/api/channels`, props);
+
+  deleteChannel = (props: deleteChannelType) =>
+    this.deleteReq(`/api/channels?${qs(props)}`);
 
   updateChannel = ({
     accountId,

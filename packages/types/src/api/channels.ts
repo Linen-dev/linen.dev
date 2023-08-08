@@ -16,6 +16,12 @@ export const createChannelSchema = z.object({
 });
 export type createChannelType = z.infer<typeof createChannelSchema>;
 
+export const deleteChannelSchema = z.object({
+  id: z.string().uuid(),
+  accountId: z.string().uuid(),
+});
+export type deleteChannelType = z.infer<typeof deleteChannelSchema>;
+
 export const updateChannelSchema = z.object({
   channelName: z.string().regex(patterns.channelName),
   channelId: z.string().uuid(),

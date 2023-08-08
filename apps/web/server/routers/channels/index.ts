@@ -23,6 +23,8 @@ import {
   bulkReorderChannelsType,
   createChannelSchema,
   createChannelType,
+  deleteChannelSchema,
+  deleteChannelType,
   updateChannelSchema,
   createDmSchema,
   createDmType,
@@ -140,6 +142,32 @@ channelsRouter.get(
   ) => {
     const channels = await ChannelsService.findPublic(req.tenant?.id!);
     return res.status(200).json({ channels: channels.map(serializeChannel) });
+  }
+);
+
+channelsRouter.delete(
+  `${prefix}`,
+  tenantMiddleware([Roles.ADMIN, Roles.OWNER]),
+  validationMiddleware(deleteChannelSchema),
+  async (
+    req: AuthedRequestWithTenantAndBody<deleteChannelType>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { id, accountId } = req.body;
+
+    try {
+      await prisma.channels.deleteMany({
+        where: {
+          id,
+          accountId,
+        },
+      });
+    } catch (exception) {
+      return res.status(500).json({});
+    }
+
+    return res.status(200).json({});
   }
 );
 
