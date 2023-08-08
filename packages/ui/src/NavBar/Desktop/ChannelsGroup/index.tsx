@@ -258,19 +258,21 @@ export default function ChannelsGroup({
                         {channel.channelName}
                       </span>
                     </div>
-                    <FiSettings
-                      className={styles.icon}
-                      onClick={(event) => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        setClicked(true);
-                        setPoints({
-                          x: event.pageX,
-                          y: event.pageY,
-                        });
-                        setContext(channel);
-                      }}
-                    />
+                    {currentUser && (
+                      <FiSettings
+                        className={styles.icon}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          setClicked(true);
+                          setPoints({
+                            x: event.pageX,
+                            y: event.pageY,
+                          });
+                          setContext(channel);
+                        }}
+                      />
+                    )}
                   </Nav.Item>
                 </Link>
               </div>

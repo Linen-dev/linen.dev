@@ -43,10 +43,13 @@
   align-items: center;
   display: flex;
   justify-content: space-between;
+  position: relative;
 }
 
 .item .icon {
   display: none;
+  position: absolute;
+  right: 0.5rem;
 }
 
 .item:hover .icon {
