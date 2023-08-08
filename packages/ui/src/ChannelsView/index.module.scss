@@ -108,3 +108,12 @@
 .position svg path {
   stroke: var(--color-gray-500);
 }
+
+.icon {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.icon:hover {
+  color: var(--color-red-700);
+}
