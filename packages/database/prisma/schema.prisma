@@ -262,8 +262,8 @@ model auths {
 }
 
 model memberships {
-  user    users    @relation(fields: [usersId], references: [id])
-  channel channels @relation(fields: [channelsId], references: [id])
+  user    users    @relation(fields: [usersId], references: [id], onDelete: Cascade)
+  channel channels @relation(fields: [channelsId], references: [id], onDelete: Cascade)
 
   usersId    String
   channelsId String
