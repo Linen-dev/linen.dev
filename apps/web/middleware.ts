@@ -1,3 +1,4 @@
+import { blocked } from 'utilities/blocked';
 import { NextRequest, NextResponse } from 'next/server';
 import { rewrite } from 'utilities/middlewareHelper';
 
@@ -5,8 +6,13 @@ export const config = {
   matcher: ['/((?!api|_next/static|pp|ph).*)'],
 };
 
-export default function middleware(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone(); // clone the request url
+
+  if (await blocked(request)) {
+    url.pathname = `/500`;
+    return NextResponse.rewrite(url.toString());
+  }
 
   const { pathname } = request.nextUrl; // get pathname of request (e.g. /blog-slug)
   const hostname = request.headers.get('host'); // get hostname of request (e.g. demo.vercel.pub)
