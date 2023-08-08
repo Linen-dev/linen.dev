@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '@/Button';
 import Modal from '@/Modal';
+import useKeyboard from '@linen/hooks/keyboard';
 import styles from './index.module.scss';
 
 interface Props {
@@ -22,6 +23,26 @@ export default function ConfirmationModal({
   confirm,
   cancel,
 }: Props) {
+  useKeyboard(
+    {
+      onKeyUp(event) {
+        if (open) {
+          if (event.key === 'Escape') {
+            event.preventDefault();
+            event.stopPropagation();
+            close();
+          }
+
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            event.stopPropagation();
+            onConfirm();
+          }
+        }
+      },
+    },
+    [open]
+  );
   return (
     <Modal open={open} close={close}>
       <h3 className={styles.header}>{title || 'Confirmation'}</h3>
