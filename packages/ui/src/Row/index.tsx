@@ -34,6 +34,7 @@ interface Props {
   mode?: Mode;
   showActions?: boolean;
   subheader?: React.ReactNode;
+  truncate?: boolean;
   onClick?(): void;
   onDelete?(messageId: string): void;
   onEdit?(threadId: string, messageId: string): void;
@@ -82,6 +83,7 @@ export default function Row({
   mode,
   showActions,
   subheader,
+  truncate,
   onClick,
   onDelete,
   onEdit,
@@ -135,6 +137,7 @@ export default function Row({
         currentUser={currentUser}
         mode={mode}
         drag="thread"
+        truncate={truncate}
         showActions={showActions}
         onDelete={onDelete}
         onEdit={onEdit}

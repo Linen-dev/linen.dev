@@ -183,7 +183,7 @@ export default function Feed({
                 </>
               )}
             </div>
-            <div className='pb-2'>
+            <div className="pb-2">
               <h1>What is Linen?</h1>
               <p>
                 <small>
@@ -228,6 +228,7 @@ export default function Feed({
                     ? 'https://www.linen.dev'
                     : 'http://localhost:3000',
               });
+              const message = thread.messages[0];
               return (
                 <div className={styles.wrapper} key={thread.id}>
                   <a
@@ -243,6 +244,7 @@ export default function Feed({
                       isSubDomainRouting={false}
                       settings={setting}
                       showActions={false}
+                      truncate={message.body.length > 280}
                       subheader={
                         <>
                           {timeAgo(Number(thread.lastReplyAt))}
