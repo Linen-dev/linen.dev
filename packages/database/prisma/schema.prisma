@@ -18,7 +18,7 @@ model messages {
   body      String
   sentAt    DateTime
 
-  channel           channels @relation(fields: [channelId], references: [id])
+  channel           channels @relation(fields: [channelId], references: [id], onDelete: Cascade)
   channelId         String
   externalMessageId String?
 
@@ -51,7 +51,7 @@ enum MessageFormat {
 model threads {
   id               String      @id @default(uuid())
   incrementId      Int         @default(autoincrement())
-  channel          channels    @relation(fields: [channelId], references: [id])
+  channel          channels    @relation(fields: [channelId], references: [id], onDelete: Cascade)
   externalThreadId String?
   viewCount        Int         @default(0)
   slug             String?
@@ -144,7 +144,7 @@ model channelsIntegration {
   id              String                  @id @default(uuid())
   createdAt       DateTime                @default(now())
   updatedAt       DateTime?               @updatedAt
-  channel         channels                @relation(fields: [channelId], references: [id])
+  channel         channels                @relation(fields: [channelId], references: [id], onDelete: Cascade)
   channelId       String
   type            channelsIntegrationType
   externalId      String
