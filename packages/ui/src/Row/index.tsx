@@ -136,7 +136,6 @@ export default function Row({
         mode={mode}
         drag="thread"
         showActions={showActions}
-        truncate={message.body.length > 280}
         onDelete={onDelete}
         onEdit={onEdit}
         onLoad={onLoad}
