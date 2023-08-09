@@ -54,6 +54,12 @@
   width: 100%;
 }
 
+.is-expanded > div {
+  display: block;
+  width: 100%;
+  overflow: initial;
+}
+
 .ulFull > :not([hidden]) ~ :not([hidden]) {
   --tw-divide-y-reverse: 0;
   border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
