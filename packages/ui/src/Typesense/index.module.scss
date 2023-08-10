@@ -1,0 +1,51 @@
+.stats {
+  font-size: small;
+  font-style: italic;
+  color: var(--color-text);
+  justify-content: center;
+  display: flex;
+}
+
+.list {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  width: 100%;
+}
+
+.selected {
+  color: var(--color-link);
+}
+
+.link {
+  display: inline-flex;
+  padding: 0.5rem;
+  font-size: small;
+  font-weight: bold;
+  align-items: center;
+}
+
+.container {
+  max-width: 52rem;
+  width: 100%;
+}
+
+.container .input {
+  border-radius: 32px;
+  background-color: transparent;
+  border-color: rgba(255, 255, 255, 0.25);
+  transition: 0.2s ease background-color, 0.2s ease color,
+    0.2s ease border-color;
+}
+
+.searchBar {
+  display: flex;
+}
+
+.x {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  margin: 0.5rem 0.5rem 0 0;
+}

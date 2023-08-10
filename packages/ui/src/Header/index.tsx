@@ -16,6 +16,7 @@ import Logo from './Logo';
 import UpgradeButton from './UpgradeButton';
 import type { ApiClient } from '@linen/api-client';
 import SearchBar from '@/SearchBar';
+import { TypesenseSearch } from '@/Typesense';
 
 interface Props {
   settings: Settings;
@@ -38,6 +39,10 @@ interface Props {
   api: ApiClient;
   handleSelect: (message: SerializedSearchMessage) => void;
   logoClassName?: string;
+  typesense?: {
+    searchClient: (apiKey: string) => any;
+    routing: any;
+  };
 }
 
 function isWhiteColor(color: string) {
@@ -59,6 +64,7 @@ export default function Header({
   api,
   handleSelect,
   logoClassName,
+  typesense,
 }: Props) {
   const brandColor = currentCommunity.brandColor || 'var(--color-navbar)';
   const fontColor = pickTextColorBasedOnBgColor(brandColor, 'white', 'black');
@@ -83,14 +89,28 @@ export default function Header({
       >
         <Logo src={logoUrl} alt={`${homeUrl} logo`} />
       </Link>
-      <SearchBar
-        className={styles.search}
-        brandColor={brandColor}
-        channels={channels}
-        accountId={settings.communityId}
-        api={api}
-        handleSelect={handleSelect}
-      />
+      {currentCommunity.search?.scope === 'public' &&
+      !!currentCommunity.search?.apiKey &&
+      currentCommunity.search?.engine === 'typesense' &&
+      typesense?.searchClient ? (
+        <TypesenseSearch
+          apiKey={currentCommunity.search?.apiKey}
+          indexName={currentCommunity.search?.indexName}
+          key={`${currentCommunity.search?.indexName}${currentCommunity.search?.apiKey}`}
+          searchClient={typesense.searchClient}
+          settings={settings}
+          routing={typesense.routing}
+        />
+      ) : (
+        <SearchBar
+          className={styles.search}
+          brandColor={brandColor}
+          channels={channels}
+          accountId={settings.communityId}
+          api={api}
+          handleSelect={handleSelect}
+        />
+      )}
       <div className={styles.menu}>
         {permissions.user && permissions.is_member ? (
           <>

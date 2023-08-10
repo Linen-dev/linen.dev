@@ -1,0 +1,22 @@
+.threadContainer {
+  min-height: 0;
+}
+
+.view {
+  width: 50%;
+  overflow: hidden auto;
+  height: 80vh;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  padding: 0.1rem 0.5rem;
+}
+
+.list {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  width: 100%;
+}

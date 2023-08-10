@@ -58,7 +58,8 @@
     "rollup-plugin-visualizer": "^5.9.0",
     "sass": "^1.62.1",
     "ts-jest": "^29.0.5",
-    "typescript": "^5.1.3"
+    "typescript": "^5.1.3",
+    "react-instantsearch": "^7.0.1"
   },
   "peerDependencies": {
     "@react-icons/all-files": "^4.1.0",
@@ -66,7 +67,8 @@
     "highlight.js": "^11.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hot-toast": "2.2.0"
+    "react-hot-toast": "2.2.0",
+    "react-instantsearch": "^7.0.1"
   },
   "exports": {
     "./Accordion": "./dist/Accordion/index.js",
@@ -196,6 +198,7 @@
     "./Toast": "./dist/Toast/index.js",
     "./Toggle": "./dist/Toggle/index.js",
     "./Tooltip": "./dist/Tooltip/index.js",
+    "./Typesense": "./dist/Typesense/index.js",
     "./UserMessage": "./dist/UserMessage/index.js",
     "./YCombinatorLogo": "./dist/YCombinatorLogo/index.js",
     "./index.css": "./dist/index.css"
@@ -582,6 +585,9 @@
       ],
       "Tooltip": [
         "./dist/Tooltip/index.d.ts"
+      ],
+      "Typesense": [
+        "./dist/Typesense/index.d.ts"
       ],
       "UserMessage": [
         "./dist/UserMessage/index.d.ts"

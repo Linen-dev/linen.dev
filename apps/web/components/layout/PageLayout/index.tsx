@@ -22,11 +22,13 @@ import JoinButton from '@linen/ui/JoinButton';
 import InternalLink from 'components/Link/InternalLink';
 import { signOut, useSession } from '@linen/auth/client';
 import usePath from 'hooks/path';
-import { useRouter } from 'next/router';
+import nextRouter, { useRouter } from 'next/router';
 import { notify } from 'utilities/notification';
 import { getHomeUrl } from '@linen/utilities/home';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 import { useJoinContext } from 'contexts/Join';
+import { searchClient } from 'utilities/typesenseClient';
+import { createInstantSearchRouterNext } from 'react-instantsearch-router-nextjs';
 
 interface Props {
   className?: string;
@@ -106,6 +108,10 @@ function PageLayout({
     });
   };
 
+  const routing = {
+    router: createInstantSearchRouterNext({ singletonRouter: nextRouter }),
+  };
+
   return (
     <LinkContext
       context={{
@@ -136,6 +142,7 @@ function PageLayout({
           usePath={usePath}
           routerAsPath={router.asPath}
           handleSelect={handleSelect}
+          typesense={{ searchClient, routing }}
         />
       </div>
       {seo && (
