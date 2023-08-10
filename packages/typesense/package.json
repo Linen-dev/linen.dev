@@ -1,0 +1,27 @@
+{
+  "name": "@linen/typesense",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "tsx": "dotenv -e .env -e ../../.env tsx",
+    "prebuild": "rimraf dist",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "Sandro de Souza",
+  "license": "ISC",
+  "dependencies": {
+    "@linen/database": "*",
+    "@linen/serializers": "*",
+    "@linen/types": "*",
+    "dotenv-cli": "^7.2.1",
+    "envalid": "^7.3.1",
+    "typesense": "^1.5.4"
+  },
+  "devDependencies": {
+    "tsx": "^3.12.7",
+    "typescript": "^5.1.6"
+  }
+}
