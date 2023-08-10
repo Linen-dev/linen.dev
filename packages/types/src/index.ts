@@ -101,14 +101,9 @@ export enum Period {
 export type StartSignUpProps = {
   flow?: AuthFlow;
   communityId: string;
-  onSignIn?: onSignInType;
-};
-export type onSignInType = {
-  run: Function;
-  init: any;
-  params: any;
   redirectUrl?: string;
 };
+
 export type AuthFlow = 'signup' | 'signin';
 
 export type StartSignUpFn = (props: StartSignUpProps) => any;

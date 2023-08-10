@@ -44,25 +44,6 @@ export function sendMessageWrapper({
     if (!currentUser) {
       startSignUp?.({
         communityId: currentCommunity.id,
-        onSignIn: {
-          run: sendMessageWrapper,
-          init: {
-            allUsers,
-            currentChannel,
-            setUploads,
-            setThreads,
-            scrollableRootRef,
-            currentCommunity,
-            startSignUp,
-            createThread,
-          },
-          params: {
-            message,
-            title,
-            files,
-            channelId,
-          },
-        },
       });
       return;
     }
