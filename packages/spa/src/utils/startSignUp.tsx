@@ -8,15 +8,8 @@ export default function startSignUp({
   permissions: Permissions;
   reload(): void;
 }): (props: StartSignUpProps) => Promise<void> {
-  return async ({ communityId, onSignIn }) => {
-    // join community
+  return async ({ communityId }) => {
     await api.joinCommunity({ communityId });
-    // callback message send function
-    await onSignIn?.run({
-      ...onSignIn?.init,
-      currentUser: permissions.auth,
-      startSignUp: () => {},
-    })?.(onSignIn?.params);
     reload();
   };
 }

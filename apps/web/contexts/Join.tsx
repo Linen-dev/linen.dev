@@ -8,7 +8,6 @@ import {
   AuthFlow,
   StartSignUpFn,
   StartSignUpProps,
-  onSignInType,
   SignInMode,
 } from '@linen/types';
 import LinenLogo from '@linen/ui/LinenLogo';
@@ -26,7 +25,6 @@ type Props = {
 export const JoinContext = ({ children }: Props) => {
   const [open, setOpen] = useState(false);
   const [communityId, setCommunityId] = useState<string>();
-  const [onSignInAction, setOnSignInAction] = useState<onSignInType>();
   const [flow, setFlow] = useState<AuthFlow>('signup');
   const [mode, setMode] = useState<SignInMode>('magic');
 
@@ -49,14 +47,13 @@ export const JoinContext = ({ children }: Props) => {
 
   const startSignUp = async (props: StartSignUpProps) => {
     setFlow(props.flow || 'signup');
-    setOnSignInAction(props.onSignIn);
     setCommunityId(props.communityId);
-    setCallbackUrl(props.onSignIn?.redirectUrl || window.location.href);
+    setCallbackUrl(props.redirectUrl || window.location.href);
     const session = await getSession();
     if (session) {
-      const res = await join(props);
+      const res = await join({ communityId: props.communityId });
       if (res.ok) {
-        await callAfterSignInFunction(props.onSignIn, session);
+        window.location.replace(props.redirectUrl || window.location.href);
         return;
       }
     }
@@ -68,28 +65,12 @@ export const JoinContext = ({ children }: Props) => {
     if (session && communityId) {
       const res = await join({ communityId });
       if (res.ok) {
-        await callAfterSignInFunction(onSignInAction, session);
+        window.location.replace(window.location.href);
         return;
       }
     }
     setOpen(false);
   };
-
-  async function callAfterSignInFunction(
-    onSignInAction: onSignInType | undefined,
-    session: SessionType | null
-  ) {
-    await onSignInAction?.run({
-      currentUser: session?.user,
-      startSignUp: () => {},
-      ...onSignInAction?.init,
-    })?.({
-      ...onSignInAction?.params,
-    });
-    window.location.replace(
-      onSignInAction?.redirectUrl || window.location.href
-    );
-  }
 
   const onCloseModal = () => {
     setOpen(false);
