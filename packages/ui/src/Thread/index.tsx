@@ -76,6 +76,7 @@ interface Props {
   fetchMentions(term?: string | undefined): Promise<SerializedUser[]>;
   api: ApiClient;
   breadcrumb?: React.ReactNode;
+  classContainer?: string;
 }
 
 enum ModalView {
@@ -110,6 +111,7 @@ export default function Thread({
   api,
   fetchMentions,
   breadcrumb,
+  ...props
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
@@ -227,9 +229,13 @@ export default function Thread({
   return (
     <>
       <div
-        className={classNames(styles.container, {
-          [styles.expanded]: expanded,
-        })}
+        className={classNames(
+          styles.container,
+          {
+            [styles.expanded]: expanded,
+          },
+          props.classContainer
+        )}
         ref={ref}
         onDrop={onDrop}
       >
