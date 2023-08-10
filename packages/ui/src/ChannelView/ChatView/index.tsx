@@ -604,10 +604,7 @@ export default function Channel({
                   </>
                 ) : (
                   <>
-                    {!currentUser && !currentCommunity.communityInviteUrl && (
-                      <></>
-                    )}
-                    {currentUser && !currentCommunity.communityInviteUrl && (
+                    {!currentCommunity.communityInviteUrl && (
                       <Chat
                         channelId={currentChannel.id}
                         currentUser={currentUser}
