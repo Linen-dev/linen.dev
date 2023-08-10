@@ -31,6 +31,7 @@ export default function createAccount(options?: Partial<accounts>): accounts {
     faviconUrl: null,
     newChannelsConfig: 'NOT_HIDDEN',
     redirectDomainPropagate: null,
+    updatedAt: null,
     ...options,
   };
 }

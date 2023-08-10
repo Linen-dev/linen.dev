@@ -12,6 +12,7 @@ export default function createMessage(options?: Partial<messages>): messages {
     channelId: '1',
     usersId: null,
     messageFormat: MessageFormat.LINEN,
+    updatedAt: null,
     ...options,
   };
 }

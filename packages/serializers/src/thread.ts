@@ -26,6 +26,8 @@ export function serializeThread({
   closeAt,
   firstManagerReplyAt,
   firstUserReplyAt,
+  createdAt,
+  updatedAt,
   ...thread
 }: any): SerializedThread {
   return {

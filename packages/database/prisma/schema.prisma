@@ -13,8 +13,9 @@ datasource db {
 }
 
 model messages {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt()
   body      String
   sentAt    DateTime
 
@@ -79,6 +80,8 @@ model threads {
   page              Int?
   userStarredThread userStarredThread[]
   robotsMetaTag     String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime?           @updatedAt()
 
   @@unique([externalThreadId])
   @@unique([incrementId])
@@ -172,6 +175,7 @@ enum AnonymizeType {
 model accounts {
   id                      String        @id @default(uuid())
   createdAt               DateTime      @default(now())
+  updatedAt               DateTime?     @updatedAt()
   type                    AccountType   @default(PUBLIC)
   name                    String?
   description             String?
@@ -299,6 +303,9 @@ model users {
   userThreadStatus  userThreadStatus[]
   channelsCreatedBy channels[]
   userStarredThread userStarredThread[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt()
 
   @@unique([externalUserId, accountsId])
   @@index([authsId])

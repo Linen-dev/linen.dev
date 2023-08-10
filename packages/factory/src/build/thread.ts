@@ -25,6 +25,8 @@ export default function createThread(options?: Partial<threads>): threads {
     question: null,
     feed: false,
     robotsMetaTag: null,
+    createdAt: new Date(),
+    updatedAt: null,
     ...options,
   };
 }
