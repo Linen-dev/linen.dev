@@ -52,7 +52,6 @@ import { getFormData } from '@linen/utilities/files';
 import type { ApiClient } from '@linen/api-client';
 import PaginationNumbers from '@/PaginationNumbers';
 import { useViewport } from '@linen/hooks/useViewport';
-import MessageFormJoinLinen from '@/MessageFormJoinLinen';
 
 const useLayoutEffect =
   typeof window !== 'undefined' ? useClientLayoutEffect : () => {};
@@ -606,13 +605,7 @@ export default function Channel({
                 ) : (
                   <>
                     {!currentUser && !currentCommunity.communityInviteUrl && (
-                      <MessageFormJoinLinen
-                        api={api}
-                        currentCommunity={currentCommunity}
-                        settings={settings}
-                        startSignUp={startSignUp}
-                        isAuthenticated={!!permissions.auth?.id}
-                      />
+                      <></>
                     )}
                     {currentUser && !currentCommunity.communityInviteUrl && (
                       <Chat

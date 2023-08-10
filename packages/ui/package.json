@@ -143,7 +143,6 @@
     "./MembersView": "./dist/MembersView/index.js",
     "./Message": "./dist/Message/index.js",
     "./MessageForm": "./dist/MessageForm/index.js",
-    "./MessageFormJoinLinen": "./dist/MessageFormJoinLinen/index.js",
     "./MessagePreview": "./dist/MessagePreview/index.js",
     "./MetricsView": "./dist/MetricsView/index.js",
     "./Modal": "./dist/Modal/index.js",
@@ -424,9 +423,6 @@
       ],
       "MessageForm": [
         "./dist/MessageForm/index.d.ts"
-      ],
-      "MessageFormJoinLinen": [
-        "./dist/MessageFormJoinLinen/index.d.ts"
       ],
       "MessagePreview": [
         "./dist/MessagePreview/index.d.ts"
