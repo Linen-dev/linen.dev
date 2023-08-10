@@ -201,6 +201,7 @@ model accounts {
   anonymize               AnonymizeType @default(NONE)
   newChannelsConfig       String        @default("NOT_HIDDEN")
   redirectDomainPropagate Boolean?
+  searchSettings          String?
 
   auths                 auths[]
   users                 users[]

@@ -62,7 +62,18 @@ export interface SerializedAccount {
   communityUrl?: string;
   newChannelsConfig: string;
   redirectDomainPropagate?: boolean;
+  search?: SerializedSearchSettings;
 }
+
+export type SerializedSearchSettings = {
+  engine: 'typesense';
+  apiKey: string;
+  scope: 'public' | 'private';
+  indexName: string;
+  apiKeyId: number;
+  apiKeyExpiresAt: number;
+  lastSync?: number;
+};
 
 export interface Permissions {
   access: boolean;

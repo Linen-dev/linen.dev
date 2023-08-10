@@ -1,4 +1,8 @@
-import { CommunityType, SerializedAccount } from '@linen/types';
+import {
+  CommunityType,
+  SerializedAccount,
+  SerializedSearchSettings,
+} from '@linen/types';
 
 function identifyCommunity(account: any) {
   if (account.slackAuthorizations?.length) {
@@ -24,6 +28,14 @@ function hasAuthFn(account: any) {
     return true;
   }
   return false;
+}
+
+function tc<T>(fn: () => T) {
+  try {
+    return fn();
+  } catch (error) {
+    return null;
+  }
 }
 
 export function serializeAccount(account?: any): SerializedAccount {
@@ -52,10 +64,12 @@ export function serializeAccount(account?: any): SerializedAccount {
     communityUrl,
     newChannelsConfig,
     redirectDomainPropagate,
+    searchSettings,
   } = account;
 
   const communityType = identifyCommunity(account);
   const hasAuth = hasAuthFn(account);
+  const search: SerializedSearchSettings = tc(() => JSON.parse(searchSettings));
 
   return {
     description,
@@ -84,5 +98,6 @@ export function serializeAccount(account?: any): SerializedAccount {
     communityUrl,
     newChannelsConfig,
     redirectDomainPropagate,
+    search,
   };
 }

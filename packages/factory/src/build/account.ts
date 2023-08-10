@@ -32,6 +32,7 @@ export default function createAccount(options?: Partial<accounts>): accounts {
     newChannelsConfig: 'NOT_HIDDEN',
     redirectDomainPropagate: null,
     updatedAt: null,
+    searchSettings: null,
     ...options,
   };
 }
