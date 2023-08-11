@@ -24,6 +24,7 @@
     "@linen/types": "*",
     "@linen/utilities": "*",
     "@linen/web": "*",
+    "@linen/typesense": "*",
     "axios": "^0.27.2",
     "graphile-worker": "^0.13.0"
   },

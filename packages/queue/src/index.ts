@@ -15,6 +15,8 @@ import { discordIntegration } from './tasks/discord-integration';
 import { removeCommunity } from './tasks/remove-community';
 import { buildFeed, createFeedJob } from './tasks/build-feed';
 import { checkPropagation } from './tasks/custom-domain-propagate';
+import { typesenseSetup } from './tasks/typesense-setup';
+import { typesenseDump } from './tasks/typesense-dump';
 
 export type TaskInterface = (
   payload: any,
@@ -56,6 +58,8 @@ async function runWorker() {
       sitemap,
       buildFeed,
       checkPropagation,
+      typesenseSetup,
+      typesenseDump,
     },
     parsedCronItems: parseCronItems([
       {
