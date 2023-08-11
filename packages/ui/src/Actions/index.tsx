@@ -287,9 +287,10 @@ export default function Actions({
               incrementId: thread.incrementId,
               slug: thread.slug,
               messageId: message.id,
-              LINEN_URL: process.env.DEVELOPMENT
-                ? 'http://localhost:3000'
-                : 'https://www.linen.dev',
+              LINEN_URL:
+                process.env.NODE_ENV === 'development'
+                  ? 'http://localhost:3000'
+                  : 'https://www.linen.dev',
             });
             event.stopPropagation();
             event.preventDefault();
