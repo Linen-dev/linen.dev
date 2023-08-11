@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
-import { prisma } from '@linen/database';
+import { ChatType, prisma } from '@linen/database';
 import UsersService from 'services/users';
 import Session from 'services/session';
 import { normalize } from '@linen/utilities/string';
@@ -10,12 +10,31 @@ import { z } from 'zod';
 import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
 import { cors, preflight } from 'utilities/cors';
 import { eventUserJoin } from 'services/events/eventUserJoin';
+import ThreadsService from 'services/threads';
+import MessagesService from 'services/messages';
 
 const createSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
   accountId: z.string().uuid().optional(),
   displayName: z.string().min(1).optional(),
+  thread: z
+    .optional(
+      z.object({
+        body: z.string().min(1),
+        channelId: z.string().uuid(),
+      })
+    )
+    .or(z.null()),
+  message: z.optional(
+    z
+      .object({
+        body: z.string().min(1),
+        channelId: z.string().uuid(),
+        threadId: z.string().uuid(),
+      })
+      .or(z.null())
+  ),
 });
 
 async function create(request: NextApiRequest, response: NextApiResponse) {
@@ -33,7 +52,8 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
     });
   }
 
-  const { email, password, accountId, displayName } = requestBody.data;
+  const { email, password, accountId, displayName, thread, message } =
+    requestBody.data;
 
   const auth = await prisma.auths.findFirst({ where: { email } });
   if (auth) {
@@ -47,12 +67,36 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
   });
 
   if (accountId) {
-    await joinCommunity({
+    const { account, user } = await joinCommunity({
       accountId,
       newAuthId: newAuth.id,
       displayName,
       email,
     });
+    if (user && account && account.chat === ChatType.MEMBERS) {
+      if (thread) {
+        await ThreadsService.create({
+          ...thread,
+          authorId: user.id,
+          accountId,
+        });
+        await trackApiEvent(
+          { req: { ...request, user: newAuth }, res: response },
+          ApiEvent.sign_up_new_thread
+        );
+      }
+      if (message) {
+        await MessagesService.create({
+          ...message,
+          userId: user.id,
+          accountId,
+        });
+        await trackApiEvent(
+          { req: { ...request, user: newAuth }, res: response },
+          ApiEvent.sign_up_new_message
+        );
+      }
+    }
   }
 
   try {
@@ -68,6 +112,14 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
     .status(200)
     .json({ message: 'Account created, please sign in!' });
 }
+
+async function createThread({
+  body,
+  channelId,
+}: {
+  body: string;
+  channelId: string;
+}) {}
 
 async function joinCommunity({
   accountId,
@@ -98,7 +150,9 @@ async function joinCommunity({
       },
     });
     await eventUserJoin({ userId: newUser.id });
+    return { account, user: newUser };
   }
+  return { account };
 }
 
 async function update(req: NextApiRequest, res: NextApiResponse) {

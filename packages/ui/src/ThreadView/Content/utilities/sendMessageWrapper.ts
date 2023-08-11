@@ -7,6 +7,7 @@ import {
   SerializedThread,
   SerializedUser,
 } from '@linen/types';
+import { localStorage } from '@linen/utilities/storage';
 
 export function sendMessageWrapper({
   currentUser,
@@ -35,22 +36,13 @@ export function sendMessageWrapper({
     threadId: string;
   }) => {
     if (!currentUser) {
+      localStorage.set('signup.message', {
+        body: message,
+        channelId,
+        threadId,
+      });
       startSignUp?.({
         communityId: currentCommunity.id,
-        onSignIn: {
-          run: sendMessageWrapper,
-          init: {
-            currentCommunity,
-            allUsers,
-            setThread,
-            createMessage,
-          },
-          params: {
-            message,
-            channelId,
-            threadId,
-          },
-        },
       });
       return;
     }

@@ -8,6 +8,7 @@ import {
 } from '@linen/types';
 import { scrollToBottom } from '@linen/utilities/scroll';
 import { createThreadImitation } from '@linen/serializers/thread';
+import { localStorage } from '@linen/utilities/storage';
 
 export function sendMessageWrapper({
   currentUser,
@@ -42,6 +43,10 @@ export function sendMessageWrapper({
     channelId: string;
   }) => {
     if (!currentUser) {
+      localStorage.set('signup.thread', {
+        body: message,
+        channelId,
+      });
       startSignUp?.({
         communityId: currentCommunity.id,
       });
