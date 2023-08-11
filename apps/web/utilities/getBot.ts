@@ -1,8 +1,66 @@
+const botList = [
+  'AdsBot-Google',
+  'AhrefsBot',
+  'Amazonbot',
+  'Apache-HttpClient',
+  'applebot',
+  'baiduspider',
+  'Barkrowler',
+  'bingbot',
+  'Bingbot',
+  'BingPreview',
+  'bitlybot',
+  'Bytespider',
+  'CensysInspect',
+  'Chrome-Lighthouse',
+  'DataForSeoBot',
+  'Discordbot',
+  'DotBot',
+  'DuckDuckBot',
+  'DuckDuckGo-Favicons-Bot',
+  'Embedly',
+  'facebookcatalog',
+  'facebookexternalhit',
+  'FeedlyApp',
+  'Google-InspectionTool',
+  'Google-PageRenderer',
+  'Googlebot',
+  'googleweblight',
+  'Grammarly',
+  'HeadlessChrome',
+  'HubSpot Crawler',
+  'ia_archiver',
+  'InternetMeasurement',
+  'LinkedInBot',
+  'Mediapartners-Google',
+  'MJ12bot',
+  'MojeekBot',
+  'PetalBot',
+  'quora link preview',
+  'redditbot',
+  'SemrushBot',
+  'SeznamBot',
+  'SiteAuditBot',
+  'SkypeUriPreview',
+  'Slackbot',
+  'Slurp',
+  'sogou',
+  'Storebot-Google',
+  'tumblr',
+  'Twitterbot',
+  'VelenPublicWebCrawler',
+  'vkShare',
+  'WhatsApp',
+  'yandex',
+  'YandexBot',
+  'YouBot',
+  'ZoominfoBot',
+];
+
+const regex = new RegExp(botList.join('|'), 'i');
+
 export function getBot(input: string): string | undefined {
-  const result =
-    /Googlebot|Mediapartners-Google|Bytespider|Chrome-Lighthouse|HubSpot Crawler|Amazonbot|MJ12bot|DotBot|SemrushBot|Barkrowler|SeznamBot|YouBot|HeadlessChrome|CensysInspect|DuckDuckGo-Favicons-Bot|FeedlyApp|InternetMeasurement|Grammarly|MojeekBot|ZoominfoBot|Embedly|PetalBot|AhrefsBot|AdsBot-Google|googleweblight|Storebot-Google|Google-PageRenderer|Google-InspectionTool|Bingbot|BingPreview|Slurp|DuckDuckBot|baiduspider|yandex|sogou|LinkedInBot|bitlybot|tumblr|vkShare|quora link preview|facebookexternalhit|facebookcatalog|Twitterbot|applebot|redditbot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|ia_archiver/i.exec(
-      input
-    );
+  const result = regex.exec(input);
   return result?.length ? result.at(0) : undefined;
 }
 
