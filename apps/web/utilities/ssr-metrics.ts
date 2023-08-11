@@ -96,7 +96,7 @@ export const trackPageView = async (
 ) => {
   const distinctId = identifyUserSession(context);
   const url = identifyUrl(context);
-  const headers = context.req.headers;
+  const headers = context.req.headers || {};
   const userAgentInfo = getUserAgentInfo(headers['user-agent']);
   const ipInfo = getIp(headers);
 
@@ -133,6 +133,8 @@ export enum ApiEvent {
   'sign_in' = 'sign_in',
   'sign_up' = 'sign_up',
   'sign_out' = 'sign_out',
+  'sign_up_new_thread' = 'sign_up_new_thread',
+  'sign_up_new_message' = 'sign_up_new_message',
   'user_create_community' = 'user_create_community',
 }
 /**
@@ -147,7 +149,7 @@ export const trackApiEvent = (
 ) => {
   const distinctId = identifyUserSession({ req, res });
   const url = identifyUrl({ req });
-  const headers = req.headers;
+  const headers = req.headers || {};
   const userAgentInfo = getUserAgentInfo(headers['user-agent']);
   const ipInfo = getIp(headers);
 

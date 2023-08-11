@@ -1,6 +1,7 @@
 import { getCsrfToken } from '@linen/auth/client';
 import { qs } from '@linen/utilities/url';
 import { SignInMode } from '@linen/types';
+import { localStorage } from '@linen/utilities/storage';
 
 async function signInWithCreds(
   email: string,
@@ -192,6 +193,10 @@ export function onSignUpWithCredsSubmit({
     }
     try {
       setLoading(true);
+      const thread = localStorage.get('signup.thread');
+      const message = localStorage.get('signup.message');
+      localStorage.remove('signup.thread');
+      localStorage.remove('signup.message');
       const signUpResponse = await fetch('/api/signup', {
         method: 'POST',
         body: JSON.stringify({
@@ -203,6 +208,8 @@ export function onSignUpWithCredsSubmit({
           ...(!!form.displayName.value && {
             displayName: form.displayName.value,
           }),
+          thread,
+          message,
         }),
       });
       if (!signUpResponse.ok) {

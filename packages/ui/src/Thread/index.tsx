@@ -284,7 +284,7 @@ export default function Thread({
             )}
           </div>
         </div>
-        {permissions.chat && (
+        {(permissions.chat || !currentUser) && (
           <div className={styles.chat}>
             {manage && state === ThreadState.OPEN ? (
               <MessageForm
