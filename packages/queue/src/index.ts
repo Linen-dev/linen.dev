@@ -16,8 +16,12 @@ import { removeCommunity } from './tasks/remove-community';
 import { buildFeed, createFeedJob } from './tasks/build-feed';
 import { checkPropagation } from './tasks/custom-domain-propagate';
 import { cleanupUserThreadStatusTask } from './tasks/cleanup-user-thread-status';
-import { typesenseSetup } from './tasks/typesense-setup';
-import { typesenseDump } from './tasks/typesense-dump';
+import {
+  typesenseSetup,
+  typesenseDump,
+  typesenseSyncAll,
+  typesenseSync,
+} from './tasks/typesense';
 
 export type TaskInterface = (
   payload: any,
@@ -63,6 +67,8 @@ async function runWorker() {
       checkPropagation,
       typesenseSetup,
       typesenseDump,
+      typesenseSync,
+      typesenseSyncAll,
     },
     parsedCronItems: parseCronItems([
       {

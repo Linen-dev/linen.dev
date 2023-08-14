@@ -5,9 +5,9 @@ export const client = new Typesense.Client({
   nodes: [
     {
       host: env.NEXT_PUBLIC_TYPESENSE_HOST,
-      port: 443,
+      port: env.isProd ? 443 : 8108,
       path: '',
-      protocol: 'https',
+      protocol: env.isProd ? 'https' : 'http',
     },
   ],
   apiKey: env.TYPESENSE_ADMIN,

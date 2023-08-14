@@ -1,8 +1,11 @@
-import { client } from './client';
 import { prisma } from '@linen/database';
-import { serializer } from './serializer';
-import { serializeThread } from '@linen/serializers/thread';
-import type { Logger, SerializedSearchSettings } from '@linen/types';
+import type { Logger } from '@linen/types';
+import {
+  getAccountSettings,
+  getQuery,
+  mapAndPersist,
+  persistEndFlag,
+} from './shared';
 
 export async function dump({
   accountId,
@@ -11,55 +14,16 @@ export async function dump({
   accountId: string;
   logger: Logger;
 }) {
-  const account = await prisma.accounts.findUnique({
-    where: {
-      id: accountId,
-    },
-  });
-
-  if (!account) {
-    throw new Error(`account not found: ${accountId}`);
-  }
-
-  if (!account.searchSettings) {
-    throw new Error(`missing searchSettings: ${accountId}`);
-  }
-
-  const searchSettings: SerializedSearchSettings = JSON.parse(
-    account.searchSettings
-  );
-
+  const searchSettings = await getAccountSettings(accountId);
   let cursor = 0;
   do {
+    const defaultQuery = getQuery(accountId);
     const threads = await prisma.threads.findMany({
-      include: {
-        messages: {
-          include: {
-            author: true,
-            mentions: {
-              include: {
-                users: true,
-              },
-            },
-            reactions: true,
-            attachments: true,
-          },
-          orderBy: { sentAt: 'asc' },
-        },
-        channel: true,
-      },
+      ...defaultQuery,
       where: {
-        channel: {
-          account: { id: accountId },
-          hidden: false,
-          type: 'PUBLIC',
-        },
+        ...defaultQuery.where,
         incrementId: { gt: cursor },
-        hidden: false,
-        messageCount: { gt: 0 },
       },
-      orderBy: { incrementId: 'asc' },
-      take: 300,
     });
 
     if (!threads.length) {
@@ -68,26 +32,9 @@ export async function dump({
 
     cursor = threads.at(threads.length - 1)?.incrementId!;
 
-    const documents = threads.map((t) => serializer(serializeThread(t)));
-
-    await client
-      .collections(searchSettings.indexName)
-      .documents()
-      .import(documents, { action: 'upsert' })
-      .catch((error: any) => {
-        logger.error(
-          error.importResults.filter((result: any) => !result.success)
-        );
-      });
+    await mapAndPersist(threads, searchSettings, logger);
   } while (true);
 
   // set cursor for next sync job
-  searchSettings.lastSync = new Date().getTime();
-  // persist
-  await prisma.accounts.update({
-    where: { id: accountId },
-    data: {
-      searchSettings: JSON.stringify(searchSettings),
-    },
-  });
+  await persistEndFlag(searchSettings, accountId);
 }

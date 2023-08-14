@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npx tsx watch src/index.ts",
+    "dev": "dotenv -e ../../.env tsx watch src/index.ts",
     "build": "node build.mjs",
     "postbuild": "tsc",
     "start:prod": "pm2-runtime start ecosystem.config.js --only \"queue\"",

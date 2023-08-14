@@ -7,9 +7,9 @@ const defaultConfiguration = {
     nodes: [
       {
         host: process.env.NEXT_PUBLIC_TYPESENSE_HOST!,
-        port: 443,
+        port: isProd() ? 443 : 8108,
         path: '',
-        protocol: 'https',
+        protocol: isProd() ? 'https' : 'http',
       },
     ],
     cacheSearchResultsForSeconds: 2 * 60,
@@ -32,6 +32,10 @@ export const searchClient = (apiKey: string) => {
   });
   return typesenseInstantsearchAdapter.searchClient;
 };
+
+function isProd() {
+  return process.env.NODE_ENV === 'production';
+}
 
 export function analyticsMiddleware() {
   const sendEventDebounced = debounce(() => {

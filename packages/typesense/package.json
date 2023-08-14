@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "tsx": "dotenv -e .env -e ../../.env tsx",
+    "tsx": "dotenv -e ../../.env tsx",
     "prebuild": "rimraf dist",
     "build": "tsc"
   },
@@ -16,7 +16,6 @@
     "@linen/database": "*",
     "@linen/serializers": "*",
     "@linen/types": "*",
-    "dotenv-cli": "^7.2.1",
     "envalid": "^7.3.1",
     "typesense": "^1.5.4"
   },
