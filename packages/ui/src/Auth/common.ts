@@ -9,12 +9,18 @@ async function signInWithCreds(
   csrfToken: string,
   sso?: string
 ) {
+  const thread = localStorage.get('nouser.thread');
+  const message = localStorage.get('nouser.message');
+  localStorage.remove('nouser.thread');
+  localStorage.remove('nouser.message');
   return await fetch(`/api/auth/callback/credentials?${qs({ sso })}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       username: String(email).toLowerCase(),
       password,
+      thread,
+      message,
       csrfToken,
     }),
   }).then((r) => {
