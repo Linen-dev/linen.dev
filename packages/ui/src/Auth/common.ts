@@ -33,10 +33,10 @@ async function signInWithMagicLink(
     sso?: string;
   } = {}
 ) {
-  const thread = localStorage.get('signup.thread');
-  const message = localStorage.get('signup.message');
-  localStorage.remove('signup.thread');
-  localStorage.remove('signup.message');
+  const thread = localStorage.get('nouser.thread');
+  const message = localStorage.get('nouser.message');
+  localStorage.remove('nouser.thread');
+  localStorage.remove('nouser.message');
   return await fetch(`/api/auth/magic-link`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -199,10 +199,10 @@ export function onSignUpWithCredsSubmit({
     }
     try {
       setLoading(true);
-      const thread = localStorage.get('signup.thread');
-      const message = localStorage.get('signup.message');
-      localStorage.remove('signup.thread');
-      localStorage.remove('signup.message');
+      const thread = localStorage.get('nouser.thread');
+      const message = localStorage.get('nouser.message');
+      localStorage.remove('nouser.thread');
+      localStorage.remove('nouser.message');
       const signUpResponse = await fetch('/api/signup', {
         method: 'POST',
         body: JSON.stringify({

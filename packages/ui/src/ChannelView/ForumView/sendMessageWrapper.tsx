@@ -43,7 +43,7 @@ export function sendMessageWrapper({
     channelId: string;
   }) => {
     if (!currentUser) {
-      localStorage.set('signup.thread', {
+      localStorage.set('nouser.thread', {
         body: message,
         channelId,
       });
