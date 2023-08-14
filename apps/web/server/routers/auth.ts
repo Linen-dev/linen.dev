@@ -63,7 +63,7 @@ const authRouter = CreateRouter({
       provider: 'github',
     });
   },
-  onMagicLinkLogin: async (req, res, payload) => {
+  onMagicLinkLogin: async (req, res, payload: any) => {
     const state = payload.state;
     const displayName = normalize(
       payload.displayName || payload.email.split('@').shift() || payload.email

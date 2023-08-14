@@ -78,12 +78,7 @@ export default function InvitePage({
             onClick={() => {
               startSignUp({
                 communityId: currentCommunity.id,
-                onSignIn: {
-                  run() {},
-                  init: {},
-                  params: {},
-                  redirectUrl: getHomeUrl(currentCommunity),
-                },
+                redirectUrl: getHomeUrl(currentCommunity),
               });
             }}
           >
