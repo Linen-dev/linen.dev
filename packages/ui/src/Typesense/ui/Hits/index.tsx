@@ -66,17 +66,17 @@ export function Hits({
             api={{ threadIncrementView: () => {} } as any}
             channelId={preview.channelId}
             channelName={preview.channel?.channelName!}
-            currentUser={undefined as any}
-            fetchMentions={undefined as any}
-            isSubDomainRouting
-            onMessage={undefined as any}
+            currentUser={null}
+            fetchMentions={async () => []}
+            isSubDomainRouting={false}
+            onMessage={() => {}}
             permissions={{} as any}
-            sendMessage={undefined as any}
+            sendMessage={async () => {}}
             settings={settings}
             thread={preview}
-            token={undefined as any}
-            updateThread={undefined as any}
-            useUsersContext={undefined as any}
+            token={null}
+            updateThread={() => {}}
+            useUsersContext={() => [[], () => {}]}
             expanded
             classContainer={styles.threadContainer}
             breadcrumb={
