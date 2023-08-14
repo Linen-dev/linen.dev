@@ -41,7 +41,7 @@ export function sendThreadMessageWrapper({
     threadId: string;
   }) => {
     if (!currentUser) {
-      localStorage.set('signup.message', {
+      localStorage.set('nouser.message', {
         body: message,
         channelId,
         threadId,
