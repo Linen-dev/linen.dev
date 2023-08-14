@@ -1,5 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { InstantSearch, Pagination, Stats } from 'react-instantsearch';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
+import {
+  InstantSearch,
+  Pagination,
+  Stats,
+  useInstantSearch,
+} from 'react-instantsearch';
 import styles from './index.module.scss';
 import { SearchBox } from './SearchBox';
 import { Hits } from './Hits';
@@ -16,12 +21,14 @@ export function TypesenseSearch({
   searchClient,
   settings,
   routing,
+  middlewares,
 }: {
   apiKey: string;
   indexName: string;
   searchClient: (apiKey: string) => any;
   settings: Settings;
   routing?: any;
+  middlewares?: any[];
 }) {
   const [open, setOpen] = useState<boolean>(false);
 
@@ -58,6 +65,7 @@ export function TypesenseSearch({
           searchClient={searchClient(apiKey)}
           routing={routing}
         >
+          {middlewares?.length && <Middleware middlewares={middlewares} />}
           <div className={styles.searchBar}>
             <SearchBox placeholder="Search" autoFocus />
             <div className={styles.x}>
@@ -83,4 +91,14 @@ export function TypesenseSearch({
       </Modal>
     </div>
   );
+}
+
+function Middleware({ middlewares }: { middlewares: any[] }) {
+  const { addMiddlewares } = useInstantSearch();
+
+  useLayoutEffect(() => {
+    return addMiddlewares(...middlewares);
+  }, []);
+
+  return null;
 }

@@ -42,6 +42,7 @@ interface Props {
   typesense?: {
     searchClient: (apiKey: string) => any;
     routing: any;
+    middlewares?: any[];
   };
 }
 
@@ -100,6 +101,7 @@ export default function Header({
           searchClient={typesense.searchClient}
           settings={settings}
           routing={typesense.routing}
+          middlewares={typesense.middlewares}
         />
       ) : (
         <SearchBar

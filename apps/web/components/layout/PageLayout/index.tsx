@@ -27,7 +27,7 @@ import { notify } from 'utilities/notification';
 import { getHomeUrl } from '@linen/utilities/home';
 import CustomRouterPush from 'components/Link/CustomRouterPush';
 import { useJoinContext } from 'contexts/Join';
-import { searchClient } from 'utilities/typesenseClient';
+import { analyticsMiddleware, searchClient } from 'utilities/typesenseClient';
 import { createInstantSearchRouterNext } from 'react-instantsearch-router-nextjs';
 
 interface Props {
@@ -142,7 +142,11 @@ function PageLayout({
           usePath={usePath}
           routerAsPath={router.asPath}
           handleSelect={handleSelect}
-          typesense={{ searchClient, routing }}
+          typesense={{
+            searchClient,
+            routing,
+            middlewares: [analyticsMiddleware],
+          }}
         />
       </div>
       {seo && (

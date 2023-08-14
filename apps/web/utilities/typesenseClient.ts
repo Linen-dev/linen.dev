@@ -1,4 +1,5 @@
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
+import debounce from '@linen/utilities/debounce';
 
 const defaultConfiguration = {
   server: {
@@ -31,3 +32,20 @@ export const searchClient = (apiKey: string) => {
   });
   return typesenseInstantsearchAdapter.searchClient;
 };
+
+export function analyticsMiddleware() {
+  const sendEventDebounced = debounce(() => {
+    const url = new URL(window.location.toString());
+    (window as any).posthog?.capture('search', {
+      url: url.toJSON(),
+    });
+  }, 3000);
+
+  return {
+    onStateChange() {
+      sendEventDebounced();
+    },
+    subscribe() {},
+    unsubscribe() {},
+  };
+}
