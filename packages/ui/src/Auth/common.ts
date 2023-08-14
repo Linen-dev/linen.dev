@@ -33,12 +33,18 @@ async function signInWithMagicLink(
     sso?: string;
   } = {}
 ) {
+  const thread = localStorage.get('signup.thread');
+  const message = localStorage.get('signup.message');
+  localStorage.remove('signup.thread');
+  localStorage.remove('signup.message');
   return await fetch(`/api/auth/magic-link`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       destination: String(email).toLowerCase(),
       csrfToken,
+      thread,
+      message,
       ...options,
     }),
   }).then((r) => {

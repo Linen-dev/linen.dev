@@ -135,6 +135,8 @@ export enum ApiEvent {
   'sign_out' = 'sign_out',
   'sign_up_new_thread' = 'sign_up_new_thread',
   'sign_up_new_message' = 'sign_up_new_message',
+  'magic_link_new_thread' = 'magic_link_new_thread',
+  'magic_link_new_message' = 'magic_link_new_message',
   'user_create_community' = 'user_create_community',
 }
 /**
