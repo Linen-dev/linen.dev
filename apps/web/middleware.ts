@@ -18,8 +18,9 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.rewrite(url.toString());
   }
   if (isBadBot(userAgent)) {
-    url.pathname = `/bot`;
-    return NextResponse.rewrite(url.toString());
+    const host =
+      process.env.NODE_ENV === 'production' ? 'www.linen.dev' : url.hostname;
+    return NextResponse.rewrite(`${url.protocol}://${host}/bot`);
   }
 
   const { pathname } = request.nextUrl; // get pathname of request (e.g. /blog-slug)
