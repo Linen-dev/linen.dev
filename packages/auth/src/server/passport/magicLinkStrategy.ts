@@ -52,21 +52,13 @@ export function magicLinkStrategy({
     // In standard passport fashion, call callback with the error as the first argument (if there was one)
     // and the user data as the second argument!
     verify: (payload, callback) => {
-      const callbackUrl = payload.callbackUrl;
-      const state = payload.state;
-      const displayName = payload.displayName;
-      const sso = payload.sso;
-
       // Get or create a user with the provided email from the database
       getOrCreateAuthWithEmail(payload.destination)
         .then((user) => {
           callback(null, {
             id: user.id,
             email: user.email,
-            callbackUrl,
-            state,
-            displayName,
-            sso,
+            ...payload,
           });
         })
         .catch((err) => {
