@@ -66,11 +66,11 @@ export function Hits({
             api={{ threadIncrementView: () => {} } as any}
             channelId={preview.channelId}
             channelName={preview.channel?.channelName!}
-            currentUser={null}
+            currentUser={{} as any}
             fetchMentions={async () => []}
             isSubDomainRouting={false}
             onMessage={() => {}}
-            permissions={{} as any}
+            permissions={{ chat: false } as any}
             sendMessage={async () => {}}
             settings={settings}
             thread={preview}
