@@ -339,17 +339,19 @@ export async function joinCommunityAfterSignIn({
   if (!permissions.access) {
     throw new Unauthorized();
   }
-  const exist = await findUser(communityId, authId);
-  if (!exist) {
-    const user = await createUser({
-      accountId: communityId,
-      authId,
-      displayName,
-      profileImageUrl,
-    });
-    await createChannelMemberships(communityId, user.id);
-  }
   await checkoutTenant(authId, communityId);
+  const record = await findUser(communityId, authId);
+  if (record) {
+    return record;
+  }
+  const user = await createUser({
+    accountId: communityId,
+    authId,
+    displayName,
+    profileImageUrl,
+  });
+  await createChannelMemberships(communityId, user.id);
+  return user;
 }
 
 export async function inviteNewMembers({

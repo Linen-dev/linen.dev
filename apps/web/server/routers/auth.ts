@@ -7,6 +7,8 @@ import {
   magicLinkStrategy,
   passport,
 } from '../auth';
+import { prisma } from '@linen/database';
+import { ChatType } from '@linen/types';
 import jwtMiddleware from 'server/middlewares/jwt';
 import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
 import { normalize } from '@linen/utilities/string';
@@ -16,6 +18,8 @@ import {
   joinCommunityAfterSignIn,
 } from 'services/invites';
 import { createSsoSession, getSsoSession } from 'services/sso';
+import ThreadsService from 'services/threads';
+import MessagesService from 'services/messages';
 
 async function acceptInvites(userEmail: string) {
   // accept invites
@@ -59,21 +63,50 @@ const authRouter = CreateRouter({
       provider: 'github',
     });
   },
-  onMagicLinkLogin: async (req, res, user) => {
-    const state = user.state;
+  onMagicLinkLogin: async (req, res, payload) => {
+    const state = payload.state;
     const displayName = normalize(
-      user.displayName || user.email.split('@').shift() || user.email
+      payload.displayName || payload.email.split('@').shift() || payload.email
     );
-    await acceptInvites(user.email);
+    await acceptInvites(payload.email);
     if (state) {
-      // join community
-      await joinCommunityAfterSignIn({
-        request: req,
-        response: res,
-        communityId: state,
-        authId: user.id,
-        displayName,
+      const account = await prisma.accounts.findUnique({
+        where: { id: state },
       });
+      if (account) {
+        const user = await joinCommunityAfterSignIn({
+          request: req,
+          response: res,
+          communityId: account.id,
+          authId: payload.id,
+          displayName,
+        });
+        if (user && account && account.chat === ChatType.MEMBERS) {
+          const { thread, message } = payload;
+          if (thread) {
+            await ThreadsService.create({
+              ...thread,
+              authorId: user.id,
+              accountId: account.id,
+            });
+            await trackApiEvent(
+              { req: { ...req, user }, res },
+              ApiEvent.magic_link_new_thread
+            );
+          }
+          if (message) {
+            await MessagesService.create({
+              ...message,
+              userId: user.id,
+              accountId: account.id,
+            });
+            await trackApiEvent(
+              { req: { ...req, user }, res },
+              ApiEvent.magic_link_new_message
+            );
+          }
+        }
+      }
     }
     await trackApiEvent({ req, res }, ApiEvent.sign_in, {
       provider: 'magic-link',
