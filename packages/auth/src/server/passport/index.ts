@@ -5,7 +5,7 @@ import { githubStrategy } from './githubStrategy';
 
 type Props = {
   authorize: (username: string, password: string) => Promise<any>;
-  getOrCreateUserWithEmail: (email: string) => Promise<{
+  getOrCreateAuthWithEmail: (email: string) => Promise<{
     id: string;
     email: string;
   }>;
@@ -18,7 +18,7 @@ type Props = {
 
 export default function Passport({
   authorize,
-  getOrCreateUserWithEmail,
+  getOrCreateAuthWithEmail,
   secret,
   sendEmail,
   authServerUrl,
@@ -27,7 +27,7 @@ export default function Passport({
 }: Props) {
   passport.use(localStrategy({ authorize }));
   const magicStrategy = magicLinkStrategy({
-    getOrCreateUserWithEmail,
+    getOrCreateAuthWithEmail,
     secret,
     sendEmail,
   });
@@ -39,7 +39,7 @@ export default function Passport({
         authServerUrl,
         clientID: githubClientID,
         clientSecret: githubClientSecret,
-        getOrCreateUserWithEmail,
+        getOrCreateAuthWithEmail,
       })
     );
   }

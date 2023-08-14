@@ -87,7 +87,7 @@ export default class UsersService {
     }
     return null;
   }
-  static async getOrCreateUserWithEmail(email: string) {
+  static async getOrCreateAuthWithEmail(email: string) {
     const auth = await prisma.auths.findUnique({ where: { email } });
     if (auth) return auth;
 

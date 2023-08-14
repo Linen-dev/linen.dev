@@ -4,7 +4,7 @@ import { magicLinkExpiration } from '../constraints';
 
 type Props = {
   secret: string;
-  getOrCreateUserWithEmail: (email: string) => Promise<{
+  getOrCreateAuthWithEmail: (email: string) => Promise<{
     id: string;
     email: string;
   }>;
@@ -13,7 +13,7 @@ type Props = {
 
 export function magicLinkStrategy({
   secret,
-  getOrCreateUserWithEmail,
+  getOrCreateAuthWithEmail,
   sendEmail,
 }: Props) {
   return new MagicLoginStrategy({
@@ -58,7 +58,7 @@ export function magicLinkStrategy({
       const sso = payload.sso;
 
       // Get or create a user with the provided email from the database
-      getOrCreateUserWithEmail(payload.destination)
+      getOrCreateAuthWithEmail(payload.destination)
         .then((user) => {
           callback(null, {
             id: user.id,
