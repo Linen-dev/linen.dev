@@ -5,7 +5,7 @@ import SignInMailer from 'mailers/SignInMailer';
 const { githubSignIn, loginPassport, magicLink, passport, magicLinkStrategy } =
   Passport({
     authorize: UsersService.authorize,
-    getOrCreateUserWithEmail: UsersService.getOrCreateUserWithEmail,
+    getOrCreateAuthWithEmail: UsersService.getOrCreateAuthWithEmail,
     sendEmail: SignInMailer.send,
     authServerUrl: process.env.NEXTAUTH_URL!,
     githubClientID: process.env.AUTH_GITHUB_ID!,

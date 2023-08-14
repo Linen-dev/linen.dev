@@ -1,7 +1,7 @@
 import GitHubStrategy from 'passport-github2';
 
 type Props = {
-  getOrCreateUserWithEmail: (
+  getOrCreateAuthWithEmail: (
     email: string
   ) => Promise<{ id: string; email: string }>;
   clientID: string;
@@ -10,7 +10,7 @@ type Props = {
 };
 
 export function githubStrategy({
-  getOrCreateUserWithEmail,
+  getOrCreateAuthWithEmail,
   clientID,
   clientSecret,
   authServerUrl,
@@ -41,7 +41,7 @@ export function githubStrategy({
           throw new Error('email not found');
         }
 
-        const auth = await getOrCreateUserWithEmail(user.email);
+        const auth = await getOrCreateAuthWithEmail(user.email);
 
         return cb(null, {
           ...user,
