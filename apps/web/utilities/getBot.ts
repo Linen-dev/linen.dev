@@ -1,37 +1,44 @@
-const botList = [
+const knownBot = [
   'AdsBot-Google',
-  'AhrefsBot',
   'Amazonbot',
-  'Apache-HttpClient',
+  'AhrefsBot',
   'applebot',
-  'baiduspider',
-  'Barkrowler',
   'bingbot',
   'Bingbot',
   'BingPreview',
-  'bitlybot',
-  'Bytespider',
-  'CensysInspect',
   'Chrome-Lighthouse',
-  'DataForSeoBot',
-  'Discordbot',
-  'DotBot',
   'DuckDuckBot',
   'DuckDuckGo-Favicons-Bot',
-  'Embedly',
   'facebookcatalog',
   'facebookexternalhit',
-  'FeedlyApp',
   'Google-InspectionTool',
   'Google-PageRenderer',
   'Googlebot',
   'googleweblight',
+  'LinkedInBot',
+  'Twitterbot',
+  'yandex',
+  'YandexBot',
+];
+
+const botList = [
+  'Apache-HttpClient',
+  'baiduspider',
+  'Barkrowler',
+  'bitlybot',
+  'Bytespider',
+  'curl',
+  'CensysInspect',
+  'DataForSeoBot',
+  'Discordbot',
+  'DotBot',
+  'Embedly',
+  'FeedlyApp',
   'Grammarly',
   'HeadlessChrome',
   'HubSpot Crawler',
   'ia_archiver',
   'InternetMeasurement',
-  'LinkedInBot',
   'Mediapartners-Google',
   'MJ12bot',
   'MojeekBot',
@@ -47,17 +54,14 @@ const botList = [
   'sogou',
   'Storebot-Google',
   'tumblr',
-  'Twitterbot',
   'VelenPublicWebCrawler',
   'vkShare',
   'WhatsApp',
-  'yandex',
-  'YandexBot',
   'YouBot',
   'ZoominfoBot',
 ];
 
-const regex = new RegExp(botList.join('|'), 'i');
+const regex = new RegExp([...knownBot, ...botList].join('|'), 'i');
 
 export function getBot(input: string): string | undefined {
   const result = regex.exec(input);
@@ -66,4 +70,14 @@ export function getBot(input: string): string | undefined {
 
 export function isBot(userAgent: string) {
   return !!getBot(userAgent);
+}
+
+const regexBadBots = new RegExp([...botList].join('|'), 'i');
+
+export function isBadBot(userAgent: string | null) {
+  if (!userAgent) {
+    return true;
+  }
+  const result = regexBadBots.exec(userAgent);
+  return !!(result?.length ? result.at(0) : undefined);
 }

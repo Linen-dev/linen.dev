@@ -1,6 +1,7 @@
 import { blocked } from 'utilities/blocked';
 import { NextRequest, NextResponse } from 'next/server';
 import { rewrite } from 'utilities/middlewareHelper';
+import { isBadBot } from 'utilities/getBot';
 
 export const config = {
   matcher: ['/((?!api|_next/static|pp|ph).*)'],
@@ -8,9 +9,16 @@ export const config = {
 
 export default async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone(); // clone the request url
+  const userAgent = request.headers.has('user-agent')
+    ? request.headers.get('user-agent')
+    : '';
 
   if (await blocked(request)) {
     url.pathname = `/500`;
+    return NextResponse.rewrite(url.toString());
+  }
+  if (isBadBot(userAgent)) {
+    url.pathname = `/bot`;
     return NextResponse.rewrite(url.toString());
   }
 
@@ -27,7 +35,7 @@ export default async function middleware(request: NextRequest) {
     hostname,
     pathname,
     url,
-    userAgent: request.headers.get('user-agent'),
+    userAgent,
   });
 
   if (res && !!res.rewrite) {

@@ -14,9 +14,19 @@ const errorMap = {
     message: 'Internal Server Error',
     subtitle: false,
   },
+  bot: {
+    message: 'Bot Detection',
+    subtitle:
+      'Our website utilizes a bot and crawler detection system to ensure the best experience for our human visitors. ' +
+      "Unfortunately, it appears that you've been flagged as a bot or crawler. " +
+      'If you are indeed a human user trying to access our website, we apologize for the inconvenience. ' +
+      'Please double-check your browser settings and ensure that any VPN or proxy is disabled. ' +
+      'If you believe this detection is in error, feel free to contact our support team for further assistance. ' +
+      'Thank you for your understanding.',
+  },
 };
 
-function Error(code: 404 | 403 | 500) {
+function Error(code: 404 | 403 | 500 | 'bot') {
   return (
     <div className={styles.errorView}>
       <div className={styles.errorViewWrapper}>
@@ -59,4 +69,8 @@ export function Error404() {
 
 export function Error500() {
   return Error(500);
+}
+
+export function ErrorBot() {
+  return Error('bot');
 }
