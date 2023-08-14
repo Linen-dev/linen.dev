@@ -2,16 +2,13 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import { ChatType, prisma } from '@linen/database';
 import UsersService from 'services/users';
 import Session from 'services/session';
-import { normalize } from '@linen/utilities/string';
-import { AccountType, Roles } from '@linen/types';
-import { generateRandomWordSlug } from '@linen/utilities/randomWordSlugs';
 import { eventSignUp } from 'services/events/eventNewSignUp';
 import { z } from 'zod';
 import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
 import { cors, preflight } from 'utilities/cors';
-import { eventUserJoin } from 'services/events/eventUserJoin';
 import ThreadsService from 'services/threads';
 import MessagesService from 'services/messages';
+import OnboardingService from 'services/onboarding';
 
 const createSchema = z.object({
   email: z.string().email(),
@@ -67,9 +64,9 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
   });
 
   if (accountId) {
-    const { account, user } = await joinCommunity({
+    const { account, user } = await OnboardingService.joinCommunity({
       accountId,
-      newAuthId: newAuth.id,
+      authId: newAuth.id,
       displayName,
       email,
     });
@@ -111,48 +108,6 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
   return response
     .status(200)
     .json({ message: 'Account created, please sign in!' });
-}
-
-async function createThread({
-  body,
-  channelId,
-}: {
-  body: string;
-  channelId: string;
-}) {}
-
-async function joinCommunity({
-  accountId,
-  newAuthId,
-  displayName,
-  email,
-}: {
-  accountId: string;
-  newAuthId: string;
-  displayName?: string;
-  email: string;
-}) {
-  const account = await prisma.accounts.findUnique({
-    where: { id: accountId },
-  });
-  if (account && account.type === AccountType.PUBLIC) {
-    const newUser = await prisma.users.create({
-      data: {
-        isAdmin: false,
-        isBot: false,
-        accountsId: accountId,
-        displayName: normalize(
-          displayName || email.split('@').shift() || email
-        ),
-        anonymousAlias: generateRandomWordSlug(),
-        role: Roles.MEMBER,
-        authsId: newAuthId,
-      },
-    });
-    await eventUserJoin({ userId: newUser.id });
-    return { account, user: newUser };
-  }
-  return { account };
 }
 
 async function update(req: NextApiRequest, res: NextApiResponse) {
