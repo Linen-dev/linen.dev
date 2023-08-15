@@ -503,6 +503,7 @@ export default function AllView({
                 if (!term) return Promise.resolve([]);
                 return api.fetchMentions(term, currentCommunity.id);
               }}
+              currentCommunity={currentCommunity}
               api={api}
               key={thread.id}
               thread={thread}

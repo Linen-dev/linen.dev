@@ -13,11 +13,12 @@ import TextInput from '@/TextInput';
 import { FiSearch } from '@react-icons/all-files/fi/FiSearch';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import Icon from '@/Icon';
-import { Settings } from '@linen/types';
+import { SerializedAccount, Settings } from '@linen/types';
 
 export function TypesenseSearch({
   apiKey,
   indexName,
+  currentCommunity,
   searchClient,
   settings,
   routing,
@@ -25,6 +26,7 @@ export function TypesenseSearch({
 }: {
   apiKey: string;
   indexName: string;
+  currentCommunity: SerializedAccount;
   searchClient: (apiKey: string) => any;
   settings: Settings;
   routing?: any;
@@ -79,7 +81,7 @@ export function TypesenseSearch({
               root: styles.stats,
             }}
           />
-          <Hits settings={settings} />
+          <Hits currentCommunity={currentCommunity} settings={settings} />
           <Pagination
             classNames={{
               list: styles.list,

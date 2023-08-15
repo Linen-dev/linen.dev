@@ -644,6 +644,7 @@ export default function Channel({
                 if (!term) return Promise.resolve([]);
                 return api.fetchMentions(term, currentCommunity.id);
               }}
+              currentCommunity={currentCommunity}
               api={api}
               useUsersContext={useUsersContext}
               key={threadToRender.id}

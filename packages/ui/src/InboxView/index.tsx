@@ -764,6 +764,7 @@ export default function InboxView({
                 return api.fetchMentions(term, currentCommunity.id);
               }}
               key={thread.id}
+              currentCommunity={currentCommunity}
               thread={thread}
               channelId={thread.channelId}
               channelName={thread.channel?.channelName as string}

@@ -7,6 +7,7 @@ import MessageForm from '@/MessageForm';
 import {
   onResolve,
   Permissions,
+  SerializedAccount,
   SerializedMessage,
   SerializedThread,
   SerializedUser,
@@ -27,6 +28,7 @@ interface Props {
   thread: SerializedThread;
   channelId: string;
   channelName: string;
+  currentCommunity: SerializedAccount;
   threadUrl?: string | null;
   isBot?: boolean;
   isSubDomainRouting: boolean;
@@ -88,6 +90,7 @@ export default function Thread({
   thread,
   channelId,
   channelName,
+  currentCommunity,
   threadUrl,
   isBot,
   isSubDomainRouting,
@@ -290,7 +293,7 @@ export default function Thread({
             )}
           </div>
         </div>
-        {(permissions.chat || !currentUser) && (
+        {!currentCommunity.communityInviteUrl && (
           <div className={styles.chat}>
             {manage && state === ThreadState.OPEN ? (
               <MessageForm

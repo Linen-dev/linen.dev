@@ -1,17 +1,19 @@
 import Row from '@/Row';
 import Thread from '@/Thread';
-import { SerializedThread, Settings } from '@linen/types';
+import { SerializedAccount, SerializedThread, Settings } from '@linen/types';
 import styles from './index.module.scss';
 import React, { useEffect } from 'react';
 import { getThreadUrl } from '@linen/utilities/url';
 import Breadcrumb from '@/ThreadView/Content/Breadcrumb';
 
 export function Hits({
+  currentCommunity,
   hits,
   setPreview,
   preview,
   settings,
 }: {
+  currentCommunity: SerializedAccount;
   hits: any[];
   setPreview: React.Dispatch<
     React.SetStateAction<SerializedThread | undefined>
@@ -66,6 +68,7 @@ export function Hits({
             api={{ threadIncrementView: () => {} } as any}
             channelId={preview.channelId}
             channelName={preview.channel?.channelName!}
+            currentCommunity={currentCommunity}
             currentUser={{} as any}
             fetchMentions={async () => []}
             isSubDomainRouting={false}
