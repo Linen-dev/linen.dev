@@ -8,7 +8,8 @@ import {
 } from '@linen/database';
 import { discordSync } from 'services/discord/sync';
 import { slackSyncWithFiles } from 'services/slack/syncWithFiles';
-import { Logger, SyncJobType } from '@linen/types';
+import { Logger, Roles, SyncJobType } from '@linen/types';
+import SyncMailer from 'mailers/SyncMailer';
 
 export enum SyncStatus {
   IN_PROGRESS = 'IN_PROGRESS',
@@ -41,6 +42,12 @@ export async function updateAndNotifySyncStatus({
     communityUrl: communityUrl || '',
     pathDomain,
   });
+
+  await syncEmail({
+    status,
+    accountId,
+    pathDomain,
+  });
 }
 
 async function slackNotification({
@@ -70,6 +77,58 @@ async function slackNotification({
     );
   } catch (e) {
     console.error('Failed to send Slack notification: ', e);
+  }
+}
+
+async function syncEmail({
+  status,
+  accountId,
+  pathDomain,
+}: {
+  status: SyncStatus;
+  accountId: string;
+  pathDomain: string | null;
+}) {
+  try {
+    const account = await prisma.accounts.findUnique({
+      where: { id: accountId },
+    });
+    if (account) {
+      const admins = await prisma.auths.findMany({
+        where: {
+          users: {
+            some: {
+              role: { in: [Roles.ADMIN, Roles.OWNER] },
+              accountsId: account.id,
+            },
+          },
+        },
+        include: {
+          users: true,
+        },
+      });
+      if (admins.length > 0) {
+        await Promise.all(
+          admins.map(async (admin) => {
+            if (status === SyncStatus.IN_PROGRESS) {
+              return SyncMailer.start({ to: admin.email });
+            }
+            if (status === SyncStatus.DONE) {
+              return SyncMailer.end({
+                to: admin.email,
+                url: `https://www.linen.dev/s/${pathDomain}`,
+              });
+            }
+            if (status === SyncStatus.ERROR) {
+              return SyncMailer.error({ to: admin.email });
+            }
+            return Promise.resolve();
+          })
+        );
+      }
+    }
+  } catch (exception) {
+    console.error('Failed to send sync emails: ', exception);
   }
 }
 
