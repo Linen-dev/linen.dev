@@ -7,8 +7,10 @@ import {
   messageGetType,
   messagePostType,
   messagePutType,
+  messageDeleteType,
 } from '@linen/types';
 import MessagesService from 'services/messages';
+import { HttpException } from 'server/exceptions';
 
 export class MessagesController extends BaseController {
   static async post(
@@ -51,5 +53,20 @@ export class MessagesController extends BaseController {
       ...req.body,
     });
     res.json(message);
+  }
+
+  static async delete(
+    req: AuthedRequestWithBody<messageDeleteType>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const deletionRequest = await MessagesService.delete({
+      id: req.body.id,
+      accountId: req.body.accountId,
+    });
+    if (!deletionRequest) {
+      return next(new HttpException(500, 'Something went wrong'));
+    }
+    res.json({ ok: true });
   }
 }

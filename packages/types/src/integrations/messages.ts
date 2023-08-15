@@ -65,3 +65,9 @@ export const messagePutSchema = z.object({
   body: z.string().optional(),
 });
 export type messagePutType = z.infer<typeof messagePutSchema>;
+
+export const messageDeleteSchema = z.object({
+  id: z.string().uuid(),
+  accountId: z.string().uuid(),
+});
+export type messageDeleteType = z.infer<typeof messageDeleteSchema>;

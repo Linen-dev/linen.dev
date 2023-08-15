@@ -15,6 +15,9 @@ export default class Api {
   private put = (path: string, data = {}) =>
     this.instance.put(path, data).then((res) => res.data);
 
+  private delete = (path: string) =>
+    this.instance.delete(path).then((res) => res.data);
+
   constructor({
     apiKey,
     type = 'external',
@@ -105,6 +108,10 @@ export default class Api {
 
   updateMessage(message: LinenTypes.messagePutType) {
     return this.put(`/api/integrations/messages`, message);
+  }
+
+  deleteMessage(message: LinenTypes.messageDeleteType) {
+    return this.delete(`/api/integrations/messages?${qs(message)}`);
   }
 
   // users ----

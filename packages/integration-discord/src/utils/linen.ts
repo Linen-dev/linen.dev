@@ -2,7 +2,7 @@ import LinenSdk from '@linen/sdk';
 import env from './config';
 import { appendProtocol } from '@linen/utilities/url';
 import { getIntegrationUrl } from '@linen/utilities/domain';
-import { PrismaPromise, prisma } from '@linen/database';
+import { prisma } from '@linen/database';
 import { slugify } from '@linen/utilities/string';
 
 export type LinenUser = {
@@ -197,17 +197,14 @@ export async function setMessageExternalId(id: string, externalId: string) {
 export async function deleteMessage({
   channelId,
   externalMessageId,
+  accountId,
 }: {
   channelId: string;
   externalMessageId: string;
+  accountId: string;
 }) {
   const existMessage = await prisma.messages.findUnique({
-    select: {
-      id: true,
-      threads: {
-        select: { messageCount: true, id: true },
-      },
-    },
+    select: { id: true },
     where: {
       channelId_externalMessageId: {
         channelId,
@@ -215,24 +212,10 @@ export async function deleteMessage({
       },
     },
   });
-
-  if (existMessage) {
-    const transactions: PrismaPromise<any>[] = [
-      prisma.messages.delete({ where: { id: existMessage.id } }),
-    ];
-    if (existMessage.threads) {
-      transactions.push(
-        // if the thread has only one message
-        existMessage.threads.messageCount === 1
-          ? // delete the thread
-            prisma.threads.delete({ where: { id: existMessage.threads.id } })
-          : // otherwise, decrement message count
-            prisma.threads.update({
-              where: { id: existMessage.threads.id },
-              data: { messageCount: { decrement: 1 } },
-            })
-      );
-    }
-    await prisma.$transaction(transactions);
+  if (existMessage?.id) {
+    await linenSdk.deleteMessage({
+      accountId,
+      id: existMessage.id,
+    });
   }
 }

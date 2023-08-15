@@ -8,6 +8,7 @@ import {
   messageGetSchema,
   messagePostSchema,
   messagePutSchema,
+  messageDeleteSchema,
 } from '@linen/types';
 
 const prefix = '/api/integrations/messages';
@@ -36,6 +37,12 @@ const messagesRouter = Router()
     integrationMiddleware(),
     validationMiddleware(messagePutSchema),
     MessagesController.put
+  )
+  .delete(
+    `${prefix}`,
+    integrationMiddleware(),
+    validationMiddleware(messageDeleteSchema),
+    MessagesController.delete
   )
   .all(`${prefix}*`, MessagesController.notImplemented)
   .use(onError);

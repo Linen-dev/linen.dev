@@ -1,9 +1,4 @@
-import {
-  createMessageWithMentions,
-  findMessageByChannelIdAndTs,
-  deleteMessageWithMentions,
-  deleteMessageFromThread,
-} from 'services/messages';
+import MessagesService from 'services/messages';
 import { findOrCreateThread, updateSlackThread } from 'services/threads';
 import { slugify } from '@linen/utilities/string';
 import {
@@ -161,7 +156,10 @@ async function addMessage(
     messageFormat: MessageFormat.SLACK,
   };
 
-  const message = await createMessageWithMentions(param, mentionIds);
+  const message = await MessagesService.createMessageWithMentions(
+    param,
+    mentionIds
+  );
 
   if (accessToken) {
     await processAttachments(
@@ -224,13 +222,16 @@ async function deleteMessage(
   logger: Logger
 ) {
   if (event.deleted_ts) {
-    const message = await findMessageByChannelIdAndTs(
-      channel.id,
-      event.deleted_ts
-    );
+    const message = await MessagesService.findMessageByChannelIdAndTs({
+      channelId: channel.id,
+      ts: event.deleted_ts,
+    });
     try {
-      if (message) {
-        await deleteMessageFromThread(message.id, message.threadId);
+      if (message && message.channel.accountId) {
+        await MessagesService.delete({
+          accountId: message.channel.accountId,
+          id: message.id,
+        });
       }
     } catch (error) {
       logger.warn({
@@ -252,12 +253,17 @@ async function changeMessage(
 ) {
   // First remove previous message
   if (event.previous_message) {
-    const message = await findMessageByChannelIdAndTs(
-      channel.id,
-      event.previous_message.ts
-    );
+    const message = await MessagesService.findMessageByChannelIdAndTs({
+      channelId: channel.id,
+      ts: event.previous_message.ts,
+    });
     try {
-      message && (await deleteMessageWithMentions(message.id));
+      if (message && message.channel.accountId) {
+        await MessagesService.delete({
+          accountId: message.channel.accountId,
+          id: message.id,
+        });
+      }
     } catch (error) {
       logger.warn({
         'Message not found': event.deleted_ts,

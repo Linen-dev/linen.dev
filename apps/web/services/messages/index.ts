@@ -13,6 +13,7 @@ import {
 } from '@linen/types';
 import { v4 as uuid } from 'uuid';
 import unique from 'lodash.uniq';
+import { eventMessageDeletion } from 'services/events/eventMessageDeletion';
 
 export default class MessagesService {
   static async create({
@@ -178,7 +179,7 @@ export default class MessagesService {
 
   static async delete({ id, accountId }: { id: string; accountId: string }) {
     const message = await prisma.messages.findFirst({
-      select: { id: true, threadId: true },
+      select: { id: true, threadId: true, attachments: true, channel: true },
       where: { id, channel: { accountId } },
     });
 
@@ -202,21 +203,30 @@ export default class MessagesService {
         },
       });
 
-      if (thread && thread._count.messages === 0) {
-        await prisma.threads.delete({
-          where: {
-            id: thread.id,
-          },
-        });
-      } else {
-        await prisma.threads.update({
-          where: {
-            id: message.threadId,
-          },
-          data: { messageCount: { decrement: 1 } },
-        });
+      if (thread) {
+        if (thread._count.messages === 0) {
+          await prisma.threads.delete({
+            where: {
+              id: thread.id,
+            },
+          });
+        } else {
+          await prisma.threads.update({
+            where: {
+              id: thread.id,
+            },
+            data: { messageCount: thread._count.messages },
+          });
+        }
       }
     }
+
+    await eventMessageDeletion({
+      messageId: message.id,
+      threadId: message.threadId,
+      attachments: message.attachments,
+      accountId,
+    });
 
     return { ok: true };
   }
@@ -277,93 +287,63 @@ export default class MessagesService {
       data: { externalMessageId },
     });
   }
-}
 
-export const createMessageWithMentions = async (
-  message: Prisma.messagesUncheckedCreateInput,
-  mentionsId: string[]
-) => {
-  const msg = {
-    body: message.body,
-    threadId: message.threadId,
-    externalMessageId: message.externalMessageId,
-    channelId: message.channelId,
-    sentAt: message.sentAt,
-    usersId: message.usersId,
-    messageFormat: message.messageFormat,
-  };
-  const newMessage = await prisma.messages.upsert({
-    include: { mentions: { include: { users: true } }, author: true },
-    create: {
-      ...msg,
-      mentions: {
-        create: mentionsId.map((id) => ({ usersId: id })),
-      },
-    },
-    where: {
-      channelId_externalMessageId: {
-        externalMessageId: message.externalMessageId!,
-        channelId: message.channelId,
-      },
-    },
-    update: {
-      ...msg,
-    },
-  });
-  if (!!newMessage.threadId) {
-    await prisma.threads.updateMany({
+  static async findMessageByChannelIdAndTs({
+    channelId,
+    ts,
+  }: {
+    channelId: string;
+    ts: string;
+  }) {
+    return prisma.messages.findFirst({
+      select: { id: true, channel: { select: { accountId: true } } },
       where: {
-        id: newMessage.threadId,
-        lastReplyAt: { lt: newMessage.sentAt.getTime() },
+        channelId: channelId,
+        externalMessageId: ts,
       },
-      data: { lastReplyAt: newMessage.sentAt.getTime() },
     });
   }
-  return newMessage;
-};
 
-export const deleteMessageFromThread = async (
-  messageId: string,
-  threadId: string | null
-) => {
-  await deleteMessageWithMentions(messageId);
-
-  // if thread exists and has no messages, we will remove it
-  if (threadId) {
-    const messages = await prisma.messages.count({ where: { threadId } });
-    if (messages === 0) {
-      await prisma.threads.delete({ where: { id: threadId } });
+  static createMessageWithMentions = async (
+    message: Prisma.messagesUncheckedCreateInput,
+    mentionsId: string[]
+  ) => {
+    const msg = {
+      body: message.body,
+      threadId: message.threadId,
+      externalMessageId: message.externalMessageId,
+      channelId: message.channelId,
+      sentAt: message.sentAt,
+      usersId: message.usersId,
+      messageFormat: message.messageFormat,
+    };
+    const newMessage = await prisma.messages.upsert({
+      include: { mentions: { include: { users: true } }, author: true },
+      create: {
+        ...msg,
+        mentions: {
+          create: mentionsId.map((id) => ({ usersId: id })),
+        },
+      },
+      where: {
+        channelId_externalMessageId: {
+          externalMessageId: message.externalMessageId!,
+          channelId: message.channelId,
+        },
+      },
+      update: {
+        ...msg,
+      },
+    });
+    if (!!newMessage.threadId) {
+      await prisma.threads.updateMany({
+        where: {
+          id: newMessage.threadId,
+          lastReplyAt: { lt: newMessage.sentAt.getTime() },
+        },
+        data: { lastReplyAt: newMessage.sentAt.getTime() },
+      });
     }
-  }
-};
-
-export const deleteMessageWithMentions = async (messageId: string) => {
-  return await prisma.$transaction([
-    prisma.messages.update({
-      where: { id: messageId },
-      data: { threads: { update: { messageCount: { decrement: 1 } } } },
-    }),
-    prisma.mentions.deleteMany({
-      where: {
-        messagesId: messageId,
-      },
-    }),
-    prisma.messages.delete({
-      where: {
-        id: messageId,
-      },
-    }),
-  ]);
-};
-
-export const findMessageByChannelIdAndTs = async (
-  channelId: string,
-  ts: string
-) => {
-  return prisma.messages.findFirst({
-    where: {
-      channelId: channelId,
-      externalMessageId: ts,
-    },
-  });
-};
+    return newMessage;
+  };
+}

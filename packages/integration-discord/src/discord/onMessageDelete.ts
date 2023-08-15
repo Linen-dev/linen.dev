@@ -50,6 +50,7 @@ export function onMessageDelete(botId: number) {
       await deleteMessage({
         channelId: linenChannel.id,
         externalMessageId: message.id,
+        accountId: linenAccount.id,
       });
 
       logger.info({ info: 'success' });
