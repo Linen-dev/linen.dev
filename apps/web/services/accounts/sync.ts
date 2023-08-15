@@ -94,33 +94,33 @@ async function syncEmail({
       where: { id: accountId },
     });
     if (account) {
-      const admins = await prisma.auths.findMany({
+      const admins = await prisma.users.findMany({
         where: {
-          users: {
-            some: {
-              role: { in: [Roles.ADMIN, Roles.OWNER] },
-              accountsId: account.id,
-            },
-          },
+          role: { in: [Roles.ADMIN, Roles.OWNER] },
+          accountsId: account.id,
         },
         include: {
-          users: true,
+          auth: true,
         },
       });
       if (admins.length > 0) {
         await Promise.all(
           admins.map(async (admin) => {
+            const email = admin.auth?.email;
+            if (!email) {
+              return Promise.resolve();
+            }
             if (status === SyncStatus.IN_PROGRESS) {
-              return SyncMailer.start({ to: admin.email });
+              return SyncMailer.start({ to: email });
             }
             if (status === SyncStatus.DONE) {
               return SyncMailer.end({
-                to: admin.email,
+                to: email,
                 url: `https://www.linen.dev/s/${pathDomain}`,
               });
             }
             if (status === SyncStatus.ERROR) {
-              return SyncMailer.error({ to: admin.email });
+              return SyncMailer.error({ to: email });
             }
             return Promise.resolve();
           })
