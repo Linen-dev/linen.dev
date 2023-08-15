@@ -96,6 +96,7 @@ export default function Header({
       typesense?.searchClient ? (
         <TypesenseSearch
           apiKey={currentCommunity.search?.apiKey}
+          currentCommunity={currentCommunity}
           indexName={currentCommunity.search?.indexName}
           key={`${currentCommunity.search?.indexName}${currentCommunity.search?.apiKey}`}
           searchClient={typesense.searchClient}

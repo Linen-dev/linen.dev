@@ -152,6 +152,7 @@ export default function Content({
       <Thread
         useUsersContext={useUsersContext}
         api={api}
+        currentCommunity={currentCommunity}
         fetchMentions={fetchMentions}
         thread={thread}
         key={thread.id}
