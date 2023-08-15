@@ -22,8 +22,8 @@ export default class SyncMailer {
   static async error({ to }: { to: string }) {
     return ApplicationMailer.send({
       to,
-      subject: 'Sync finish in Linen.dev',
-      text: `We've finished syncing your data.`,
+      subject: 'Sync failed in Linen.dev',
+      text: `We've failed to sync your data.`,
       html: error(),
     });
   }
