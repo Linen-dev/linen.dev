@@ -3,7 +3,7 @@
 }
 
 .view {
-  width: 50%;
+  width: 100%;
   overflow: hidden auto;
   height: 80vh;
 }
@@ -19,4 +19,10 @@
   gap: 0.5rem;
   justify-content: center;
   width: 100%;
+}
+
+@media (max-width: 767px) {
+  .hideOnMobile {
+    display: none;
+  }
 }

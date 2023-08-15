@@ -5,6 +5,7 @@ import styles from './index.module.scss';
 import React, { useEffect } from 'react';
 import { getThreadUrl } from '@linen/utilities/url';
 import Breadcrumb from '@/ThreadView/Content/Breadcrumb';
+import classNames from 'classnames';
 
 export function Hits({
   hits,
@@ -60,7 +61,7 @@ export function Hits({
           );
         })}
       </div>
-      <div className={styles.view}>
+      <div className={classNames(styles.view, styles.hideOnMobile)}>
         {preview && (
           <Thread
             api={{ threadIncrementView: () => {} } as any}
