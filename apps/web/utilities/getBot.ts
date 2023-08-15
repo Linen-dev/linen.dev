@@ -32,6 +32,7 @@ const botList = [
   'DataForSeoBot',
   'Discordbot',
   'DotBot',
+  'EasyStartup/Monitoring Agent',
   'Embedly',
   'FeedlyApp',
   'Grammarly',
@@ -75,7 +76,7 @@ export function isBot(userAgent: string) {
 const regexBadBots = new RegExp([...botList].join('|'), 'i');
 
 export function isBadBot(userAgent: string | null) {
-  if (!userAgent) {
+  if (!userAgent || userAgent === '') {
     return true;
   }
   const result = regexBadBots.exec(userAgent);

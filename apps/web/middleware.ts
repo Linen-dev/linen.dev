@@ -4,8 +4,10 @@ import { rewrite } from 'utilities/middlewareHelper';
 import { isBadBot } from 'utilities/getBot';
 
 export const config = {
-  matcher: ['/((?!api|_next/static|pp|ph).*)'],
+  matcher: ['/((?!api|_next/static|pp|ph|bot).*)'],
 };
+
+const isProd = process.env.NODE_ENV === 'production';
 
 export default async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone(); // clone the request url
@@ -18,9 +20,9 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.rewrite(url.toString());
   }
   if (isBadBot(userAgent)) {
-    const host =
-      process.env.NODE_ENV === 'production' ? 'www.linen.dev' : url.hostname;
-    return NextResponse.rewrite(`${url.protocol}://${host}/bot`);
+    const host = isProd ? 'www.linen.dev' : url.hostname;
+    const protocol = isProd ? 'https' : 'http';
+    return NextResponse.redirect(`${protocol}://${host}/bot`);
   }
 
   const { pathname } = request.nextUrl; // get pathname of request (e.g. /blog-slug)
