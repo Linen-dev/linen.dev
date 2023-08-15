@@ -78,7 +78,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
           accountId,
         });
         await trackApiEvent(
-          { req: { ...request, user: newAuth }, res: response },
+          { req: { ...request, user }, res: response },
           ApiEvent.sign_up_new_thread
         );
       }
@@ -89,7 +89,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
           accountId,
         });
         await trackApiEvent(
-          { req: { ...request, user: newAuth }, res: response },
+          { req: { ...request, user }, res: response },
           ApiEvent.sign_up_new_message
         );
       }
