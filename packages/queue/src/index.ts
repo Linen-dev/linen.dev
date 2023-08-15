@@ -21,6 +21,7 @@ import {
   typesenseDump,
   typesenseSyncAll,
   typesenseSync,
+  typesenseDeletion,
 } from './tasks/typesense';
 
 export type TaskInterface = (
@@ -69,6 +70,7 @@ async function runWorker() {
       typesenseDump,
       typesenseSync,
       typesenseSyncAll,
+      typesenseDeletion,
     },
     parsedCronItems: parseCronItems([
       {

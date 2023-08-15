@@ -124,3 +124,13 @@ export async function createRemoveCommunityJob(accountId: string) {
     }
   );
 }
+
+export async function createTypesenseDeletion(payload: {
+  accountId: string;
+  threadId: string;
+}) {
+  const worker = await WorkerSingleton.getInstance();
+  return await worker.addJob('typesenseDeletion', payload, {
+    maxAttempts: 1,
+  });
+}
