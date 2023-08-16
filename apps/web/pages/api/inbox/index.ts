@@ -7,6 +7,7 @@ import ChannelsService, { getDMs } from 'services/channels';
 import { anonymizeMessages } from 'utilities/anonymizeMessages';
 import { AnonymizeType, SerializedChannel } from '@linen/types';
 import { cors, preflight } from 'utilities/cors';
+import { daysAgo } from '@linen/utilities/date';
 
 function getPage(page?: number) {
   if (!page || page < 1) {
@@ -72,7 +73,7 @@ export async function index({
     messages: {
       some: {},
     },
-    lastReplyAt: { lt: new Date().getTime() },
+    lastReplyAt: { lt: new Date().getTime(), gt: daysAgo(60).getTime() },
     userThreadStatus: {
       none: {
         userId: currentUserId,
