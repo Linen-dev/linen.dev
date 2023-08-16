@@ -72,7 +72,7 @@ export async function createRemindMeJob(
 
 export async function createMarkAllAsReadJob(
   jobKey: string,
-  payload: { userId: string }
+  payload: { communityId: string; userId: string }
 ) {
   const worker = await WorkerSingleton.getInstance();
   return await worker.addJob('mark-all-as-read-queue', payload, {
