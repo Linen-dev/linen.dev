@@ -168,16 +168,10 @@ export default function Feed({
                 </>
               ) : (
                 <>
-                  <Link
-                    className={styles.link}
-                    href="/signin?callbackUrl=/feed"
-                  >
+                  <Link className={styles.link} href="/signin">
                     Log in
                   </Link>
-                  <Link
-                    className={styles.link}
-                    href="/signup?callbackUrl=/feed"
-                  >
+                  <Link className={styles.link} href="/signup">
                     Sign up
                   </Link>
                 </>
@@ -285,16 +279,10 @@ export default function Feed({
                 </>
               ) : (
                 <>
-                  <Link
-                    className={styles.link}
-                    href="/signin?callbackUrl=/feed"
-                  >
+                  <Link className={styles.link} href="/signin">
                     Log in
                   </Link>
-                  <Link
-                    className={styles.link}
-                    href="/signup?callbackUrl=/feed"
-                  >
+                  <Link className={styles.link} href="/signup">
                     Sign up
                   </Link>
                 </>
