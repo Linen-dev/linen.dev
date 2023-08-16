@@ -443,19 +443,24 @@ export default function InboxView({
     setMarkAllAsReadProgress(40);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setMarkAllAsReadProgress(60);
-    await api.upsertUserThreadStatus({
-      communityId: currentCommunity.id,
-      threadIds: [],
-      muted: false,
-      reminder: false,
-      read: true,
-    });
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setMarkAllAsReadProgress(80);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setMarkAllAsReadProgress(100);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setModal(undefined);
+    try {
+      await api.upsertUserThreadStatus({
+        communityId: currentCommunity.id,
+        threadIds: [],
+        muted: false,
+        reminder: false,
+        read: true,
+      });
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setMarkAllAsReadProgress(80);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setMarkAllAsReadProgress(100);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setModal(undefined);
+    } catch (exception) {
+      Toast.error('Something went wrong. Please try again.');
+      setModal(undefined);
+    }
   }
 
   function markUserThreadStatuses({
