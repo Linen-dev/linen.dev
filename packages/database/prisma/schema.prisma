@@ -289,6 +289,7 @@ model users {
   isAdmin         Boolean
   mentions        mentions[]
   anonymousAlias  String?
+  searchSettings  String?
 
   account    accounts @relation(fields: [accountsId], references: [id])
   accountsId String

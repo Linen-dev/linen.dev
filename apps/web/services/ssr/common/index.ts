@@ -45,6 +45,10 @@ export async function ssr(
     publicChannels,
   } = await fetchCommon(permissions, community, isBot);
 
+  if (permissions.user?.search) {
+    currentCommunity.search = permissions.user?.search;
+  }
+
   return {
     props: {
       token: permissions.token,
