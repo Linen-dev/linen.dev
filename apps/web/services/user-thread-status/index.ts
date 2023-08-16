@@ -1,5 +1,7 @@
 import { prisma } from '@linen/database';
 
+export const USER_THREAD_STATUS_DAYS_LIMIT = 60;
+
 class UserThreadStatusService {
   static async markAsUnread(threadId: string, userId?: string) {
     if (userId) {
@@ -47,6 +49,13 @@ class UserThreadStatusService {
       WHERE "lastReplyAt" > extract(epoch from now() - '60 days'::interval) * 1000
       ON CONFLICT DO NOTHING
     `;
+  }
+
+  static async cleanup() {
+    return prisma.$queryRaw`
+    DELETE FROM "userThreadStatus"
+    WHERE "createdAt" < current_date - interval '60' day;
+  `;
   }
 }
 
