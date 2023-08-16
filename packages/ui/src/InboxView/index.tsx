@@ -85,6 +85,7 @@ export default function InboxView({
   const [markAllAsReadProgress, setMarkAllAsReadProgress] = useState<number>(0);
   const [uploads, setUploads] = useState<UploadedFile[]>([]);
   const ref = useRef<HTMLDivElement>(null);
+  const [marked, setMarked] = useState<string[]>([]);
   const [allUsers] = useUsersContext();
 
   const token = permissions.token || null;
@@ -470,6 +471,7 @@ export default function InboxView({
     read: boolean;
     reminderType?: ReminderTypes;
   }) {
+    setMarked((marked) => [...marked, threadId]);
     setLoading(true);
     setInbox((inbox) => {
       const { threads, ...rest } = inbox;
@@ -504,7 +506,14 @@ export default function InboxView({
           configuration,
           limit: LIMIT,
         }).then((inbox) => {
-          setInbox(inbox);
+          setInbox(() => {
+            return {
+              threads: inbox.threads.filter(
+                (thread) => !marked.includes(thread.id)
+              ),
+              total: inbox.total,
+            };
+          });
         });
       })
       .finally(() => {
