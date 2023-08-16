@@ -42,8 +42,9 @@ class UserThreadStatusService {
   static async markAllAsRead({ userId }: { userId: string }) {
     return prisma.$queryRaw`
       INSERT INTO "userThreadStatus" ("userId", "threadId", "muted", "read", "createdAt", "updatedAt")
-      SELECT ${userId}, t.id, false, true, current_timestamp, current_timestamp
-      from threads as t
+      SELECT ${userId}, thread.id, false, true, current_timestamp, current_timestamp
+      FROM threads AS thread
+      WHERE "lastReplyAt" > extract(epoch from now() - '60 days'::interval) * 1000
       ON CONFLICT DO NOTHING
     `;
   }
