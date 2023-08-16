@@ -802,7 +802,7 @@ export default async function createLinenCommunity() {
     const sentAt = `2022-12-15T08:02:00.${pad(number.toString(), 3)}Z`;
     await prisma.threads.create({
       data: {
-        title: `Title ${index}`,
+        title: `Forum title ${index}`,
         channelId: channel7.id,
         sentAt: new Date(sentAt).getTime(),
         lastReplyAt: new Date(sentAt).getTime(),
@@ -834,10 +834,10 @@ export default async function createLinenCommunity() {
 
   [...(Array(999).keys() as any)].map(async (index) => {
     const number = 999 - index;
-    const timestamp = new Date().getTime() - index;
+    const timestamp = new Date().getTime() - index * 10;
     await prisma.threads.create({
       data: {
-        title: `Title ${index}`,
+        title: `Feed title ${index}`,
         channelId: channel8.id,
         sentAt: timestamp,
         lastReplyAt: timestamp,
