@@ -17,7 +17,7 @@
     "@linen/serializers": "*",
     "@linen/types": "*",
     "envalid": "^7.3.1",
-    "typesense": "^1.5.4"
+    "typesense": "1.7.1"
   },
   "devDependencies": {
     "tsx": "^3.12.7",

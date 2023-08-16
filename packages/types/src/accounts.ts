@@ -67,11 +67,9 @@ export interface SerializedAccount {
 
 export type SerializedSearchSettings = {
   engine: 'typesense';
-  apiKey: string;
   scope: 'public' | 'private';
-  indexName: string;
-  apiKeyId: number;
-  apiKeyExpiresAt: number;
+  apiKey: string | 'private';
+  apiKeyExpiresAt?: number;
   lastSync?: number;
 };
 

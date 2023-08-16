@@ -1,11 +1,12 @@
-import { prisma } from '@linen/database';
 import type { Logger, SerializedSearchSettings } from '@linen/types';
 import {
   getAccountSettings,
-  getQuery,
   persistEndFlag,
-  mapAndPersist,
-} from './shared';
+  pushToTypesense,
+  queryThreads,
+  threadsWhere,
+} from './utils/shared';
+import { prisma } from '@linen/database';
 
 export async function sync({
   accountId,
@@ -29,20 +30,18 @@ async function syncUpdatedThreads(
   let cursor = new Date(searchSettings.lastSync || 0);
   let stats = 0;
   do {
-    const defaultQuery = getQuery(accountId);
     const messages = await prisma.messages.findMany({
       select: { threadId: true, updatedAt: true },
       where: {
         threads: {
-          ...defaultQuery.where,
+          ...threadsWhere({ accountId }),
         },
         updatedAt: { gt: cursor },
       },
       orderBy: { updatedAt: 'asc' },
     });
 
-    const threads = await prisma.threads.findMany({
-      include: defaultQuery.include,
+    const threads = await queryThreads({
       where: {
         id: { in: [...new Set(messages.map((m) => m.threadId!))] },
       },
@@ -55,7 +54,11 @@ async function syncUpdatedThreads(
     stats += threads.length;
     cursor = messages.at(messages.length - 1)?.updatedAt!;
 
-    await mapAndPersist(threads, searchSettings, logger);
+    await pushToTypesense({
+      threads,
+      is_restrict: searchSettings.scope === 'private',
+      logger,
+    });
   } while (true);
   logger.log({ syncUpdatedThreads: stats });
 }

@@ -90,14 +90,12 @@ export default function Header({
       >
         <Logo src={logoUrl} alt={`${homeUrl} logo`} />
       </Link>
-      {currentCommunity.search?.scope === 'public' &&
-      !!currentCommunity.search?.apiKey &&
+      {!!currentCommunity.search?.apiKey &&
       currentCommunity.search?.engine === 'typesense' &&
       typesense?.searchClient ? (
         <TypesenseSearch
           apiKey={currentCommunity.search?.apiKey}
-          indexName={currentCommunity.search?.indexName}
-          key={`${currentCommunity.search?.indexName}${currentCommunity.search?.apiKey}`}
+          key={`${currentCommunity.search?.apiKey}`}
           searchClient={typesense.searchClient}
           settings={settings}
           routing={typesense.routing}

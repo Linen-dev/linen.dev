@@ -1,7 +1,12 @@
+import { cleanEnv, str } from 'envalid';
 import { prisma } from '@linen/database';
 import type { Logger, SerializedSearchSettings } from '@linen/types';
-import { client } from './client';
-import { collectionFactory } from './model';
+import { createAccountKey, createUserKey } from './utils/keys';
+import { collectionSchema } from './utils/model';
+
+const env = cleanEnv(process.env, {
+  TYPESENSE_SEARCH_ONLY: str(),
+});
 
 export async function setup({
   accountId,
@@ -20,41 +25,20 @@ export async function setup({
     throw new Error(`account not found: ${accountId}`);
   }
 
-  const schema = collectionFactory(accountId);
+  const isPublic = account.type === 'PUBLIC';
 
-  const collection = await client
-    .collections(schema.name)
-    .retrieve()
-    .catch(() => {});
-
-  if (collection) {
-    throw new Error(`collection already setup: ${accountId}`);
-  }
-
-  try {
-    await client.collections().create(schema);
-  } catch (error) {
-    logger.error({ error });
-    throw new Error('failed to create collection');
-  }
-
-  const key = await client.keys().create({
-    description: `Search-only ${accountId}`,
-    actions: ['documents:search'],
-    collections: [schema.name],
-  });
-
-  if (!key.value || !key.expires_at) {
-    throw new Error('failed to create api key');
-  }
+  const key = isPublic
+    ? createAccountKey({
+        keyWithSearchPermissions: env.TYPESENSE_SEARCH_ONLY,
+        accountId,
+      })
+    : undefined;
 
   const settings: SerializedSearchSettings = {
     engine: 'typesense',
-    scope: 'public',
-    indexName: schema.name,
-    apiKey: key.value,
-    apiKeyExpiresAt: key.expires_at,
-    apiKeyId: key.id,
+    scope: isPublic ? 'public' : 'private',
+    apiKey: key?.value || 'private',
+    apiKeyExpiresAt: key?.expires_at,
   };
 
   await prisma.accounts.update({
@@ -65,4 +49,30 @@ export async function setup({
       searchSettings: JSON.stringify(settings),
     },
   });
+
+  const users = await prisma.users.findMany({
+    where: { accountsId: accountId, authsId: { not: null } },
+  });
+
+  for (const user of users) {
+    const key = createUserKey({
+      keyWithSearchPermissions: env.TYPESENSE_SEARCH_ONLY,
+      accountId,
+      userId: user.id,
+    });
+    const settings: SerializedSearchSettings = {
+      apiKey: key.value,
+      apiKeyExpiresAt: key.expires_at,
+      engine: 'typesense',
+      scope: isPublic ? 'public' : 'private',
+    };
+    await prisma.users.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        searchSettings: JSON.stringify(settings),
+      },
+    });
+  }
 }

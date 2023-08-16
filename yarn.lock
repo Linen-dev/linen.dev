@@ -16661,17 +16661,25 @@ typescript@^5.1.3, typescript@^5.1.6:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.1.6.tgz#02f8ac202b6dad2c0dd5e0913745b47a37998274"
   integrity sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==
 
-typesense-instantsearch-adapter@^2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/typesense-instantsearch-adapter/-/typesense-instantsearch-adapter-2.7.0.tgz#3b396d9084d387a78bdcea2c3994fc71b6157923"
-  integrity sha512-wpHCXNyMRjufh+wQQ0QdQiQfT5bSRvdEJO1HWgpqKQZiGCSlNq/EDOt8lwlP5if3PbznPTK5wLFFNeunKMN1RQ==
+typesense-instantsearch-adapter@2.7.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/typesense-instantsearch-adapter/-/typesense-instantsearch-adapter-2.7.1.tgz#d2912196d3f1e29c5f967a54213b1aaa3d0cb6b4"
+  integrity sha512-GSEwkNzXoVcL4iSV/LDiZvjx/knctqfGLLKUNRe5twgzFprnoU07UUh2mQ5Z0/aP1moY/UpBF1bMKhTU6ECoAQ==
   dependencies:
-    typesense "^1.5.4"
+    typesense "^1.7.0"
 
-typesense@^1.5.4:
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/typesense/-/typesense-1.5.4.tgz#c93077c5cbc689318bcdec955f08540d5c60ad9e"
-  integrity sha512-51/lyTWbn4NmH4oe3dXv4xSi9eqZwOB7/hXnzyGl84pgFn2MdeeMKb4Lr7z8fUNFmS0TNl7rujaIHRmNR1f2ZA==
+typesense@1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/typesense/-/typesense-1.7.1.tgz#0562c8635b1902a321fdc049f52ff9169f723606"
+  integrity sha512-RVtwprXDyU8MfAtLZ3PyH9WWRpEFGwij5BTu9I3VBjPIWtIvM/hbi2ogL/UK9dPXFECaxY8HlHrZz9djhJDZtg==
+  dependencies:
+    axios "^0.26.0"
+    loglevel "^1.8.0"
+
+typesense@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/typesense/-/typesense-1.7.0.tgz#3fd1c960f734053e4f379193be8066b0a12c48d4"
+  integrity sha512-g33vkDFr4EpDeP2gVXqt5/9aHL87ivbxiwzu4+nQoJMgKA2sCkzkzmPauLudsXNlBwl/0nIYxf0WuhH7zTSU2A==
   dependencies:
     axios "^0.26.0"
     loglevel "^1.8.0"

@@ -1,7 +1,11 @@
-import { prisma } from '@linen/database';
 import type { Logger } from '@linen/types';
-import { getAccountSettings, getQuery, mapAndPersist } from './shared';
-import { client } from './client';
+import {
+  getAccountSettings,
+  pushToTypesense,
+  queryThreads,
+} from './utils/shared';
+import { client } from './utils/client';
+import { collectionSchema } from './utils/model';
 
 export async function deletion({
   accountId,
@@ -13,22 +17,24 @@ export async function deletion({
   logger: Logger;
 }) {
   const searchSettings = await getAccountSettings(accountId);
-  const defaultQuery = getQuery(accountId);
 
-  const thread = await prisma.threads.findFirst({
-    include: defaultQuery.include,
+  const threads = await queryThreads({
     where: {
       id: threadId,
     },
   });
 
-  if (thread) {
+  if (threads.length) {
     // upsert
-    await mapAndPersist([thread], searchSettings, logger);
+    await pushToTypesense({
+      threads,
+      is_restrict: searchSettings.scope === 'private',
+      logger,
+    });
   } else {
     // delete
     await client
-      .collections(searchSettings.indexName)
+      .collections(collectionSchema.name)
       .documents(threadId)
       .delete();
   }

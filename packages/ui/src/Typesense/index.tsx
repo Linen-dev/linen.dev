@@ -17,14 +17,14 @@ import { Settings } from '@linen/types';
 
 export function TypesenseSearch({
   apiKey,
-  indexName,
+  indexName = 'threads',
   searchClient,
   settings,
   routing,
   middlewares,
 }: {
   apiKey: string;
-  indexName: string;
+  indexName?: string;
   searchClient: (apiKey: string) => any;
   settings: Settings;
   routing?: any;

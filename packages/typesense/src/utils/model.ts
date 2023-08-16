@@ -1,17 +1,15 @@
 import type { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
 
-export const collectionFactory = (
-  accountId: string
-): CollectionCreateSchema => ({
-  name: `threads_${accountId}`,
+export const collectionSchema: CollectionCreateSchema = {
+  name: `threads`,
   fields: [
     {
       name: 'id',
       type: 'string',
     },
     {
-      name: 'increment_id',
-      type: 'int64',
+      name: 'accountId',
+      type: 'string',
     },
     {
       name: 'channel_name',
@@ -30,18 +28,21 @@ export const collectionFactory = (
       type: 'string',
     },
     {
-      name: 'has_attachment',
+      name: 'is_public',
       type: 'bool',
     },
     {
-      name: 'created_at',
-      type: 'int64',
+      name: 'is_restrict',
+      type: 'bool',
     },
     {
       name: 'last_reply_at',
       type: 'int64',
     },
+    {
+      name: 'accessible_to',
+      type: 'string[]',
+    },
   ],
   default_sorting_field: 'last_reply_at',
-  enable_nested_fields: true,
-});
+};
