@@ -98,7 +98,10 @@ export async function create(params: {
     });
   } else if (threadIds.length === 0 && read) {
     try {
-      await createMarkAllAsReadJob(`${communityId}:${userId}`, { userId });
+      await createMarkAllAsReadJob(`${communityId}:${userId}`, {
+        communityId,
+        userId,
+      });
       return { status: 200 };
     } catch (exception) {
       console.log(exception);

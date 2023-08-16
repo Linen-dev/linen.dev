@@ -41,12 +41,19 @@ class UserThreadStatusService {
     });
   }
 
-  static async markAllAsRead({ userId }: { userId: string }) {
+  static async markAllAsRead({
+    communityId,
+    userId,
+  }: {
+    communityId: string;
+    userId: string;
+  }) {
     return prisma.$queryRaw`
       INSERT INTO "userThreadStatus" ("userId", "threadId", "muted", "read", "createdAt", "updatedAt")
       SELECT ${userId}, thread.id, false, true, current_timestamp, current_timestamp
       FROM threads AS thread
       WHERE "lastReplyAt" > extract(epoch from now() - '60 days'::interval) * 1000
+      AND "channelId" IN (SELECT id FROM channels WHERE "accountId" = ${communityId})
       ON CONFLICT DO NOTHING
     `;
   }
