@@ -15,6 +15,7 @@ import { discordIntegration } from './tasks/discord-integration';
 import { removeCommunity } from './tasks/remove-community';
 import { buildFeed, createFeedJob } from './tasks/build-feed';
 import { checkPropagation } from './tasks/custom-domain-propagate';
+import { cleanupUserThreadStatusTask } from './tasks/cleanup-user-thread-status';
 import { typesenseSetup } from './tasks/typesense-setup';
 import { typesenseDump } from './tasks/typesense-dump';
 
@@ -27,6 +28,7 @@ const QUEUE_1_NEW_EVENT = 'notification-new-event';
 const QUEUE_2_SEND_EMAIL = 'notification-send-email';
 const QUEUE_REMIND_ME_LATER = 'remind-me-later-queue';
 const QUEUE_MARK_ALL_AS_READ = 'mark-all-as-read-queue';
+const QUEUE_CLEANUP_USER_THREAD_STATUS = 'cleanup-user-thread-status-queue';
 const QUEUE_MAINTENANCE_MESSAGE_COUNT = 'update-message-count';
 const QUEUE_CRAWL_GOOGLE_STATS = 'google-stats';
 const QUEUE_INTEGRATION_DISCORD = 'integration-discord';
@@ -47,6 +49,7 @@ async function runWorker() {
       [QUEUE_2_SEND_EMAIL]: emailNotificationTask as any,
       [QUEUE_REMIND_ME_LATER]: reminderMeLaterTask as any,
       [QUEUE_MARK_ALL_AS_READ]: markAllAsReadTask as any,
+      [QUEUE_CLEANUP_USER_THREAD_STATUS]: cleanupUserThreadStatusTask as any,
       [QUEUE_MAINTENANCE_MESSAGE_COUNT]: updateMessagesCount,
       [QUEUE_CRAWL_GOOGLE_STATS]: crawlGoogleResults,
       [QUEUE_INTEGRATION_DISCORD]: discordIntegration,
@@ -97,6 +100,15 @@ async function runWorker() {
         },
         task: QUEUE_CRAWL_GOOGLE_STATS,
         identifier: QUEUE_CRAWL_GOOGLE_STATS,
+      },
+      {
+        pattern: '0 0 23 * *', // at 23:00:00 every day
+        options: {
+          queueName: QUEUE_CLEANUP_USER_THREAD_STATUS,
+          backfillPeriod: 0,
+        },
+        task: QUEUE_CLEANUP_USER_THREAD_STATUS,
+        identifier: QUEUE_CLEANUP_USER_THREAD_STATUS,
       },
       {
         pattern: '0 0 * * *',
