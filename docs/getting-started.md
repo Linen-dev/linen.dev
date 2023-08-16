@@ -7,6 +7,7 @@ Linen is a mono repo with multiple apps and packages in the same place.
 Since we have multiple applications like Desktop client and a server rendered app. We share the UI code between them with the packages/ui folder.
 
 The apps folder contains all the applications and each app imports the UI code from packages/ui.
+
 - web: Next.js server rendered app - along with backend apis
 - desktop: Tauri desktop client
 - push_service: Push notification server built with Phoneix and Elixir
@@ -41,6 +42,11 @@ cd dev
 # windows-only: set COMPOSE_CONVERT_WINDOWS_PATHS=1
 docker-compose up -d
 cd ..
+
+# Increase the Nodejs heap size
+# Recommended if you run into JavaScript heap out of memory issue
+export NODE_OPTIONS=--max-old-space-size=8192
+
 
 # build dependencies
 yarn build:deps
@@ -166,4 +172,3 @@ npx dotenv -e .env -- mix phx.server
 3. pick subdomain i.e kam-test.ngrok.io
 4. Update dev database to have the redirect url `update accounts set "redirectDomain"='kam-test.ngrok.io' where id = '9677cb41-033e-4c1a-9ae5-ef178606cad3';` - replace with your subdomain that you chose
 5. run ngrok tunnel `ngrok http --region=us --hostname=kam-test.ngrok.io 3000`
-
