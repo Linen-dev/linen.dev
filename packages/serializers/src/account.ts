@@ -3,6 +3,7 @@ import {
   SerializedAccount,
   SerializedSearchSettings,
 } from '@linen/types';
+import { tc } from '@linen/utilities/tc';
 
 function identifyCommunity(account: any) {
   if (account.slackAuthorizations?.length) {
@@ -28,14 +29,6 @@ function hasAuthFn(account: any) {
     return true;
   }
   return false;
-}
-
-function tc<T>(fn: () => T) {
-  try {
-    return fn();
-  } catch (error) {
-    return null;
-  }
 }
 
 export function serializeAccount(account?: any): SerializedAccount {

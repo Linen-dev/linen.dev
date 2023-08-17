@@ -46,6 +46,7 @@
     "./sleep": "./dist/sleep.js",
     "./storage": "./dist/storage.js",
     "./string": "./dist/string.js",
+    "./tc": "./dist/tc.js",
     "./url": "./dist/url.js"
   },
   "typesVersions": {
@@ -118,6 +119,9 @@
       ],
       "string": [
         "./dist/string.d.ts"
+      ],
+      "tc": [
+        "./dist/tc.d.ts"
       ],
       "url": [
         "./dist/url.d.ts"
