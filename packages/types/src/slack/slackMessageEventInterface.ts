@@ -1,4 +1,5 @@
-import { MessageFile } from '.';
+import { Block } from './Block';
+import { MessageFile } from './MessageFile';
 import { UserInfo } from './slackUserInfoInterface';
 
 export interface SlackEvent {
@@ -81,14 +82,6 @@ export interface SlackMessageReactionAddedEvent {
     ts: string;
   };
   event_ts: string;
-}
-
-export interface Block {
-  type: string;
-  block_id: string;
-  elements: Element[];
-  text: Text2;
-  fields: Field[];
 }
 
 export interface Text2 {

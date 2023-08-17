@@ -1,3 +1,4 @@
+import { SerializedSearchSettings } from './SerializedSearchSettings';
 import { Roles } from './roles';
 
 export interface SerializedUser {
@@ -9,4 +10,5 @@ export interface SerializedUser {
   profileImageUrl: string | null;
   anonymousAlias?: string | null;
   role?: Roles;
+  search?: SerializedSearchSettings;
 }

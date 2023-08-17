@@ -39,7 +39,9 @@ export default function NewChannelModal({
   const [loading, setLoading] = useState(false);
   const [channelPrivate, setChannelPrivate] = useState(false);
   const [viewType, setViewType] = useState<ChannelViewType>('CHAT');
-  const [users, setUsers] = useState<SerializedUser[]>([permissions.user]);
+  const [users, setUsers] = useState<SerializedUser[]>(
+    permissions.user ? [permissions.user] : []
+  );
 
   async function onSubmit(e: any) {
     setLoading(true);

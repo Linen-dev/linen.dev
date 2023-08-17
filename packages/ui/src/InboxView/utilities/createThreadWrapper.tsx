@@ -52,7 +52,7 @@ export function createThreadWrapper({
   page,
   api,
 }: {
-  currentUser: SerializedUser;
+  currentUser: SerializedUser | null;
   allUsers: SerializedUser[];
   setThread: React.Dispatch<React.SetStateAction<SerializedThread | undefined>>;
   communityId: string;
@@ -70,6 +70,9 @@ export function createThreadWrapper({
     files: UploadedFile[];
     channel: SerializedChannel;
   }) => {
+    if (!currentUser) {
+      return;
+    }
     const id = `imitation-${uuid()}`;
     const imitation: SerializedThread = {
       id,

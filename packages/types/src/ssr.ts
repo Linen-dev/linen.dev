@@ -1,4 +1,5 @@
-import { SerializedAccount, Settings, Permissions } from './accounts';
+import { SerializedAccount, Settings } from './accounts';
+import { Permissions } from './Permissions';
 import { SerializedChannel } from './channels';
 import { SerializedThread } from './threads';
 

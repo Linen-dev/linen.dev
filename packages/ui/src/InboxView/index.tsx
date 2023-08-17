@@ -246,7 +246,7 @@ export default function InboxView({
     if (thread) {
       if (
         thread.messages.length &&
-        currentUser.id === thread.messages[0]?.author?.id
+        currentUser?.id === thread.messages[0]?.author?.id
       ) {
         return null;
       }

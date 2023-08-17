@@ -144,7 +144,7 @@ const handlers = {
           communityName: request.body.communityName as string,
         },
       });
-      if (!permissions.inbox) {
+      if (!permissions.inbox || !permissions.user?.id) {
         return response.status(401).json({});
       }
       const { status, data } = await index({

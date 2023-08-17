@@ -6,7 +6,7 @@ import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
 
 interface Props {
-  currentUser: SerializedUser;
+  currentUser: SerializedUser | null;
   currentUrl: string;
   permissions: Permissions;
   paths: { [key: string]: string };

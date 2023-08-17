@@ -16,12 +16,12 @@ export function addReactionToThread(
   }: {
     threadId: string;
     messageId: string;
-    currentUser: SerializedUser;
+    currentUser: SerializedUser | null;
     type: string;
     active: boolean;
   }
 ): SerializedThread {
-  if (!thread) {
+  if (!thread || !currentUser) {
     return thread;
   }
   if (thread.id === threadId) {
@@ -148,7 +148,7 @@ export function addReaction(
     threadId: string;
     messageId: string;
     type: string;
-    currentUser: SerializedUser;
+    currentUser: SerializedUser | null;
   }
 ) {
   if (!currentUser) {

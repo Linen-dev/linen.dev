@@ -164,7 +164,7 @@ const handlers = {
           communityName: request.query.communityName as string,
         },
       });
-      if (!permissions.starred) {
+      if (!permissions.starred || !permissions.user?.id) {
         return response.status(401).json({});
       }
       const { status, data } = await index({
@@ -188,7 +188,7 @@ const handlers = {
           communityId: request.body.communityId as string,
         },
       });
-      if (!permissions.starred) {
+      if (!permissions.starred || !permissions.user?.id) {
         return response.status(401).json({});
       }
       const { status } = await create({
@@ -212,7 +212,7 @@ const handlers = {
           communityId: request.body.communityId as string,
         },
       });
-      if (!permissions.starred) {
+      if (!permissions.starred || !permissions.user?.id) {
         return response.status(401).json({});
       }
       const { status } = await destroy({

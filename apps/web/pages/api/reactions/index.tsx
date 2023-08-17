@@ -23,7 +23,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
     response,
     params: { communityId },
   });
-  if (!permissions.is_member) {
+  if (!permissions.is_member || !permissions.user?.id) {
     return response.status(401).end();
   }
   const message = await prisma.messages.findUnique({

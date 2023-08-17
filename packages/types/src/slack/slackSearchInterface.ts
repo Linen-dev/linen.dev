@@ -1,4 +1,4 @@
-import { Block } from '.';
+import { Block } from './Block';
 
 export interface Pagination {
   total_count: number;

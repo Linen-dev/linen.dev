@@ -613,7 +613,7 @@ export default function Channel({
                         progress={progress}
                         uploads={uploads}
                         uploading={uploading}
-                        uploadFiles={currentUser && uploadFiles}
+                        uploadFiles={currentUser ? uploadFiles : undefined}
                         useUsersContext={useUsersContext}
                         fetchMentions={(term?: string) => {
                           if (!currentUser) {

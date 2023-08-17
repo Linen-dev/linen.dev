@@ -1,4 +1,10 @@
-import { AnonymizeType } from '.';
+import { SerializedSearchSettings } from './SerializedSearchSettings';
+
+export enum AnonymizeType {
+  NONE = 'NONE',
+  MEMBERS = 'MEMBERS',
+  ALL = 'ALL',
+}
 
 export enum ChatType {
   NONE = 'NONE',
@@ -63,29 +69,4 @@ export interface SerializedAccount {
   newChannelsConfig: string;
   redirectDomainPropagate?: boolean;
   search?: SerializedSearchSettings;
-}
-
-export type SerializedSearchSettings = {
-  engine: 'typesense';
-  scope: 'public' | 'private';
-  apiKey: string | 'private';
-  apiKeyExpiresAt?: number;
-  lastSync?: number;
-};
-
-export interface Permissions {
-  access: boolean;
-  inbox: boolean;
-  starred: boolean;
-  chat: boolean;
-  manage: boolean;
-  channel_create: boolean;
-  is_member: boolean;
-  accountId: string | null;
-  token: string | null;
-  user: any | null;
-  auth: {
-    id: string;
-    email: string;
-  } | null;
 }

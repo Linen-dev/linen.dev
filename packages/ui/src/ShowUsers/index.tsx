@@ -20,7 +20,7 @@ export default function ShowUsers({
   users: SerializedUser[];
   setUsers: React.Dispatch<React.SetStateAction<SerializedUser[]>>;
   removeUser(user: SerializedUser): void;
-  currentUser: SerializedUser;
+  currentUser: SerializedUser | null;
   api: ApiClient;
 }) {
   const ref = useRef(null);
@@ -64,7 +64,7 @@ export default function ShowUsers({
           <div className={styles.usersWrapper}>
             {users.map((user) => {
               const props =
-                currentUser.id !== user.id
+                currentUser?.id !== user.id
                   ? { onClick: () => removeUser(user) }
                   : {};
               return (

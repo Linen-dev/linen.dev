@@ -13,7 +13,7 @@ interface Props {
   className?: string;
   channel: SerializedChannel;
   children?: React.ReactNode;
-  currentUser?: SerializedUser;
+  currentUser?: SerializedUser | null;
   permissions: Permissions;
   onAddClick?(): void;
   api: ApiClient;

@@ -20,7 +20,7 @@ import type { ApiClient } from '@linen/api-client';
 
 interface Props {
   communityId: string;
-  currentUser: SerializedUser;
+  currentUser: SerializedUser | null;
   currentThread: SerializedThread;
   open: boolean;
   close(): void;

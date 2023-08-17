@@ -18,7 +18,7 @@ export function sendMessageWrapper({
   communityId,
   createMessage,
 }: {
-  currentUser: SerializedUser;
+  currentUser: SerializedUser | null;
   allUsers: SerializedUser[];
   setThread: React.Dispatch<React.SetStateAction<SerializedThread | undefined>>;
   setData: React.Dispatch<React.SetStateAction<AllResponse>>;
@@ -36,6 +36,9 @@ export function sendMessageWrapper({
     channelId: string;
     threadId: string;
   }) => {
+    if (!currentUser) {
+      return;
+    }
     const id = `imitation-${uuid()}`;
     const imitation: SerializedMessage = {
       id,

@@ -24,6 +24,9 @@ export * from './partialTypes';
 export * from './server';
 export * from './vercel';
 export * from './logger';
+export * from './Permissions';
+export * from './SerializedSearchSettings';
+
 /*
   This package redefines enums from `schema.prisma`.
   Ideally this package should be considered as a source of truth
@@ -40,12 +43,6 @@ export enum ReminderTypes {
   SOON = 'soon',
   TOMORROW = 'tomorrow',
   NEXT_WEEK = 'next-week',
-}
-
-export enum AnonymizeType {
-  NONE = 'NONE',
-  MEMBERS = 'MEMBERS',
-  ALL = 'ALL',
 }
 
 export enum Priority {
