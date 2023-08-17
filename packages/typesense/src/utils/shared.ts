@@ -8,12 +8,15 @@ import {
   prisma,
   threads,
   users,
+  accounts,
 } from '@linen/database';
 import { SerializedSearchSettings, Logger } from '@linen/types';
 import { client } from './client';
 import { serializer } from './serializer';
 import { serializeThread } from '@linen/serializers/thread';
 import { collectionSchema } from './model';
+import { env } from './env';
+import { createUserKey, createAccountKey } from './keys';
 
 export async function getAccountSettings(accountId: string) {
   const account = await prisma.accounts.findUnique({
@@ -146,4 +149,65 @@ export async function pushToTypesense({
           ?.map((result: any) => result.error) || error
       );
     });
+}
+
+export async function createUserKeyAndPersist({
+  account,
+  user,
+  isPublic,
+}: {
+  account: accounts;
+  user: users;
+  isPublic: boolean;
+}) {
+  const key = createUserKey({
+    keyWithSearchPermissions: env.TYPESENSE_SEARCH_ONLY,
+    accountId: account.id,
+    userId: user.id,
+  });
+  const settings: SerializedSearchSettings = {
+    apiKey: key.value,
+    apiKeyExpiresAt: key.expires_at,
+    engine: 'typesense',
+    scope: isPublic ? 'public' : 'private',
+  };
+  await prisma.users.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      searchSettings: JSON.stringify(settings),
+    },
+  });
+}
+
+export async function createAccountKeyAndPersist({
+  account,
+}: {
+  account: accounts;
+}) {
+  const isPublic = account.type === 'PUBLIC';
+
+  const key = isPublic
+    ? createAccountKey({
+        keyWithSearchPermissions: env.TYPESENSE_SEARCH_ONLY,
+        accountId: account.id,
+      })
+    : undefined;
+
+  const settings: SerializedSearchSettings = {
+    engine: 'typesense',
+    scope: isPublic ? 'public' : 'private',
+    apiKey: key?.value || 'private',
+    apiKeyExpiresAt: key?.expires_at,
+  };
+
+  await prisma.accounts.update({
+    where: {
+      id: account.id,
+    },
+    data: {
+      searchSettings: JSON.stringify(settings),
+    },
+  });
 }

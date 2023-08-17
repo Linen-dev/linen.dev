@@ -1,4 +1,11 @@
-import { dump, setup, sync, syncAll, deletion } from '@linen/typesense';
+import {
+  dump,
+  setup,
+  sync,
+  syncAll,
+  deletion,
+  refreshApiKeys,
+} from '@linen/typesense';
 import type { JobHelpers } from 'graphile-worker';
 import { KeepAlive } from '../helpers/keep-alive';
 import { Logger } from '../helpers/logger';
@@ -63,6 +70,18 @@ export const typesenseDeletion = async (payload: any, helpers: JobHelpers) => {
     threadId: payload.threadId,
     logger,
   });
+
+  keepAlive.end();
+};
+
+export const typesenseRefreshApiKeys = async (
+  payload: any,
+  helpers: JobHelpers
+) => {
+  const keepAlive = new KeepAlive(helpers);
+  keepAlive.start();
+
+  await refreshApiKeys();
 
   keepAlive.end();
 };

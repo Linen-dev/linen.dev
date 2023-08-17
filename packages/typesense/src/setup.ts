@@ -1,12 +1,9 @@
-import { cleanEnv, str } from 'envalid';
 import { prisma } from '@linen/database';
-import type { Logger, SerializedSearchSettings } from '@linen/types';
-import { createAccountKey, createUserKey } from './utils/keys';
-import { collectionSchema } from './utils/model';
-
-const env = cleanEnv(process.env, {
-  TYPESENSE_SEARCH_ONLY: str(),
-});
+import type { Logger } from '@linen/types';
+import {
+  createAccountKeyAndPersist,
+  createUserKeyAndPersist,
+} from './utils/shared';
 
 export async function setup({
   accountId,
@@ -25,54 +22,15 @@ export async function setup({
     throw new Error(`account not found: ${accountId}`);
   }
 
+  await createAccountKeyAndPersist({ account });
+
   const isPublic = account.type === 'PUBLIC';
 
-  const key = isPublic
-    ? createAccountKey({
-        keyWithSearchPermissions: env.TYPESENSE_SEARCH_ONLY,
-        accountId,
-      })
-    : undefined;
-
-  const settings: SerializedSearchSettings = {
-    engine: 'typesense',
-    scope: isPublic ? 'public' : 'private',
-    apiKey: key?.value || 'private',
-    apiKeyExpiresAt: key?.expires_at,
-  };
-
-  await prisma.accounts.update({
-    where: {
-      id: accountId,
-    },
-    data: {
-      searchSettings: JSON.stringify(settings),
-    },
-  });
-
   const users = await prisma.users.findMany({
-    where: { accountsId: accountId, authsId: { not: null } },
+    where: { accountsId: account.id, authsId: { not: null } },
   });
 
   for (const user of users) {
-    const key = createUserKey({
-      keyWithSearchPermissions: env.TYPESENSE_SEARCH_ONLY,
-      accountId,
-      userId: user.id,
-    });
-    const settings: SerializedSearchSettings = {
-      apiKey: key.value,
-      apiKeyExpiresAt: key.expires_at,
-      engine: 'typesense',
-      scope: isPublic ? 'public' : 'private',
-    };
-    await prisma.users.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        searchSettings: JSON.stringify(settings),
-      },
-    });
+    await createUserKeyAndPersist({ account, user, isPublic });
   }
 }

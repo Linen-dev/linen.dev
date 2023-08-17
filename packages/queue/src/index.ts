@@ -22,6 +22,7 @@ import {
   typesenseSyncAll,
   typesenseSync,
   typesenseDeletion,
+  typesenseRefreshApiKeys,
 } from './tasks/typesense';
 
 export type TaskInterface = (
@@ -71,6 +72,7 @@ async function runWorker() {
       typesenseSync,
       typesenseSyncAll,
       typesenseDeletion,
+      typesenseRefreshApiKeys,
     },
     parsedCronItems: parseCronItems([
       {
@@ -126,6 +128,15 @@ async function runWorker() {
         },
         task: 'sitemap',
         identifier: 'sitemap',
+      },
+      {
+        pattern: '0 0 * * *',
+        options: {
+          queueName: 'typesenseRefreshApiKeys',
+          backfillPeriod: 0,
+        },
+        task: 'typesenseRefreshApiKeys',
+        identifier: 'typesenseRefreshApiKeys',
       },
     ]),
   });
