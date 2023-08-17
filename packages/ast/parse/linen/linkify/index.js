@@ -2,7 +2,10 @@ function splitByPattern(tokens, pattern) {
   const result = [];
   for (let index = 0, length = tokens.length; index < length; index++) {
     const token = tokens[index];
-    if (token.type === 'text') {
+    if (token.type === 'list' || token.type === 'item') {
+      token.children = splitByPattern(token.children, pattern);
+      result.push(token);
+    } else if (token.type === 'text') {
       const { value } = token;
       const matches = value.match(pattern);
 

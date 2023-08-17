@@ -285,9 +285,12 @@ describe('parse', () => {
     );
   });
 
-  it.skip('works for urls inside of lists', () => {
+  it('works for urls inside of lists', () => {
     expect(parse('- https://foo.com')).toEqual(
       root([list([item([url('https://foo.com')])])])
+    );
+    expect(parse('- foo https://bar.com')).toEqual(
+      root([list([item([text('foo '), url('https://bar.com')])])])
     );
   });
 });
