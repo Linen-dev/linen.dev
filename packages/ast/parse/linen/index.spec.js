@@ -284,4 +284,10 @@ describe('parse', () => {
       root([text('foo\n'), list([item([text('bar')])], { ordered: true })])
     );
   });
+
+  it.skip('works for urls inside of lists', () => {
+    expect(parse('- https://foo.com')).toEqual(
+      root([list([item([url('https://foo.com')])])])
+    );
+  });
 });
