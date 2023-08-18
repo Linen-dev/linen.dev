@@ -1,6 +1,6 @@
 import { Prisma, prisma } from '@linen/database';
 import { UserMap } from '@linen/types';
-
+import { eventUserNameUpdate } from 'services/events/eventUserNameUpdate';
 import UsersService from './users';
 export default UsersService;
 
@@ -60,7 +60,14 @@ export const createUser = async (user: Prisma.usersUncheckedCreateInput) => {
 
 export const updateUser = async (user: Prisma.usersUncheckedCreateInput) => {
   const { anonymousAlias, ...param } = user;
-  return await prisma.users.update({
+  if (!user.id) {
+    throw new Error('missing userId');
+  }
+  const old = await prisma.users.findUnique({
+    select: { displayName: true },
+    where: { id: user.id },
+  });
+  const newUser = await prisma.users.update({
     data: {
       ...param,
     },
@@ -68,4 +75,11 @@ export const updateUser = async (user: Prisma.usersUncheckedCreateInput) => {
       id: user.id,
     },
   });
+  if (old?.displayName !== user.displayName) {
+    await eventUserNameUpdate({
+      userId: user.id,
+      accountId: user.accountsId,
+    });
+  }
+  return newUser;
 };

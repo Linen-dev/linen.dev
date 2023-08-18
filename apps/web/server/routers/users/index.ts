@@ -16,6 +16,7 @@ import {
 import { prisma } from '@linen/database';
 import UsersService from 'services/users';
 import { z } from 'zod';
+import { eventUserNameUpdate } from 'services/events/eventUserNameUpdate';
 
 const prefix = '/api/users';
 
@@ -94,6 +95,10 @@ usersRouter.delete(
           displayName: 'deleted-user',
           profileImageUrl: null,
         },
+      });
+      await eventUserNameUpdate({
+        userId: user.id,
+        accountId: user.accountsId,
       });
       return res.status(200).json({});
     }

@@ -134,3 +134,13 @@ export async function createTypesenseDeletion(payload: {
     maxAttempts: 1,
   });
 }
+
+export async function createTypesenseUserNameUpdate(payload: {
+  accountId: string;
+  userId: string;
+}) {
+  const worker = await WorkerSingleton.getInstance();
+  return await worker.addJob('typesenseOnUserNameUpdate', payload, {
+    maxAttempts: 1,
+  });
+}

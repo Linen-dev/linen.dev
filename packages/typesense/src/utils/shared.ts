@@ -30,7 +30,7 @@ export async function getAccountSettings(accountId: string) {
   }
 
   if (!account.searchSettings) {
-    throw new Error(`missing searchSettings: ${accountId}`);
+    throw new Error(`account missing searchSettings`);
   }
 
   const searchSettings: SerializedSearchSettings = JSON.parse(

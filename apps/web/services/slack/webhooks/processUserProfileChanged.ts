@@ -14,7 +14,7 @@ export async function processUserProfileChanged(body: SlackEvent) {
   if (!user) {
     await createUser(newUser);
   } else {
-    await updateUser(newUser);
+    await updateUser({ ...user, ...newUser });
   }
   return { status: 200, message: 'user profile updated' };
 }

@@ -15,6 +15,7 @@ import UploadService from 'services/upload';
 import express from 'express';
 import CommunityService from 'services/community';
 import { serializeAccount } from '@linen/serializers/account';
+import { eventUserNameUpdate } from 'services/events/eventUserNameUpdate';
 
 const prefix = '/api/profile';
 const profileRouter = Router();
@@ -32,14 +33,26 @@ profileRouter.put(
     req: AuthedRequestWithBody<z.infer<typeof updateProfileSchema>>,
     res: Response
   ) => {
+    const users = await prisma.users.findMany({
+      select: { id: true, accountsId: true },
+      where: { authsId: req.session_user?.id! },
+    });
     await prisma.users.updateMany({
       where: {
-        auth: { id: req.session_user?.id! },
+        id: { in: users.map((u) => u.id) },
       },
       data: {
-        ...req.body,
+        displayName: req.body.displayName,
       },
     });
+    await Promise.allSettled(
+      users.map((u) =>
+        eventUserNameUpdate({
+          userId: u.id,
+          accountId: u.accountsId,
+        })
+      )
+    );
     res.json({ ok: true });
     res.end();
   }

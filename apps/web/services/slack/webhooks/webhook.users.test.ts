@@ -1,15 +1,17 @@
-import { prismaMock } from '__tests__/singleton';
-import type { accounts } from '@linen/database';
+jest.mock('services/events/eventUserNameUpdate');
+import { prisma } from '@linen/database';
+import { createAccount, createUser } from '@linen/factory';
 import { handleWebhook } from 'services/slack/webhooks';
+import { v4 } from 'uuid';
 
-const userUpdateEvent = {
+const userUpdateEvent = (id = v4(), userId = v4()) => ({
   token: 'xacv5epJ26YAuNHJeO4UoaNf',
-  team_id: 'T01234567',
+  team_id: id,
   api_app_id: 'A0123456789',
   event: {
     user: {
-      id: 'U0123456789',
-      team_id: 'T01234567',
+      id: userId,
+      team_id: id,
       name: 'cool_name',
       deleted: false,
       color: '2b6836',
@@ -34,7 +36,7 @@ const userUpdateEvent = {
         first_name: 'randomName',
         last_name: '',
         status_text_canonical: '',
-        team: 'T01234567',
+        team: id,
       },
       is_admin: false,
       is_owner: false,
@@ -58,108 +60,56 @@ const userUpdateEvent = {
   authorizations: [
     {
       enterprise_id: null,
-      team_id: 'T01234567',
-      user_id: 'U0123456789',
+      team_id: id,
+      user_id: userId,
       is_bot: false,
       is_enterprise_install: false,
     },
   ],
   is_ext_shared_channel: false,
-};
+});
 
 describe('webhook :: users', () => {
   describe('user_profile_changed event', () => {
     test('happy path :: existent user has their profile updated', async () => {
-      const accountId = userUpdateEvent.team_id;
-      const accountsFindFirstMock =
-        prismaMock.accounts.findFirst.mockResolvedValue({
-          id: accountId,
-        } as accounts);
-      const usersUpdateMock = prismaMock.users.update.mockResolvedValue({});
-      const usersFindUniqueMock = prismaMock.users.findUnique.mockResolvedValue(
-        {
-          id: 'userId',
-          anonymousAlias: 'randomAlias',
-        }
+      const event = userUpdateEvent();
+      const account = await createAccount({ slackTeamId: event.team_id });
+      const user = await createUser({
+        displayName: 'old',
+        accountsId: account.id,
+        externalUserId: event.event.user.id,
+      });
+
+      const res = await handleWebhook(event, console);
+
+      expect(res?.status).toBe(200);
+      expect(res?.message).toStrictEqual('user profile updated');
+
+      const updatedUser = await prisma.users.findUnique({
+        where: { id: user.id },
+      });
+      expect(updatedUser?.displayName).toBe(
+        event.event.user.profile.display_name
       );
-
-      const res = await handleWebhook(userUpdateEvent);
-
-      expect(res.status).toBe(200);
-      expect(res.message).toStrictEqual('user profile updated');
-
-      expect(accountsFindFirstMock).toHaveBeenCalledTimes(1);
-      expect(accountsFindFirstMock).toHaveBeenCalledWith({
-        select: { id: true, newChannelsConfig: true },
-        where: { slackTeamId: userUpdateEvent.team_id },
-      });
-      expect(usersFindUniqueMock).toHaveBeenCalledTimes(1);
-      expect(usersFindUniqueMock).toHaveBeenCalledWith({
-        where: {
-          externalUserId_accountsId: {
-            accountsId: userUpdateEvent.team_id,
-            externalUserId: userUpdateEvent.event.user.id,
-          },
-        },
-      });
-      expect(usersUpdateMock).toHaveBeenCalledTimes(1);
-      // expect(usersUpdateMock).toHaveBeenCalledWith({
-      //   data: {
-      //     accountsId: userUpdateEvent.team_id,
-      //     anonymousAlias: 'randomAlias',
-      //     displayName: userUpdateEvent.event.user.profile.display_name,
-      //     externalUserId: userUpdateEvent.event.user.id,
-      //     isAdmin: userUpdateEvent.event.user.is_admin,
-      //     isBot: userUpdateEvent.event.user.is_bot,
-      //     profileImageUrl: undefined,
-      //   },
-      //   where: {
-      //     id: 'userId',
-      //   },
-      // });
     });
 
     test('user does not exist :: it should create a new user', async () => {
-      const accountId = userUpdateEvent.team_id;
-      const accountsFindFirstMock =
-        prismaMock.accounts.findFirst.mockResolvedValue({
-          id: accountId,
-        } as accounts);
-      const usersCreateMock = prismaMock.users.create.mockResolvedValue({});
-      const usersFindUniqueMock =
-        prismaMock.users.findUnique.mockResolvedValue(null);
+      const event = userUpdateEvent();
+      const account = await createAccount({ slackTeamId: event.team_id });
 
-      const res = await handleWebhook(userUpdateEvent);
+      const res = await handleWebhook(event, console);
+      expect(res?.status).toBe(200);
+      expect(res?.message).toStrictEqual('user profile updated');
 
-      expect(res.status).toBe(200);
-      expect(res.message).toStrictEqual('user profile updated');
-
-      expect(accountsFindFirstMock).toHaveBeenCalledTimes(1);
-      expect(accountsFindFirstMock).toHaveBeenCalledWith({
-        select: { id: true, newChannelsConfig: true },
-        where: { slackTeamId: userUpdateEvent.team_id },
-      });
-      expect(usersFindUniqueMock).toHaveBeenCalledTimes(2);
-      expect(usersFindUniqueMock).toHaveBeenCalledWith({
+      const newUser = await prisma.users.findUnique({
         where: {
           externalUserId_accountsId: {
-            accountsId: userUpdateEvent.team_id,
-            externalUserId: userUpdateEvent.event.user.id,
+            accountsId: account.id,
+            externalUserId: event.event.user.id,
           },
         },
       });
-      expect(usersCreateMock).toHaveBeenCalledTimes(1);
-      expect(usersCreateMock).toHaveBeenCalledWith({
-        data: {
-          accountsId: userUpdateEvent.team_id,
-          anonymousAlias: expect.any(String),
-          displayName: userUpdateEvent.event.user.profile.display_name,
-          externalUserId: userUpdateEvent.event.user.id,
-          isAdmin: false,
-          isBot: false,
-          profileImageUrl: undefined,
-        },
-      });
+      expect(newUser?.displayName).toBe(event.event.user.profile.display_name);
     });
   });
 });

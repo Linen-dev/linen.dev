@@ -185,7 +185,13 @@ export const typesenseOnUserNameUpdate = async (
   const keepAlive = new KeepAlive(helpers);
   keepAlive.start();
 
-  await handleUserNameUpdate({ accountId, logger, userId });
+  try {
+    await handleUserNameUpdate({ accountId, logger, userId });
+  } catch (error: any) {
+    if (error.message !== 'account missing searchSettings') {
+      throw error;
+    }
+  }
 
   keepAlive.end();
 };
