@@ -1,5 +1,5 @@
 import { prisma } from '@linen/database';
-import { client } from './utils/client';
+import { updateByQuery } from './utils/client';
 import { collectionSchema } from './utils/model';
 import {
   getAccountSettings,
@@ -21,17 +21,14 @@ export async function handleChannelTypeUpdate({
     throw new Error('channel not found: ' + channelId);
   }
 
-  await client
-    .collections(collectionSchema.name)
-    .documents()
-    .update(
-      {
-        is_public: channel.type === 'PUBLIC',
-      },
-      {
-        filter_by: `accountId:=${channel.accountId} && channel_name:=${channel.channelName}`,
-      } as any
-    );
+  const document = {
+    is_public: channel.type === 'PUBLIC',
+  };
+  await updateByQuery({
+    collection: collectionSchema.name,
+    filter_by: `accountId:=${channel.accountId} && channel_name:=${channel.channelName}`,
+    document,
+  });
 }
 
 export async function handleChannelNameUpdate({

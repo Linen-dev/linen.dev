@@ -1,5 +1,5 @@
 import { accounts } from '@linen/database';
-import { client } from './utils/client';
+import { updateByQuery } from './utils/client';
 import { collectionSchema } from './utils/model';
 import { createAccountKeyAndPersist, getAccountSettings } from './utils/shared';
 
@@ -38,9 +38,10 @@ async function updateThreadsAndRecreateKeys(
   account: accounts,
   document: object
 ) {
-  await client
-    .collections(collectionSchema.name)
-    .documents()
-    .update(document, { filter_by: `accountId:=${account.id}` } as any);
+  await updateByQuery({
+    collection: collectionSchema.name,
+    filter_by: `accountId:=${account.id}`,
+    document,
+  });
   await createAccountKeyAndPersist({ account });
 }
