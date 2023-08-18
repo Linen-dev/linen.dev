@@ -26,7 +26,8 @@
     "@linen/web": "*",
     "@linen/typesense": "*",
     "axios": "^0.27.2",
-    "graphile-worker": "^0.13.0"
+    "graphile-worker": "^0.13.0",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "tsx": "^3.12.7",

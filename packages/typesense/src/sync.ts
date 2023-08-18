@@ -15,7 +15,7 @@ export async function sync({
   accountId: string;
   logger: Logger;
 }) {
-  const searchSettings = await getAccountSettings(accountId);
+  const { searchSettings } = await getAccountSettings(accountId);
   await syncUpdatedThreads(searchSettings, accountId, logger);
 
   // set cursor for next sync job

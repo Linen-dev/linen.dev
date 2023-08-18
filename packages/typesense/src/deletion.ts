@@ -16,7 +16,7 @@ export async function deletion({
   threadId: string;
   logger: Logger;
 }) {
-  const searchSettings = await getAccountSettings(accountId);
+  const { searchSettings } = await getAccountSettings(accountId);
 
   const threads = await queryThreads({
     where: {

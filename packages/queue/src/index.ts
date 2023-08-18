@@ -23,6 +23,10 @@ import {
   typesenseSync,
   typesenseDeletion,
   typesenseRefreshApiKeys,
+  typesenseOnChannelNameUpdate,
+  typesenseOnChannelTypeUpdate,
+  typesenseOnCommunityTypeUpdate,
+  typesenseOnUserNameUpdate,
 } from './tasks/typesense';
 
 export type TaskInterface = (
@@ -73,6 +77,10 @@ async function runWorker() {
       typesenseSyncAll,
       typesenseDeletion,
       typesenseRefreshApiKeys,
+      typesenseOnChannelNameUpdate,
+      typesenseOnChannelTypeUpdate,
+      typesenseOnCommunityTypeUpdate,
+      typesenseOnUserNameUpdate,
     },
     parsedCronItems: parseCronItems([
       {

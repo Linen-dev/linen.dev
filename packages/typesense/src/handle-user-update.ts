@@ -1,25 +1,35 @@
-import type { Logger } from '@linen/types';
+import { Logger } from '@linen/types';
 import {
   getAccountSettings,
-  persistEndFlag,
   pushToTypesense,
   queryThreads,
-  threadsWhere,
 } from './utils/shared';
 
-export async function dump({
+export async function handleUserNameUpdate({
+  userId,
   accountId,
   logger,
 }: {
+  userId: string;
   accountId: string;
   logger: Logger;
 }) {
   const { searchSettings } = await getAccountSettings(accountId);
+
   let cursor = 0;
   do {
     const threads = await queryThreads({
       where: {
-        ...threadsWhere({ accountId }),
+        messages: {
+          some: {
+            OR: [
+              {
+                author: { id: userId },
+              },
+              { mentions: { some: { usersId: userId } } },
+            ],
+          },
+        },
         incrementId: { gt: cursor },
       },
       orderBy: { incrementId: 'asc' },
@@ -38,7 +48,4 @@ export async function dump({
       logger,
     });
   } while (true);
-
-  // set cursor for next sync job
-  await persistEndFlag(searchSettings, accountId);
 }

@@ -77,7 +77,8 @@ same steps as public communities except it will not create a scoped api-key for 
 - [x] server: queue tasks
 - [x] server: expose setup, dump and sync functions
 - [x] server: api-key refresh task
-- [] server: channel visibility change
-- [] server: community visibility change
-- [] server: user name changes
-- [] server: channel name changes
+- [x] server: channel visibility change
+- [x] server: community visibility change
+- [x] server: user name changes
+- [x] server: channel name changes
+- [] search on feed

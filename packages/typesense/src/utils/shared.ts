@@ -36,7 +36,7 @@ export async function getAccountSettings(accountId: string) {
   const searchSettings: SerializedSearchSettings = JSON.parse(
     account.searchSettings
   );
-  return searchSettings;
+  return { searchSettings, account };
 }
 
 export async function queryThreads({
