@@ -123,14 +123,6 @@ export default function BrandingView({
                 Custom Domain
                 <Label.Description>
                   Choose the custom url that Linen will live under.
-                  {currentCommunity.premium && (
-                    <Label.Hint>
-                      Link to your custom domain from various places (your
-                      website&apos;s header or footer, github issues) to ensure
-                      that your website will get indexed and prioritized by the
-                      search engines.
-                    </Label.Hint>
-                  )}
                 </Label.Description>
               </Label>
               <TextField
@@ -144,6 +136,14 @@ export default function BrandingView({
                 disabled={!currentCommunity.premium}
                 readOnly={!currentCommunity.premium}
               />
+              {currentCommunity.premium && (
+                <Label.Hint>
+                  Link to your custom domain from various places (your
+                  website&apos;s header or footer, github issues) to ensure that
+                  your website will get indexed and prioritized by the search
+                  engines.
+                </Label.Hint>
+              )}
               <DomainStatus
                 currentCommunity={currentCommunity}
                 api={api}
