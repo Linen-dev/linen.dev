@@ -21,17 +21,17 @@
 
 .hint .content {
   align-items: center;
-  background: var(--color-primary);
-  border-radius: 2px;
-  color: var(--color-white);
+  border-radius: 4px;
+  color: var(--color-gray-600);
   display: inline-flex;
+  font-size: 12px;
+  font-weight: normal;
   gap: 0.25rem;
-  margin-top: 0.25rem;
-  padding: 4px 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .hint svg {
-  color: var(--color-white);
-  width: 12px;
-  height: 12px;
+  color: var(--color-blue-700);
+  width: 14px;
+  height: 14px;
 }
