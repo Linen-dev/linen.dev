@@ -122,12 +122,19 @@ export default function BrandingView({
               <Label htmlFor="redirectDomain">
                 Custom Domain
                 <Label.Description>
-                  Choose the custom url that Linen will live under. i.e
-                  linen.yourwebsite.com
+                  Choose the custom url that Linen will live under.
+                  {currentCommunity.premium && (
+                    <Label.Hint>
+                      Link to your custom domain from various places (your
+                      website&apos;s header or footer, github issues) to ensure
+                      that your website will get indexed and prioritized by the
+                      search engines.
+                    </Label.Hint>
+                  )}
                 </Label.Description>
               </Label>
               <TextField
-                placeholder="linen.yourwebsite.com or chat.yourwebsite.com"
+                placeholder="linen.yourwebsite.com"
                 id="redirectDomain"
                 defaultValue={
                   currentCommunity.premium
