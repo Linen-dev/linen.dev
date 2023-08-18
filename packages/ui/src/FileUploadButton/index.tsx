@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import styles from './index.module.scss';
 import { FiUploadCloud } from '@react-icons/all-files/fi/FiUploadCloud';
 
@@ -20,7 +21,10 @@ export default function FileUploadButton({
   accept,
 }: Props) {
   return (
-    <label className={styles.label} htmlFor={id}>
+    <label
+      className={classNames(styles.label, { [styles.disabled]: disabled })}
+      htmlFor={id}
+    >
       <FiUploadCloud /> {!uploading ? 'Upload' : `Uploading... ${progress}%`}
       <input
         className={styles.input}
