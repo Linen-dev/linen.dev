@@ -14,3 +14,24 @@
   line-height: 1rem;
   padding: 0.25rem 0 0.5rem 0;
 }
+
+.hint {
+  display: block;
+}
+
+.hint .content {
+  align-items: center;
+  background: var(--color-primary);
+  border-radius: 2px;
+  color: var(--color-white);
+  display: inline-flex;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+  padding: 4px 0.5rem;
+}
+
+.hint svg {
+  color: var(--color-white);
+  width: 12px;
+  height: 12px;
+}
