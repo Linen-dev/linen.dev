@@ -36,14 +36,19 @@ export async function handleChannelTypeUpdate({
 
 export async function handleChannelNameUpdate({
   channelId,
-  accountId,
   logger,
 }: {
-  accountId: string;
   channelId: string;
   logger: Logger;
 }) {
-  const { searchSettings } = await getAccountSettings(accountId);
+  const channel = await prisma.channels.findUnique({
+    where: { id: channelId },
+  });
+  if (!channel || !channel?.accountId) {
+    throw new Error('channel not found: ' + channelId);
+  }
+
+  const { searchSettings } = await getAccountSettings(channel?.accountId);
 
   let cursor = 0;
   do {

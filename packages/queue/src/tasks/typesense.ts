@@ -118,9 +118,8 @@ export const typesenseOnChannelNameUpdate = async (
 ) => {
   const logger = new Logger(helpers.logger);
 
-  const { accountId, channelId } = z
+  const { channelId } = z
     .object({
-      accountId: z.string().uuid(),
       channelId: z.string().uuid(),
     })
     .parse(payload);
@@ -128,7 +127,7 @@ export const typesenseOnChannelNameUpdate = async (
   const keepAlive = new KeepAlive(helpers);
   keepAlive.start();
 
-  await handleChannelNameUpdate({ accountId, channelId, logger });
+  await handleChannelNameUpdate({ channelId, logger });
 
   keepAlive.end();
 };

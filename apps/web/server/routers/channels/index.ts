@@ -50,6 +50,7 @@ import {
 import { serializeChannel } from '@linen/serializers/channel';
 import { serialize } from 'superjson';
 import { serializeUser } from '@linen/serializers/user';
+import { eventChannelUpdate } from 'services/events/eventChannelUpdate';
 
 const prefix = '/api/channels';
 
@@ -362,17 +363,24 @@ channelsRouter.put(
       landing,
       hidden,
     } = request.body;
+    const channel = await prisma.channels.findUnique({
+      where: { id: channelId },
+    });
+    if (!channel) {
+      return response.status(404);
+    }
     if (landing === true) {
       await ChannelsService.setLandingChannel({
         accountId: request.tenant?.id!,
         channelId,
       });
     }
+    const newType = channelPrivate ? ChannelType.PRIVATE : ChannelType.PUBLIC;
     await prisma.channels.update({
       where: { id: channelId },
       data: {
         channelName,
-        type: channelPrivate ? ChannelType.PRIVATE : ChannelType.PUBLIC,
+        type: newType,
         ...(channelPrivate && {
           memberships: {
             createMany: {
@@ -386,6 +394,11 @@ channelsRouter.put(
         landing,
         hidden,
       },
+    });
+    await eventChannelUpdate({
+      channelId: channel.id,
+      isNameChanged: channel.channelName !== channelName,
+      isTypeChanged: channel.type !== newType,
     });
     return response.status(200).json({});
   }

@@ -1,19 +1,25 @@
-import { accounts, channels } from '@linen/database';
-import { prismaMock } from '__tests__/singleton';
+jest.mock('services/events/eventChannelUpdate');
+import { accounts, prisma } from '@linen/database';
+import { createAccount, createChannel } from '@linen/factory';
 import { handleWebhook } from 'services/slack/webhooks';
+import { v4 } from 'uuid';
 
-const channelRenameEvent = {
-  token: 'xacv5epJ26YAuNHJeO4UoaNf',
-  team_id: 'T03ECUWHFGD',
-  api_app_id: 'A03DSC9PK4K',
+const channelRenameEvent = (
+  team_id: string,
+  externalId = v4(),
+  channelName = v4()
+) => ({
+  token: v4(),
+  team_id,
+  api_app_id: v4(),
   event: {
     type: 'channel_rename',
     channel: {
-      id: 'C03NGPMCX1C',
+      id: externalId,
       is_channel: true,
       is_mpim: false,
-      name: 'newnewch2',
-      name_normalized: 'newnewch2',
+      name: channelName,
+      name_normalized: channelName,
       created: 1657208098,
     },
     event_ts: '1657208648.003400',
@@ -24,193 +30,173 @@ const channelRenameEvent = {
   authorizations: [
     {
       enterprise_id: null,
-      team_id: 'T03ECUWHFGD',
-      user_id: 'U03ENAMC6AE',
+      team_id,
+      user_id: v4(),
       is_bot: true,
       is_enterprise_install: false,
     },
   ],
   is_ext_shared_channel: false,
-};
+});
 
-const channelCreatedEvent = {
-  token: 'xacv5epJ26YAuNHJeO4UoaNf',
-  team_id: 'T03ECUWHFGD',
-  api_app_id: 'A03DSC9PK4K',
+const channelCreatedEvent = (team_id: string, channelName = v4()) => ({
+  token: v4(),
+  team_id,
+  api_app_id: v4(),
   event: {
     type: 'channel_created',
     channel: {
-      id: 'C03P28QD4KT',
+      id: v4(),
       is_channel: true,
-      name: 'new2',
-      name_normalized: 'new2',
+      name: channelName,
+      name_normalized: channelName,
       created: 1657210637,
-      creator: 'U03FCDP4K7S',
+      creator: v4(),
       is_shared: false,
       is_org_shared: false,
     },
     event_ts: '1657210637.005100',
   },
   type: 'event_callback',
-  event_id: 'Ev03PDBY3PFA',
+  event_id: v4(),
   event_time: 1657210637,
   authorizations: [
     {
       enterprise_id: null,
-      team_id: 'T03ECUWHFGD',
-      user_id: 'U03ENAMC6AE',
+      team_id,
+      user_id: v4(),
       is_bot: true,
       is_enterprise_install: false,
     },
   ],
   is_ext_shared_channel: false,
-};
+});
 
 describe('webhook :: channels', () => {
+  let account: accounts;
+  beforeAll(async () => {
+    account = await createAccount({
+      slackTeamId: v4(),
+    });
+    await prisma.slackAuthorizations.create({
+      data: {
+        accountsId: account.id,
+        accessToken: v4(),
+        botUserId: v4(),
+        scope: v4(),
+        joinChannel: true,
+      },
+    });
+  });
   describe('channel_created event', () => {
     test('happy path :: create a new channel', async () => {
-      const accountId = 'accountId';
-      const accountsFindFirstMock =
-        prismaMock.accounts.findFirst.mockResolvedValue({
-          id: accountId,
-        } as accounts);
-      const channelsCreateMock = prismaMock.channels.create.mockResolvedValue(
-        {} as channels
-      );
-      prismaMock.slackAuthorizations.findFirst.mockResolvedValue({
-        accessToken: 'token',
-        joinChannel: true,
-      } as any);
+      const event = channelCreatedEvent(account.slackTeamId!);
 
-      const res = await handleWebhook(channelCreatedEvent);
-
-      expect(res.status).toBe(200);
-      expect(res.message).toStrictEqual('channel created');
-
-      expect(accountsFindFirstMock).toHaveBeenCalledWith({
-        select: { id: true, newChannelsConfig: true },
-        where: { slackTeamId: channelCreatedEvent.team_id },
-      });
-      expect(channelsCreateMock).toHaveBeenCalledWith({
-        data: {
-          channelName: channelCreatedEvent.event.channel.name,
-          accountId,
-          externalChannelId: channelCreatedEvent.event.channel.id,
-          hidden: false,
+      const shouldBeEmpty = await prisma.channels.findFirst({
+        where: {
+          accountId: account.id,
+          channelName: event.event.channel.name,
         },
+      });
+      expect(shouldBeEmpty).toBe(null);
+
+      const res = await handleWebhook(event, console);
+
+      expect(res?.status).toBe(200);
+      expect(res?.message).toStrictEqual('channel created');
+
+      const channel = await prisma.channels.findFirst({
+        where: {
+          accountId: account.id,
+          channelName: event.event.channel.name,
+        },
+      });
+
+      expect(channel).toMatchObject({
+        accountId: account.id,
+        channelName: event.event.channel.name,
+        archived: false,
+        default: false,
+        hidden: false,
+        landing: false,
+        type: 'PUBLIC',
+        viewType: 'CHAT',
       });
     });
 
     test('account does not exists :: it should return 404', async () => {
-      const accountsFindFirstMock =
-        prismaMock.accounts.findFirst.mockResolvedValue(null);
+      const event = channelCreatedEvent(v4());
 
-      const res = await handleWebhook(channelCreatedEvent);
+      const res = await handleWebhook(event, console);
 
-      expect(res.status).toBe(404);
-      expect(res.error).toStrictEqual('account not found');
-
-      expect(accountsFindFirstMock).toHaveBeenCalledWith({
-        select: { id: true, newChannelsConfig: true },
-        where: { slackTeamId: channelCreatedEvent.team_id },
-      });
+      expect(res?.status).toBe(404);
+      expect(res?.error).toStrictEqual('account not found');
     });
   });
 
   describe('channel_rename event', () => {
     test('happy path :: rename channel', async () => {
-      const accountId = 'accountId';
-      const channelId = 'channelId';
-      const accountsFindFirstMock =
-        prismaMock.accounts.findFirst.mockResolvedValue({
-          id: accountId,
-        } as accounts);
-      const channelsFindFirstMock =
-        prismaMock.channels.findFirst.mockResolvedValue({
-          id: channelId,
-        } as channels);
-      const channelsUpdateMock = prismaMock.channels.update.mockResolvedValue(
-        {} as channels
-      );
+      const event = channelRenameEvent(account.slackTeamId!);
+      const externalChannelId = event.event.channel.id;
 
-      const res = await handleWebhook(channelRenameEvent);
+      const existentChannel = await createChannel({
+        externalChannelId,
+        accountId: account.id,
+        channelName: v4(),
+      });
 
-      expect(res.status).toBe(200);
-      expect(res.message).toStrictEqual('channel renamed');
+      expect(existentChannel.channelName).not.toBe(event.event.channel.name);
 
-      expect(accountsFindFirstMock).toHaveBeenCalledWith({
-        select: { id: true, newChannelsConfig: true },
-        where: { slackTeamId: channelRenameEvent.team_id },
+      const res = await handleWebhook(event, console);
+
+      expect(res?.status).toBe(200);
+      expect(res?.message).toStrictEqual('channel renamed');
+
+      const updatedChannel = await prisma.channels.findFirst({
+        where: { externalChannelId },
       });
-      expect(channelsFindFirstMock).toHaveBeenCalledWith({
-        where: {
-          externalChannelId: channelRenameEvent.event.channel.id,
-          accountId,
-        },
-      });
-      expect(channelsUpdateMock).toHaveBeenCalledWith({
-        where: {
-          id: channelId,
-        },
-        data: {
-          channelName: channelRenameEvent.event.channel.name,
-        },
-      });
+      expect(updatedChannel).not.toBeNull();
+      expect(updatedChannel?.channelName).toBe(event.event.channel.name);
     });
 
     test('account does not exists :: it should return 404', async () => {
-      const accountsFindFirstMock =
-        prismaMock.accounts.findFirst.mockResolvedValue(null);
+      const event = channelRenameEvent(v4());
 
-      const res = await handleWebhook(channelRenameEvent);
+      const res = await handleWebhook(event, console);
 
-      expect(res.status).toBe(404);
-      expect(res.error).toStrictEqual('account not found');
-
-      expect(accountsFindFirstMock).toHaveBeenCalledWith({
-        select: { id: true, newChannelsConfig: true },
-        where: { slackTeamId: channelRenameEvent.team_id },
-      });
+      expect(res?.status).toBe(404);
+      expect(res?.error).toStrictEqual('account not found');
     });
 
     test('channel does not exists :: it should create a new one', async () => {
-      const accountId = 'accountId';
-      const accountsFindFirstMock =
-        prismaMock.accounts.findFirst.mockResolvedValue({
-          id: accountId,
-        } as accounts);
-      const channelsFindFirstMock =
-        prismaMock.channels.findFirst.mockResolvedValue(null);
-      const channelsCreateMock = prismaMock.channels.create.mockResolvedValue(
-        {} as channels
-      );
-      prismaMock.slackAuthorizations.findFirst.mockResolvedValue({
-        accessToken: 'token',
-        joinChannel: true,
-      } as any);
+      const event = channelRenameEvent(account.slackTeamId!);
+      const externalChannelId = event.event.channel.id;
 
-      const res = await handleWebhook(channelRenameEvent);
-
-      expect(res.status).toBe(200);
-      expect(res.message).toStrictEqual('channel created');
-
-      expect(accountsFindFirstMock).toHaveBeenCalledWith({
-        select: { id: true, newChannelsConfig: true },
-        where: { slackTeamId: channelRenameEvent.team_id },
+      const shouldNotExist = await prisma.channels.findFirst({
+        where: { externalChannelId },
       });
-      expect(channelsFindFirstMock).toHaveBeenCalledWith({
-        where: {
-          externalChannelId: channelRenameEvent.event.channel.id,
-          accountId,
-        },
+
+      expect(shouldNotExist).toBeNull();
+
+      const res = await handleWebhook(event, console);
+
+      expect(res?.status).toBe(200);
+      expect(res?.message).toStrictEqual('channel created');
+
+      const newChannel = await prisma.channels.findFirst({
+        where: { externalChannelId },
       });
-      expect(channelsCreateMock).toHaveBeenCalledWith({
-        data: {
-          channelName: channelRenameEvent.event.channel.name,
-          accountId,
-          externalChannelId: channelRenameEvent.event.channel.id,
-          hidden: false,
-        },
+      expect(newChannel).not.toBeNull();
+      expect(newChannel?.channelName).toBe(event.event.channel.name);
+      expect(newChannel).toMatchObject({
+        accountId: account.id,
+        channelName: event.event.channel.name,
+        archived: false,
+        default: false,
+        hidden: false,
+        landing: false,
+        type: 'PUBLIC',
+        viewType: 'CHAT',
       });
     });
   });

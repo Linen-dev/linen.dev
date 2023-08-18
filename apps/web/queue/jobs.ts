@@ -144,3 +144,21 @@ export async function createTypesenseUserNameUpdate(payload: {
     maxAttempts: 1,
   });
 }
+
+export async function createTypesenseChannelNameUpdate(payload: {
+  channelId: string;
+}) {
+  const worker = await WorkerSingleton.getInstance();
+  return await worker.addJob('typesenseOnChannelNameUpdate', payload, {
+    maxAttempts: 1,
+  });
+}
+
+export async function createTypesenseChannelTypeUpdate(payload: {
+  channelId: string;
+}) {
+  const worker = await WorkerSingleton.getInstance();
+  return await worker.addJob('typesenseOnChannelTypeUpdate', payload, {
+    maxAttempts: 1,
+  });
+}

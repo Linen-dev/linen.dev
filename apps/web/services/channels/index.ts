@@ -13,6 +13,7 @@ import { formatDistance } from '@linen/utilities/date';
 import { serializeChannel, serializeDm } from '@linen/serializers/channel';
 import { v4 } from 'uuid';
 import { config } from 'config';
+import { eventChannelUpdate } from 'services/events/eventChannelUpdate';
 
 class ChannelsService {
   static async find(communityId: string): Promise<channels[]> {
@@ -316,7 +317,7 @@ class ChannelsService {
         externalChannelId &&
         channel.externalChannelId !== externalChannelId
       ) {
-        return await prisma.channels.update({
+        const updatedChannel = await prisma.channels.update({
           where: { id: channel.id },
           data: {
             externalChannelId,
@@ -324,15 +325,27 @@ class ChannelsService {
             type,
           },
         });
+        await eventChannelUpdate({
+          channelId: channel.id,
+          isNameChanged: false,
+          isTypeChanged: channel.type !== type,
+        });
+        return updatedChannel;
       }
 
       if (channelName && channelName.toLowerCase() !== channel.channelName) {
-        return await prisma.channels.update({
+        const updatedChannel = await prisma.channels.update({
           where: { id: channel.id },
           data: {
             channelName: channelName.toLowerCase(),
           },
         });
+        await eventChannelUpdate({
+          channelId: channel.id,
+          isNameChanged: channel.channelName !== channelName.toLowerCase(),
+          isTypeChanged: false,
+        });
+        return updatedChannel;
       }
       return channel;
     }
@@ -676,15 +689,31 @@ export function findChannelByExternalId({
   });
 }
 
-export function renameChannel({ name, id }: { name: string; id: string }) {
-  return prisma.channels.update({
-    where: {
-      id,
-    },
-    data: {
-      channelName: name.toLowerCase(),
-    },
-  });
+export async function renameChannel({
+  name,
+  id,
+}: {
+  name: string;
+  id: string;
+}) {
+  const channel = await prisma.channels.findUnique({ where: { id } });
+  if (channel && channel.channelName !== name.toLowerCase()) {
+    const data = await prisma.channels.update({
+      where: {
+        id,
+      },
+      data: {
+        channelName: name.toLowerCase(),
+      },
+    });
+    await eventChannelUpdate({
+      channelId: id,
+      isNameChanged: true,
+      isTypeChanged: false,
+    });
+    return data;
+  }
+  return channel;
 }
 
 export async function findChannelWithAccountByExternalId(

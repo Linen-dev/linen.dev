@@ -81,4 +81,5 @@ same steps as public communities except it will not create a scoped api-key for 
 - [x] server: community visibility change
 - [x] server: user name changes
 - [x] server: channel name changes
+- [] server: channel hidden changes
 - [] search on feed
