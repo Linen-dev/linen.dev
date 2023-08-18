@@ -369,6 +369,15 @@ export default function BrandingView({
   );
 }
 
+function getDefaultDomainStatus(currentCommunity: SerializedAccount) {
+  if (!currentCommunity.redirectDomain) {
+    return '';
+  }
+  return currentCommunity.redirectDomainPropagate
+    ? 'Custom domain is working.'
+    : 'Custom domain is not working.';
+}
+
 function DomainStatus({
   currentCommunity,
   api,
@@ -379,9 +388,7 @@ function DomainStatus({
   dnsSettings(mounted: boolean): void;
 }) {
   const [statusText, setStatusText] = useState<string>(
-    currentCommunity.redirectDomainPropagate
-      ? 'Custom domain is working.'
-      : 'Custom domain is not working.'
+    getDefaultDomainStatus(currentCommunity)
   );
   const [statusColor, setStatusColor] = useState<'green' | 'red'>(
     currentCommunity.redirectDomainPropagate ? 'green' : 'red'
@@ -435,7 +442,10 @@ function DomainStatus({
       >
         {loading ? <Spinner /> : statusText}
       </span>
-      <Button onClick={() => validateDomain()} disabled={loading}>
+      <Button
+        onClick={() => validateDomain()}
+        disabled={loading || !currentCommunity.premium}
+      >
         Validate domain
       </Button>
     </div>
