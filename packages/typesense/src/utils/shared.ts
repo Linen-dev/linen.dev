@@ -64,6 +64,7 @@ export async function queryThreads({
           memberships: {
             select: {
               usersId: true,
+              user: { select: { authsId: true } },
             },
           },
         },
@@ -118,6 +119,9 @@ export async function pushToTypesense({
     channel: channels & {
       memberships: {
         usersId: string;
+        user: {
+          authsId: string | null;
+        };
       }[];
     };
   })[];
@@ -130,10 +134,9 @@ export async function pushToTypesense({
         thread: serializeThread(t),
         is_public: t.channel.type === 'PUBLIC',
         is_restrict,
-        accessible_to:
-          t.channel.type === 'PUBLIC'
-            ? []
-            : t.channel.memberships.map((m) => m.usersId),
+        accessible_to: t.channel.memberships
+          .filter((m) => !!m.user.authsId)
+          .map((m) => m.usersId),
       })
     )
     .filter((t) => !!t.body);

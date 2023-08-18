@@ -81,8 +81,9 @@ same steps as public communities except it will not create a scoped api-key for 
 - [x] server: community visibility change
 - [x] server: user name changes
 - [x] server: channel name changes
-- [] server: channel hidden changes
-- [] client: search on feed
 - [] server: new community event for setup
 - [] server: setup create dump task
 - [] server: setup sync all cron job
+- [] client: search on feed
+- [] server: channel hidden changes
+- [] server: channel membership changes
