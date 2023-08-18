@@ -1,0 +1,52 @@
+
+.banner {
+  align-items: center;
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-100);
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 360px;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  padding: 72px 0;
+}
+
+.header {
+  color: var(--color-gray-900);
+  font-size: 2.5rem;
+  font-weight: bold;
+  gap: 0.5rem;
+  letter-spacing: 0.3px;
+  line-height: 1;
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+}
+
+.underline {
+  align-items: center;
+  background-image: linear-gradient(
+    to right,
+    var(--color-primary) 0%,
+    var(--color-yellow-100) 100%
+  );
+  background-repeat: repeat-x;
+  background-position: 0 100%;
+  background-size: 100% 2px;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.header svg {
+  height: 36px;
+}
+
+.description {
+  color: var(--color-gray-600);
+  font-size: 1.125rem;
+  line-height: 2rem;
+  margin: 24px auto 36px;
+  max-width: 34rem;
+  text-align: center;
+}

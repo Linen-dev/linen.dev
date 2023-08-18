@@ -27,3 +27,9 @@
 .input {
   display: none;
 }
+
+.disabled {
+  background: var(--color-gray-200);
+  color: var(--color-text);
+  cursor: not-allowed;
+}

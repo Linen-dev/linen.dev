@@ -16,9 +16,9 @@ import debounce from '@linen/utilities/debounce';
 import styles from './index.module.scss';
 import type { ApiClient } from '@linen/api-client';
 import { PremiumCard } from './PremiumCard';
-import UpgradeButton from '@/Header/UpgradeButton';
 import Button from '@/Button';
 import Spinner from '@/Spinner';
+import Banner from './Banner';
 
 export default function BrandingView({
   reload,
@@ -93,13 +93,7 @@ export default function BrandingView({
     <div className={styles.container}>
       <Header />
       <form id="branding-form" onSubmit={onSubmit} className={styles.p3}>
-        {!currentCommunity.premium && (
-          <UpgradeButton
-            className={styles.upgrade}
-            label="Upgrade to Premium"
-            InternalLink={InternalLink}
-          />
-        )}
+        {!currentCommunity.premium && <Banner InternalLink={InternalLink} />}
         <div className={styles.wrapper}>
           <div className={styles.flexCol}>
             <PremiumCard isPremium={currentCommunity.premium}>
