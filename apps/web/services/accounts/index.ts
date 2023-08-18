@@ -15,6 +15,7 @@ import { replaceS3byCDN } from 'utilities/replaceS3byCDN';
 import { createRemoveCommunityJob } from 'queue/jobs';
 import { sendNotification } from 'services/slack';
 import { config } from 'config';
+import { eventCommunityUpdate } from 'services/events/eventCommunityUpdate';
 
 export default class AccountsService {
   static async create({
@@ -201,6 +202,10 @@ export default class AccountsService {
         where: { id: account.id },
         data,
       });
+      await eventCommunityUpdate({
+        id: account.id,
+        isTypeChanged: 'type' in data && account.type !== data.type,
+      });
 
       if (tags && tags.length) {
         await prisma.accountTag.deleteMany({
@@ -316,12 +321,23 @@ export const updateAccount = async (
   accountId: string,
   account: Prisma.accountsUpdateInput
 ) => {
-  return await prisma.accounts.update({
+  const oldAccount = await prisma.accounts.findUnique({
+    where: {
+      id: accountId,
+    },
+    rejectOnNotFound: true,
+  });
+  const updatedAccount = await prisma.accounts.update({
     where: {
       id: accountId,
     },
     data: account,
   });
+  await eventCommunityUpdate({
+    id: accountId,
+    isTypeChanged: oldAccount.type !== account.type,
+  });
+  return updatedAccount;
 };
 
 export const getAccountById = async (accountId: string) => {

@@ -162,3 +162,12 @@ export async function createTypesenseChannelTypeUpdate(payload: {
     maxAttempts: 1,
   });
 }
+
+export async function createTypesenseCommunityTypeUpdate(payload: {
+  accountId: string;
+}) {
+  const worker = await WorkerSingleton.getInstance();
+  return await worker.addJob('typesenseOnCommunityTypeUpdate', payload, {
+    maxAttempts: 1,
+  });
+}
