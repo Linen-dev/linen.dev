@@ -22,7 +22,8 @@ const faqs = [
   },
   {
     question: 'Does the free version get indexed by Google?',
-    answer: 'Yes! Google will index all the content on the free tier.',
+    answer:
+      'Yes! Google will index all the content on the free tier. Adding links to your community in various places is going to help with the indexation.',
   },
   {
     question: 'How does Linen Slack syncing work?',
