@@ -93,7 +93,7 @@ async function runWorker() {
         identifier: 'checkPropagation',
       },
       {
-        pattern: '00 3 * * *',
+        pattern: '00 3 * * *', // every day at 03:00
         options: {
           queueName: 'slugify',
           backfillPeriod: 0,
@@ -102,7 +102,7 @@ async function runWorker() {
         identifier: 'slugify',
       },
       {
-        pattern: '00 3 * * *',
+        pattern: '00 3 * * *', // every day at 03:00
         options: {
           queueName: QUEUE_MAINTENANCE_MESSAGE_COUNT,
           backfillPeriod: 0,
@@ -111,7 +111,7 @@ async function runWorker() {
         identifier: QUEUE_MAINTENANCE_MESSAGE_COUNT,
       },
       {
-        pattern: '00 3 * * 1,5',
+        pattern: '00 3 * * 1,5', // at 03:00 on Monday and Friday
         options: {
           queueName: QUEUE_CRAWL_GOOGLE_STATS,
           backfillPeriod: 0,
@@ -120,7 +120,7 @@ async function runWorker() {
         identifier: QUEUE_CRAWL_GOOGLE_STATS,
       },
       {
-        pattern: '0 0 23 * *', // at 23:00:00 every day
+        pattern: '0 23 * * *', // every day at 23:00
         options: {
           queueName: QUEUE_CLEANUP_USER_THREAD_STATUS,
           backfillPeriod: 0,
@@ -129,7 +129,7 @@ async function runWorker() {
         identifier: QUEUE_CLEANUP_USER_THREAD_STATUS,
       },
       {
-        pattern: '0 0 * * *',
+        pattern: '0 0 * * *', // every day at 0:00
         options: {
           queueName: 'sitemap',
           backfillPeriod: 0,
@@ -138,13 +138,23 @@ async function runWorker() {
         identifier: 'sitemap',
       },
       {
-        pattern: '0 0 * * *',
+        pattern: '0 0 * * *', // every day at 0:00
         options: {
           queueName: 'typesenseRefreshApiKeys',
           backfillPeriod: 0,
         },
         task: 'typesenseRefreshApiKeys',
         identifier: 'typesenseRefreshApiKeys',
+      },
+      {
+        pattern: '0 * * * *', // every 1 hour
+        options: {
+          queueName: 'typesenseSyncAll',
+          backfillPeriod: 0,
+          maxAttempts: 1,
+        },
+        task: 'typesenseSyncAll',
+        identifier: 'typesenseSyncAll',
       },
     ]),
   });
