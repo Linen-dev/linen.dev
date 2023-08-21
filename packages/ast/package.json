@@ -7,7 +7,7 @@
     "**/*.js"
   ],
   "scripts": {
-    "test": "jest",
+    "test": "jest --logHeapUsage --silent",
     "test:watch": "jest --watch"
   },
   "devDependencies": {

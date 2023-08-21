@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --silent",
+    "test": "jest --logHeapUsage --silent",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:integration": "dotenv -e .env.test -- jest -i -c jest.config.integration.js",

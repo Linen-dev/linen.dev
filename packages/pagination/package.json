@@ -6,7 +6,6 @@
   "private": true,
   "scripts": {
     "build": "rimraf dist && tsc",
-    "test": "jest --passWithNoTests",
     "dev": "tsc --watch"
   },
   "dependencies": {

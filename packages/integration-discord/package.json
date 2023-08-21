@@ -10,8 +10,7 @@
     "build": "yarn clean && yarn tsc",
     "with-env": "yarn dotenv -e ../../apps/web/.env",
     "dev": "tsc --watch",
-    "dev:bot": "yarn with-env tsx watch src/bot.ts",
-    "test": "jest --passWithNoTests"
+    "dev:bot": "yarn with-env tsx watch src/bot.ts"
   },
   "keywords": [],
   "author": "",
@@ -25,9 +24,6 @@
     "envalid": "^7.3.1"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.1",
-    "jest": "^29.5.0",
-    "ts-jest": "^29.0.5",
     "tsx": "^3.12.7",
     "typescript": "^5.1.3"
   }

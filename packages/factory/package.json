@@ -8,11 +8,9 @@
   },
   "dependencies": {
     "@linen/database": "*",
-    "@linen/types": "*",
-    "jest": "^29.5.0"
+    "@linen/types": "*"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.1",
     "typescript": "^5.1.3"
   },
   "main": "./dist/index.js",

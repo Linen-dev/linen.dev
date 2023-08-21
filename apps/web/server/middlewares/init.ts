@@ -8,7 +8,7 @@ import nextConnect from 'next-connect';
 import { passport } from 'server/auth';
 
 export const init = nextConnect().use(
-  morgan('tiny'),
+  morgan('tiny', { skip: () => process.env.NODE_ENV === 'test' }),
   cors({ origin: '*' }) as any,
   hpp() as any,
   helmet(),

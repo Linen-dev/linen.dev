@@ -9,7 +9,7 @@
     "clean": "rimraf dist",
     "build": "yarn clean && yarn tsc",
     "dev": "yarn tsc --watch",
-    "test": "jest"
+    "test": "jest --logHeapUsage --silent"
   },
   "keywords": [],
   "author": "",

@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "craco start",
     "build": "craco build",
-    "test": "craco test --passWithNoTests",
     "tauri": "tauri",
     "tauri:dev": "tauri dev --target x86_64-apple-darwin",
     "tauri:build:silicon": "dotenv -e .env.production -- tauri build --target aarch64-apple-darwin",
