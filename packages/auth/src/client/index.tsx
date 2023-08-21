@@ -170,7 +170,7 @@ export function useSession<R extends boolean>(options?: UseSessionOptions<R>) {
     throw new Error('`useSession` must be wrapped in a <SessionProvider />');
   }
 
-  const { required, onUnauthenticated } = options ?? {};
+  const { required, onUnauthenticated } = options || {};
 
   const requiredAndNotLoading = required && value.status === 'unauthenticated';
 
@@ -199,7 +199,7 @@ export async function getSession(params?: GetSessionParams) {
     logger,
     params
   );
-  if (params?.broadcast ?? true) {
+  if (params?.broadcast ? String(params.broadcast) !== 'false' : true) {
     broadcast.post({ event: 'session', data: { trigger: 'getSession' } });
   }
   return session;
@@ -256,7 +256,7 @@ export async function signIn<
 ): Promise<
   P extends RedirectableProviderType ? SignInResponse | undefined : undefined
 > {
-  const { callbackUrl = window.location.href, redirect = true } = options ?? {};
+  const { callbackUrl = window.location.href, redirect = true } = options || {};
 
   const baseUrl = __LINEN_AUTH.basePath;
   const providers = await getProviders();
@@ -301,7 +301,7 @@ export async function signIn<
 
   // TODO: Do not redirect for Credentials and Email providers by default in next major
   if (redirect || !isSupportingReturn) {
-    const url = data.url ?? callbackUrl;
+    const url = data.url || callbackUrl;
     window.location.href = url;
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes('#')) window.location.reload();
@@ -330,7 +330,7 @@ export async function signIn<
 export async function signOut<R extends boolean = true>(
   options?: SignOutParams<R>
 ): Promise<R extends true ? undefined : SignOutResponse> {
-  const { callbackUrl = window.location.href } = options ?? {};
+  const { callbackUrl = window.location.href } = options || {};
   const baseUrl = __LINEN_AUTH.basePath;
   const fetchOptions = {
     method: 'post',

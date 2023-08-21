@@ -2,7 +2,7 @@ import { serialize } from 'cookie';
 
 export function setPhCookie(res: any, value: string) {
   const setCookieHeader: string[] = [];
-  const existCookieHeader = res?.getHeader('Set-Cookie') ?? [];
+  const existCookieHeader = res?.getHeader('Set-Cookie') || [];
   if (Array.isArray(existCookieHeader)) {
     setCookieHeader.push(...existCookieHeader);
   }

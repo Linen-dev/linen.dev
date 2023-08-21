@@ -22,11 +22,11 @@ instance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const { config } = error;
-    const response = (error?.response as AxiosResponse) ?? {};
+    const response = (error?.response as AxiosResponse) || {};
     const delay =
       Number(
-        response?.headers['Retry-After'] ??
-          response?.headers['retry-after'] ??
+        response?.headers['Retry-After'] ||
+          response?.headers['retry-after'] ||
           10
       ) * 1000;
 

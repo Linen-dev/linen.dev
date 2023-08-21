@@ -4,7 +4,7 @@ const getLinenUrl = () => {
   if (process.env.NODE_ENV === 'production') {
     return 'https://linen.dev';
   } else {
-    return `http://localhost:${process.env.PORT ?? 3000}`;
+    return `http://localhost:${process.env.PORT || 3000}`;
   }
 };
 

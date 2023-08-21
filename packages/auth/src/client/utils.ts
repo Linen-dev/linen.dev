@@ -97,7 +97,7 @@ export function BroadcastChannel(name = 'linen.message') {
     receive(onReceive: (message: BroadcastMessage) => void) {
       const handler = (event: StorageEvent) => {
         if (event.key !== name) return;
-        const message: BroadcastMessage = JSON.parse(event.newValue ?? '{}');
+        const message: BroadcastMessage = JSON.parse(event.newValue || '{}');
         if (message?.event !== 'session' || !message?.data) return;
 
         onReceive(message);

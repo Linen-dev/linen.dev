@@ -18,7 +18,7 @@ export function getHostFromHeaders(headers?: {
   origin?: string;
 }) {
   if (process.env.NODE_ENV === 'development') {
-    return `localhost:${process.env.PORT ?? 3000}`;
+    return `localhost:${process.env.PORT || 3000}`;
   }
   if (
     headers?.origin?.startsWith('tauri://') ||
@@ -103,5 +103,5 @@ export function getPushUrlSSR() {
   if (!!process.env.PUSH_SERVICE_URL) {
     return process.env.PUSH_SERVICE_URL;
   }
-  return `http://localhost:${process.env.PUSH_PORT ?? 4000}`;
+  return `http://localhost:${process.env.PUSH_PORT || 4000}`;
 }

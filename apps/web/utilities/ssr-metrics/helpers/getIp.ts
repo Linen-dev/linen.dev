@@ -8,7 +8,7 @@ export function getIp(headers: IncomingHttpHeaders) {
       if (Array.isArray(forwardedFor)) {
         ip = forwardedFor.at(0);
       } else {
-        ip = forwardedFor?.split(',').at(0) ?? undefined;
+        ip = forwardedFor?.split(',').at(0) || undefined;
       }
     }
     return ip;
