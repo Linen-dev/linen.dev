@@ -319,7 +319,7 @@ export default function Channel({
       isLeftScrollAtBottom ||
       isInViewport(leftBottomRef.current as HTMLElement)
     ) {
-      setTimeout(() => handleScroll, 0);
+      setTimeout(() => handleScroll(), 0);
     }
   }
 
@@ -399,7 +399,7 @@ export default function Channel({
   function scrollDown(offset = 0) {
     const scrollableRoot = scrollableRootRef.current;
     const lastScrollDistanceToBottom =
-      lastScrollDistanceToBottomRef.current ?? 0;
+      lastScrollDistanceToBottomRef.current || 0;
     if (scrollableRoot) {
       scrollableRoot.scrollTop =
         scrollableRoot.scrollHeight - lastScrollDistanceToBottom + offset;
