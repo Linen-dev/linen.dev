@@ -7,7 +7,6 @@
     "**/*.js"
   ],
   "scripts": {
-    "pretest": "jest --clear-cache",
     "test": "jest",
     "test:watch": "jest --watch"
   },

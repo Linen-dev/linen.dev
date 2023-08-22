@@ -6,7 +6,6 @@
     "prebuild": "node ../scripts/rebuild-package.mjs",
     "build": "rimraf dist && tsc",
     "dev": "tsc --watch",
-    "pretest": "jest --clear-cache",
     "test": "jest",
     "test:watch": "jest --watch"
   },

@@ -13,7 +13,6 @@
     "build": "rollup --config rollup.config.mjs --failAfterWarnings",
     "dev": "yarn watch",
     "watch": "rollup --config rollup.config.mjs --watch",
-    "pretest": "jest --clear-cache",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
