@@ -6,14 +6,16 @@ import { SerializedMessage, SerializedUser } from '@linen/types';
 import styles from './index.module.scss';
 
 interface Props {
+  title?: string;
   message: SerializedMessage;
   currentUser?: SerializedUser | null;
   badge?: boolean;
 }
 
-function Row({ badge, message, currentUser }: Props) {
+function Row({ title, badge, message, currentUser }: Props) {
   return (
     <div className={styles.container}>
+      {title && <div className={styles.title}>{title}</div>}
       {badge && <Badge className={styles.badge}>Preview</Badge>}
       <div className={styles.row}>
         <div className={styles.left}>

@@ -1,9 +1,11 @@
 import React, { createRef, useState } from 'react';
 import MessageForm from '@/MessageForm';
+import MessagePreview from '@/MessagePreview';
 import TextInput from '@/TextInput';
 import Field from '@/Field';
-import { SerializedUser, UploadedFile } from '@linen/types';
+import { MessageFormat, SerializedUser, UploadedFile } from '@linen/types';
 import styles from './index.module.scss';
+import { postprocess } from '@linen/ast';
 
 interface Props {
   channelId: string;
@@ -21,14 +23,14 @@ interface Props {
   }): void;
   sendMessage({
     message,
-    title,
     files,
     channelId,
+    title,
   }: {
     message: string;
-    title: string;
     files: UploadedFile[];
     channelId: string;
+    title: string;
   }): Promise<void>;
   uploadFiles?(files: File[]): Promise<void>;
   progress: number;
@@ -51,6 +53,8 @@ export default function Chat({
   useUsersContext,
 }: Props) {
   const [title, setTitle] = useState('');
+  const [message, setMessage] = useState('');
+  const [allUsers] = useUsersContext();
   const ref = createRef<HTMLDivElement>();
 
   function handleDragEnter() {
@@ -96,7 +100,27 @@ export default function Chat({
       }}
       ref={ref}
     >
-      <Field>
+      {message && (
+        <MessagePreview
+          currentUser={currentUser}
+          title={title}
+          message={{
+            body: postprocess(message, allUsers),
+            sentAt: new Date().toISOString(),
+            author: currentUser || null,
+            usersId: currentUser?.id || '1',
+            mentions: allUsers,
+            attachments: [],
+            reactions: [],
+            id: '1',
+            threadId: '1',
+            messageFormat: MessageFormat.LINEN,
+            externalId: null,
+          }}
+          badge
+        />
+      )}
+      <Field className={styles.field}>
         <TextInput
           id="channel-title"
           placeholder="Title..."
@@ -109,8 +133,6 @@ export default function Chat({
             event.preventDefault();
           }}
         />
-      </Field>
-      <Field>
         <MessageForm
           id={`channel-message-form-${channelId}`}
           currentUser={currentUser}
@@ -123,12 +145,14 @@ export default function Chat({
               channelId: channelId,
             });
           }}
+          onMessageChange={(message: string) => setMessage(message)}
           progress={progress}
           uploading={uploading}
           uploads={uploads}
           upload={uploadFiles}
           fetchMentions={fetchMentions}
           useUsersContext={useUsersContext}
+          preview={false}
         />
       </Field>
     </div>

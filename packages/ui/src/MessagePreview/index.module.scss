@@ -1,6 +1,7 @@
 .container {
   color: var(--color-text);
   padding: 0 0 1rem 0;
+  position: relative;
 }
 
 .row {
@@ -35,6 +36,16 @@
   flex-direction: row;
   gap: 0.375rem;
   line-height: 1;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0 0 0.75rem 0;
+  word-wrap: break-word;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .date {
