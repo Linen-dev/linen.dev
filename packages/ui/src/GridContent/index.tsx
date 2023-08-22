@@ -5,6 +5,7 @@ import {
   Permissions,
   Priority,
   ReminderTypes,
+  SerializedAccount,
   SerializedChannel,
   SerializedReadStatus,
   SerializedThread,
@@ -32,6 +33,7 @@ interface RowItem {
 export default function GridContent({
   className,
   currentChannel,
+  currentCommunity,
   threads,
   permissions,
   readStatus,
@@ -58,6 +60,7 @@ export default function GridContent({
 }: {
   className?: string;
   currentChannel: SerializedChannel;
+  currentCommunity: SerializedAccount;
   threads: SerializedThread[];
   permissions: Permissions;
   readStatus?: SerializedReadStatus;
@@ -114,6 +117,16 @@ export default function GridContent({
     ...threads
       .filter((thread) => thread.messages.length > 0)
       .map((thread) => {
+        if (
+          currentCommunity.featurePreview &&
+          currentChannel.viewType === 'CHAT'
+        ) {
+          return {
+            type: RowType.Thread,
+            content: thread,
+            timestamp: Number(thread.lastReplyAt),
+          };
+        }
         return {
           type: RowType.Thread,
           content: thread,

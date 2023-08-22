@@ -571,6 +571,7 @@ export default function Channel({
                         <Grid
                           className={styles.grid}
                           currentChannel={currentChannel}
+                          currentCommunity={currentCommunity}
                           threads={threads}
                           permissions={permissions}
                           readStatus={readStatus}
