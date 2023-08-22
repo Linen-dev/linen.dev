@@ -54,6 +54,7 @@ export interface SerializedAccount {
   redirectDomain?: string;
   brandColor?: string;
   premium: boolean;
+  featurePreview: boolean;
   googleAnalyticsId?: string;
   syncStatus: string;
   communityType: CommunityType | null;

@@ -24,6 +24,7 @@ export default function createAccount(options?: Partial<accounts>): accounts {
     anonymizeUsers: false,
     anonymize: AnonymizeType.NONE,
     premium: false,
+    featurePreview: false,
     chat: 'NONE',
     integration: 'NONE',
     description: null,
