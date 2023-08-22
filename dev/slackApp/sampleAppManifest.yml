@@ -8,7 +8,7 @@ features:
     always_online: false
 oauth_config:
   redirect_urls:
-    - https://linen-YOURNAME.ngrok.io/api/auth
+    - https://linen-YOURNAME.ngrok.io/api/oauth
   scopes:
     user:
       - channels:history
