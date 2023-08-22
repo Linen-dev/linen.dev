@@ -19,6 +19,7 @@ export default function createChannel(options?: Partial<channels>): channels {
     updatedAt: null,
     displayOrder: 0,
     viewType: 'CHAT',
+    orderBy: 'THREAD_SENT_AT',
     ...options,
   };
 }
