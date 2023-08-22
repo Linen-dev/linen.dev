@@ -13,7 +13,7 @@ To set up Linen's Slack app you need to follow the steps below:
 7. Copy `Client ID` and `Client Secret` and paste them into the `.env` file for `NEXT_PUBLIC_SLACK_CLIENT_ID` and `SLACK_CLIENT_SECRET`
 8. Set `NEXT_PUBLIC_REDIRECT_URI` to `https://linen-YOURNAME.ngrok.io/api/oauth` in .env file
 9. Start linen with `yarn start` and sign up for a new account localhost:3000/signup and install the app to a workspace i.e Linen's workspace or your own custom one (Linen only shows channels with more than 20 threads so probably best to use Linen's workspace)
-10. Open up Postman or use curl and hit `localhost:3000/api/scripts/sync?account_id=7649c602-5a12-4f29-a8f6-66e288a243eb` - replace account_id with your account id - you can find the accountId in your local postgres database. This will sync all the Slack channels and threads with your Linen account.
+10. Open up Postman or use curl and hit `localhost:3000/api/sync?account_id=7649c602-5a12-4f29-a8f6-66e288a243eb` - replace account_id with your account id - you can find the accountId in your local postgres database. This will sync all the Slack channels and threads with your Linen account.
 
 ## Slack sync
 

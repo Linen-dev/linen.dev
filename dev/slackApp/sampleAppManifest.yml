@@ -1,14 +1,14 @@
 display_information:
   name: linen.dev-YOURNAME
   description: App that syncs your Slack threads
-  background_color: '#303133'
+  background_color: "#303133"
 features:
   bot_user:
     display_name: Slack_sync
     always_online: false
 oauth_config:
   redirect_urls:
-    - https://linen-YOURNAME.ngrok.io/api/oauth
+    - https://linen-YOURNAME.ngrok.io/api/auth
   scopes:
     user:
       - channels:history
