@@ -12,7 +12,7 @@ describe('MessageForm', () => {
         fetchMentions={(args) => Promise.resolve([])}
       />
     );
-    const textarea = getByPlaceholderText('Add your comment...');
+    const textarea = getByPlaceholderText('Message...');
     expect(textarea).toBeInTheDocument();
   });
 });

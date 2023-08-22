@@ -353,7 +353,7 @@ function MessageForm({
           autoFocus={autoFocus}
           className={styles.textarea}
           name="message"
-          placeholder="Add your comment..."
+          placeholder="Message..."
           rows={rows || 2}
           value={message}
           onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {

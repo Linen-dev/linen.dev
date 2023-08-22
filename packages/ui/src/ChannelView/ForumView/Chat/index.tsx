@@ -99,7 +99,7 @@ export default function Chat({
       <Field>
         <TextInput
           id="channel-title"
-          placeholder="Add your title..."
+          placeholder="Title..."
           value={title}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             setTitle(event.target.value)
