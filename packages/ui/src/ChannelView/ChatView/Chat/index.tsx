@@ -1,15 +1,22 @@
 import React, { createRef, useState } from 'react';
+import classNames from 'classnames';
 import MessageForm from '@/MessageForm';
 import MessagePreview from '@/MessagePreview';
 import TextInput from '@/TextInput';
 import Field from '@/Field';
-import { MessageFormat, SerializedUser, UploadedFile } from '@linen/types';
+import {
+  MessageFormat,
+  SerializedAccount,
+  SerializedUser,
+  UploadedFile,
+} from '@linen/types';
 import styles from './index.module.scss';
 import { postprocess } from '@linen/ast';
 
 interface Props {
   channelId: string;
   currentUser?: SerializedUser | null;
+  currentCommunity: SerializedAccount;
   onDrop({
     source,
     target,
@@ -43,6 +50,7 @@ interface Props {
 export default function Chat({
   channelId,
   currentUser,
+  currentCommunity,
   progress,
   uploading,
   uploads,
@@ -120,19 +128,25 @@ export default function Chat({
           badge
         />
       )}
-      <Field className={styles.field}>
-        <TextInput
-          id="channel-title"
-          placeholder="Title..."
-          value={title}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            setTitle(event.target.value)
-          }
-          onKeyUp={(event: React.KeyboardEvent<HTMLInputElement>) => {
-            event.stopPropagation();
-            event.preventDefault();
-          }}
-        />
+      <Field
+        className={classNames({
+          [styles.field]: currentCommunity.featurePreview,
+        })}
+      >
+        {currentCommunity.featurePreview && (
+          <TextInput
+            id="channel-title"
+            placeholder="Title..."
+            value={title}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setTitle(event.target.value)
+            }
+            onKeyUp={(event: React.KeyboardEvent<HTMLInputElement>) => {
+              event.stopPropagation();
+              event.preventDefault();
+            }}
+          />
+        )}
         <MessageForm
           id={`channel-message-form-${channelId}`}
           currentUser={currentUser}

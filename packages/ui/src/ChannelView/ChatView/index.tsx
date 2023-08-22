@@ -608,6 +608,7 @@ export default function Channel({
                       <Chat
                         channelId={currentChannel.id}
                         currentUser={currentUser}
+                        currentCommunity={currentCommunity}
                         onDrop={handleDrop}
                         sendMessage={sendMessage}
                         progress={progress}
