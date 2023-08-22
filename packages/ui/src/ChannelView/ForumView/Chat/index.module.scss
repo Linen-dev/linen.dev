@@ -30,5 +30,16 @@
 
   input, textarea {
     border: none;
+    padding-left: 0.625rem;
+  }
+  input::placeholder, textarea::placeholder {
+    color: var(--color-gray-400);
+    opacity: 1;
+  }
+  input {
+    font-weight: 600;
+  }
+  textarea {
+    padding-top: 0;
   }
 }
