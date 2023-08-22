@@ -34,7 +34,6 @@ describe('user service', () => {
       });
     });
 
-    test.skip('as admin, update user from distinct tenant should fail', async () => {});
     test('as owner, update itself to other role without another owner should fail', async () => {
       const account = await prisma.accounts.create({ data: {} });
       const requester = await prisma.auths.create({
@@ -63,6 +62,4 @@ describe('user service', () => {
       ).rejects.toEqual('the account need at least one owner');
     });
   });
-
-  test.skip('as member, update an user role should fail', async () => {});
 });

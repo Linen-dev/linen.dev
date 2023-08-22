@@ -1,8 +1,5 @@
 import * as api from 'pages/api/merge';
 import { build, create } from '@linen/factory';
-import setup from '__tests__/spec-helpers/integration';
-
-setup({ truncationStrategy: 'cascade' });
 
 describe('create', () => {
   it('returns 400 if from param is empty', async () => {

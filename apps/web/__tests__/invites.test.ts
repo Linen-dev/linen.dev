@@ -193,10 +193,6 @@ describe('invite service', () => {
         })
       ).resolves.toMatchObject({ status: 200, message: 'invitation updated' });
     });
-
-    test.skip('as admin, update invite from distinct tenant should fail', async () => {});
-
-    test.skip('as member, update an invite role should fail', async () => {});
   });
 });
 

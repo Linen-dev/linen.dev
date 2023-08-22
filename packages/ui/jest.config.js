@@ -14,4 +14,12 @@ module.exports = {
     '\\.(css|scss)$': 'identity-obj-proxy',
     '@/(.*)$': '<rootDir>/src/$1',
   },
+  silent: true,
+  logHeapUsage: true,
+  ...(process.env.CI === 'true'
+    ? {
+        workerIdleMemoryLimit: '512MB',
+        maxWorkers: 1,
+      }
+    : {}),
 };

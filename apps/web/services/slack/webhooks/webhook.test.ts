@@ -135,13 +135,16 @@ describe.skip('webhook', () => {
       },
     });
 
-    const res = await handleWebhook({
-      ...addMessageEvent,
-      event: {
-        ...addMessageEvent.event,
-        channel: channelMock.externalChannelId!,
+    const res = await handleWebhook(
+      {
+        ...addMessageEvent,
+        event: {
+          ...addMessageEvent.event,
+          channel: channelMock.externalChannelId!,
+        },
       },
-    });
+      console
+    );
     // result OK:200
     expect(res.status).toBe(200);
     expect(res.message.body).toStrictEqual('this is test3');
@@ -182,14 +185,17 @@ describe.skip('webhook', () => {
     });
     expect(messageShouldExist).toBeDefined();
 
-    const res = await handleWebhook({
-      ...deleteMessageEvent,
-      event: {
-        ...deleteMessageEvent.event,
-        deleted_ts: message.externalMessageId!,
-        channel: message.channel.externalChannelId!,
+    const res = await handleWebhook(
+      {
+        ...deleteMessageEvent,
+        event: {
+          ...deleteMessageEvent.event,
+          deleted_ts: message.externalMessageId!,
+          channel: message.channel.externalChannelId!,
+        },
       },
-    });
+      console
+    );
 
     const messageShouldNotExist = await prisma.messages.findUnique({
       where: { id: message.id },
@@ -223,21 +229,24 @@ describe.skip('webhook', () => {
     });
     expect(messageShouldExist).toBeDefined();
 
-    const res = await handleWebhook({
-      ...changeMessageEvent,
-      event: {
-        ...changeMessageEvent.event,
-        previous_message: {
-          ...changeMessageEvent.event.previous_message,
-          ts: message.externalMessageId!,
+    const res = await handleWebhook(
+      {
+        ...changeMessageEvent,
+        event: {
+          ...changeMessageEvent.event,
+          previous_message: {
+            ...changeMessageEvent.event.previous_message,
+            ts: message.externalMessageId!,
+          },
+          message: {
+            ...changeMessageEvent.event.message,
+            ts: message.externalMessageId!,
+          },
+          channel: message.channel.externalChannelId!,
         },
-        message: {
-          ...changeMessageEvent.event.message,
-          ts: message.externalMessageId!,
-        },
-        channel: message.channel.externalChannelId!,
       },
-    });
+      console
+    );
 
     const messageShouldHaveBeenUpdated = await prisma.messages.findFirst({
       where: {

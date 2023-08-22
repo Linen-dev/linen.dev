@@ -180,7 +180,7 @@ describe('api-keys endpoints', () => {
     });
   });
 
-  test.skip('delete with non-admin role', async () => {
+  test('delete with non-admin role', async () => {
     await testApiHandler({
       handler: handler as any,
       url: '/api/api-keys',
@@ -194,14 +194,14 @@ describe('api-keys endpoints', () => {
           ...attachHeaders({ token: store.nonAdminToken }),
           body: JSON.stringify(body),
         });
-        expect(response.status).toBe(200);
+        expect(response.status).toBe(403);
         const result = await response.json();
-        expect(result.ok).toBe(true);
+        expect(result).toMatchObject({ message: 'Forbidden' });
       },
     });
   });
 
-  test.skip('delete without token', async () => {
+  test('delete without token', async () => {
     await testApiHandler({
       handler: handler as any,
       url: '/api/api-keys',

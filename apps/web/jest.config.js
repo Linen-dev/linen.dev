@@ -9,6 +9,7 @@ const nextConfig = {
 module.exports.nextConfig = nextConfig;
 const createJestConfig = nextJest(nextConfig);
 // Add any custom config to be passed to Jest
+/** @type {import('jest').Config} */
 const customJestConfig = {
   // Add more setup options before each test is run
   // setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
@@ -26,6 +27,14 @@ const customJestConfig = {
   testEnvironment: 'jest-environment-jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)'],
+  silent: true,
+  logHeapUsage: true,
+  ...(process.env.CI === 'true'
+    ? {
+        workerIdleMemoryLimit: '512MB',
+        maxWorkers: 1,
+      }
+    : {}),
 };
 module.exports.customJestConfig = customJestConfig;
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

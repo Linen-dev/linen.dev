@@ -1,8 +1,5 @@
 import PermissionsService from '.';
 import Session from '../session';
-import setup from '__tests__/spec-helpers/integration';
-
-setup({ truncationStrategy: 'delete' });
 
 jest.mock('../session');
 

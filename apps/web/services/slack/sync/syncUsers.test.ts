@@ -1,47 +1,43 @@
 jest.mock('services/slack/api');
-
-import { prismaMock } from '__tests__/singleton';
 import { syncUsers } from './syncUsers';
 import * as fetch_all_conversations from 'services/slack/api';
-
-const account = {
-  id: 'accountId123',
-  slackTeamId: 'slackTeamId123',
-  slackAuthorizations: [{ accessToken: 'token123' }],
-};
-
-const externalUser = {
-  id: 'externalId',
-  profile: { display_name: 'fakeName', image_original: 'url' },
-  is_bot: false,
-};
-
-const internalUser = {
-  accountsId: account.id,
-  anonymousAlias: expect.any(String),
-  displayName: externalUser.profile.display_name,
-  externalUserId: externalUser.id,
-  isAdmin: false,
-  isBot: false,
-  profileImageUrl: externalUser.profile.image_original,
-};
+import { v4 } from 'uuid';
+import { prisma } from '@linen/database';
 
 describe('slackSync :: syncUsers', () => {
   test('syncUsers', async () => {
-    const listUsersSpy = jest
-      .spyOn(fetch_all_conversations, 'listUsers')
-      .mockReturnValueOnce({
-        body: {
-          members: [externalUser],
+    const account = await prisma.accounts.create({
+      include: { slackAuthorizations: true, channels: true },
+      data: {
+        slackTeamId: v4(),
+        slackAuthorizations: {
+          create: {
+            accessToken: v4(),
+            botUserId: v4(),
+            scope: v4(),
+          },
         },
-      } as any);
-    const usersFindManyMock = prismaMock.users.findMany
-      // .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([internalUser]);
+        channels: {
+          create: {
+            channelName: v4(),
+            externalChannelId: v4(),
+          },
+        },
+      },
+    });
+    const externalUser = {
+      id: v4(),
+      profile: { display_name: v4() },
+      is_bot: false,
+    };
 
-    const usersUpsertMock = prismaMock.users.upsert.mockResolvedValue(null);
+    jest.spyOn(fetch_all_conversations, 'listUsers').mockReturnValueOnce({
+      body: {
+        members: [externalUser],
+      },
+    } as any);
 
-    const response = await syncUsers({
+    await syncUsers({
       account,
       accountId: account.id,
       token: account.slackAuthorizations[0].accessToken,
@@ -49,31 +45,20 @@ describe('slackSync :: syncUsers', () => {
       logger: console,
       fullSync: true,
     });
-    expect(response).toMatchObject([internalUser]);
 
-    expect(listUsersSpy).toBeCalledTimes(1);
-    expect(listUsersSpy).toHaveBeenCalledWith(
-      account.slackAuthorizations[0].accessToken
-    );
-    expect(usersFindManyMock).toBeCalledTimes(1);
-    expect(usersFindManyMock).toHaveBeenCalledWith({
+    const internalUser = {
+      accountsId: account.id,
+      anonymousAlias: expect.any(String),
+      displayName: externalUser.profile.display_name,
+      externalUserId: externalUser.id,
+      isAdmin: false,
+      isBot: false,
+    };
+
+    const users = await prisma.users.findMany({
       where: { accountsId: account.id },
-      select: {
-        externalUserId: true,
-        id: true,
-      },
     });
-    // expect(usersUpsertMock).toBeCalledTimes(1);
-    const { anonymousAlias, ...rest } = internalUser;
-    // expect(usersUpsertMock).toHaveBeenCalledWith({
-    //   where: {
-    //     externalUserId_accountsId: {
-    //       accountsId: internalUser.accountsId,
-    //       externalUserId: internalUser.externalUserId,
-    //     },
-    //   },
-    //   create: internalUser,
-    //   update: rest,
-    // });
+
+    expect(users[0]).toMatchObject(internalUser);
   });
 });

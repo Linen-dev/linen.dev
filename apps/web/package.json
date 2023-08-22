@@ -7,10 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --logHeapUsage --silent",
+    "pretest": "jest --clear-cache",
+    "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:integration": "dotenv -e .env.test -- jest -i -c jest.config.integration.js",
     "db:migrate": "npx prisma generate && npx prisma migrate dev",
     "db:migrate:test": "dotenv -e .env.test -- npx prisma generate && npx prisma migrate dev",
     "db:seed": "ts-node --skip-project bin/seed.ts"

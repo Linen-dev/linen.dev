@@ -1,7 +1,10 @@
-import { create } from '@linen/factory';
-import accountsService from 'services/accounts';
-import { v4 } from 'uuid';
+jest.mock('services/events/eventNewCommunity');
+jest.mock('services/events/eventCommunityUpdate');
+
+import accountsService from '.';
 import { accounts, auths } from '@linen/database';
+import { create } from '@linen/factory';
+import { v4 } from 'uuid';
 import { z } from 'zod';
 
 describe('accounts', () => {
@@ -21,7 +24,7 @@ describe('accounts', () => {
       describe('and the account creation failed', () => {
         it('returns a 500', async () => {
           const { status } = await accountsService.create({
-            email: 'john@doe.com',
+            email: v4(),
           });
           expect(status).toEqual(500);
         });

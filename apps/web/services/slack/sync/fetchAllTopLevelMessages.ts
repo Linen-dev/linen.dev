@@ -181,7 +181,7 @@ export async function fetchAllTopLevelMessages({
         channelName,
         'fetching messages failed': (e as Error).message || e,
       });
-      await sleep(10000);
+      process.env.NODE_ENV !== 'test' && (await sleep(10000));
       retries += 1;
       if (retries > 3) {
         nextCursor = undefined;

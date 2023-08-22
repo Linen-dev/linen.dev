@@ -5,4 +5,12 @@ module.exports = {
   moduleNameMapper: {
     '^uuid$': require.resolve('uuid'),
   },
+  silent: true,
+  logHeapUsage: true,
+  ...(process.env.CI === 'true'
+    ? {
+        workerIdleMemoryLimit: '512MB',
+        maxWorkers: 1,
+      }
+    : {}),
 };

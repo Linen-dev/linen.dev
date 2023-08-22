@@ -1,14 +1,12 @@
 import * as api from 'pages/api/signin';
-import { create } from '@linen/factory';
-import setup from '__tests__/spec-helpers/integration';
-
-setup({ truncationStrategy: 'delete' });
+import { createAuth } from '@linen/factory';
+import { v4 } from 'uuid';
 
 describe('#create', () => {
   it('returns 200 when email and password match', async () => {
-    await create('auth', { email: 'john@doe.com', password: 'loremipsum1!' });
+    const auth = await createAuth({ email: v4(), password: 'loremipsum1!' });
     const { status } = await api.create({
-      email: 'john@doe.com',
+      email: auth.email,
       password: 'loremipsum1!',
     });
     expect(status).toEqual(200);
@@ -39,9 +37,9 @@ describe('#create', () => {
   });
 
   it('returns 401 when the password does not match', async () => {
-    await create('auth', { email: 'john@doe.com', password: 'loremipsum1!' });
+    const auth = await createAuth({ email: v4(), password: 'loremipsum1!' });
     const { status } = await api.create({
-      email: 'john@doe.com',
+      email: auth.email,
       password: '1234',
     });
     expect(status).toEqual(401);
