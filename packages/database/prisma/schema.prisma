@@ -127,6 +127,7 @@ model channels {
   archived            Boolean               @default(false)
   displayOrder        Int?
   viewType            ChannelViewType       @default(CHAT)
+  orderBy             ChannelOrderBy        @default(THREAD_SENT_AT)
 
   @@unique([externalChannelId])
   @@index([accountId])
@@ -141,6 +142,11 @@ enum ChannelType {
   PUBLIC
   PRIVATE
   DM
+}
+
+enum ChannelOrderBy {
+  THREAD_SENT_AT
+  THREAD_LAST_REPLY_AT
 }
 
 model channelsIntegration {
@@ -195,6 +201,7 @@ model accounts {
   logoSquareUrl           String?
   faviconUrl              String?
   premium                 Boolean       @default(false)
+  featurePreview          Boolean       @default(false)
   googleAnalyticsId       String?
   googleSiteVerification  String?
   anonymizeUsers          Boolean       @default(false)
