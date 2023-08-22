@@ -65,6 +65,7 @@ export function sendThreadMessageWrapper({
           return {
             ...thread,
             messages: [...thread.messages, imitation],
+            lastReplyAt: new Date(imitation.sentAt).getTime().toString(),
           };
         }
         return thread;
