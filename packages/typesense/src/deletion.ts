@@ -33,9 +33,17 @@ export async function deletion({
     });
   } else {
     // delete
-    await client
-      .collections(collectionSchema.name)
-      .documents(threadId)
-      .delete();
+    try {
+      await client
+        .collections(collectionSchema.name)
+        .documents(threadId)
+        .delete();
+    } catch (error: any) {
+      if (error.name === 'ObjectNotFound' || error.httpStatus === 404) {
+        logger.error({ error });
+      } else {
+        throw error;
+      }
+    }
   }
 }
