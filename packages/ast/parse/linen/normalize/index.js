@@ -8,6 +8,11 @@ function normalize(token) {
     const { value } = token;
     token.source = value;
     token.value = value.replace(/^```|```$/g, '');
+    const match = token.value.match(/^\w*\s/);
+    if (match) {
+      const [language] = match;
+      token.language = language.trim();
+    }
   }
   if (token.type === 'user') {
     const { value } = token;
