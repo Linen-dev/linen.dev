@@ -71,4 +71,5 @@ hr {
   --titlebar-height: 0px;
   --header-height: 54px;
   --push-height: 54px;
+  --monospace-font: ui-monospace, 'Lucida Sans Typewriter', Monaco, Consolas, 'Andale Mono', 'Lucida Console', 'Courier New', SFMono-Regular, Menlo, 'Liberation Mono', monospace;
 }
