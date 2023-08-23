@@ -171,3 +171,12 @@ export async function createTypesenseCommunityTypeUpdate(payload: {
     maxAttempts: 1,
   });
 }
+
+export async function createTypesenseOnNewCommunity(payload: {
+  accountId: string;
+}) {
+  const worker = await WorkerSingleton.getInstance();
+  return await worker.addJob('typesenseSetup', payload, {
+    maxAttempts: 1,
+  });
+}
