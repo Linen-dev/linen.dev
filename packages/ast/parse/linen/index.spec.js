@@ -93,7 +93,9 @@ describe('parse', () => {
 
   it('returns a `pre` node', () => {
     expect(parse('```foo```')).toEqual(root([pre('foo')]));
-    expect(parse('```foo `` bar```')).toEqual(root([pre('foo `` bar')]));
+    expect(parse('```bash `` bar```')).toEqual(
+      root([pre('bash `` bar', 'bash')])
+    );
   });
 
   it('returns a `url` node', () => {

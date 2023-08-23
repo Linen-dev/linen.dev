@@ -26,8 +26,8 @@ function code(value) {
   return { type: 'code', value, source: `\`${value}\`` };
 }
 
-function pre(value) {
-  return { type: 'pre', value, source: `\`\`\`${value}\`\`\`` };
+function pre(value, language) {
+  return { type: 'pre', value, source: `\`\`\`${value}\`\`\``, language };
 }
 
 function user(id) {
@@ -40,11 +40,11 @@ function signal(id) {
 
 function url(value) {
   if (value.startsWith('[') && value.endsWith(')')) {
-    const title = value.substring(1, value.indexOf(']'))
-    const url = value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'))
+    const title = value.substring(1, value.indexOf(']'));
+    const url = value.substring(value.indexOf('(') + 1, value.lastIndexOf(')'));
     return { type: 'url', url, value: url, source: value, title: title };
   }
-  const [url, title] = value.split('|')
+  const [url, title] = value.split('|');
   return { type: 'url', url, value: url, source: value, title: title || url };
 }
 
@@ -70,16 +70,21 @@ function list(children, { ordered = false, prefix = '-' } = {}) {
     type: 'list',
     ordered: ordered,
     children,
-    source: children.map((child, index) => `${ordered ? `${index + 1}.` : prefix} ${child.source}`).join('\n')
-  }
+    source: children
+      .map(
+        (child, index) =>
+          `${ordered ? `${index + 1}.` : prefix} ${child.source}`
+      )
+      .join('\n'),
+  };
 }
 
 function item(children) {
   return {
     type: 'item',
     children,
-    source: source(children)
-  }
+    source: source(children),
+  };
 }
 
 module.exports = {
