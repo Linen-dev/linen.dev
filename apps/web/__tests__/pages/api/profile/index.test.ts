@@ -5,19 +5,18 @@
 jest.mock('body-parser', () => ({
   json: () => (_: any, _2: any, next: any) => next(),
 }));
-jest.mock('services/events/eventUserNameUpdate');
 import handler from 'pages/api/profile/[[...slug]]';
 import { createAccount } from '@linen/factory';
 import { prisma } from '@linen/database';
 import { testApiHandler } from 'next-test-api-route-handler';
-import { createUser } from '__tests__/login';
+import { createUserAndSignIn } from '__tests__/helpers';
 
 describe('create', () => {
   let token: string;
   let userId: string;
   beforeAll(async () => {
     const account = await createAccount();
-    const user = await createUser(account.id, 'MEMBER');
+    const user = await createUserAndSignIn(account.id, 'MEMBER');
     token = user.token;
     userId = user.user.id;
   });

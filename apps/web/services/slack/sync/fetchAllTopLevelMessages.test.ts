@@ -7,7 +7,7 @@ import { conversationHistory } from '__mocks__/slack-api';
 import { v4 } from 'uuid';
 import { prisma } from '@linen/database';
 
-describe.skip('slackSync :: fetchAllTopLevelMessages', () => {
+describe('slackSync :: fetchAllTopLevelMessages', () => {
   // this function fetch messages only from channels thats hasn't "completed" as sync status
   // it upsert threads and messages, including reactions + attachments
 

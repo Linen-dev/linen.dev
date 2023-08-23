@@ -244,6 +244,7 @@ async function deleteMessage(
   return {};
 }
 
+// TODO: replace by update instead of remove and insert
 async function changeMessage(
   channel: channels & {
     account: (accounts & { slackAuthorizations: slackAuthorizations[] }) | null;

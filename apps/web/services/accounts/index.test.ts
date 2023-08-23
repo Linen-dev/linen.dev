@@ -1,6 +1,3 @@
-jest.mock('services/events/eventNewCommunity');
-jest.mock('services/events/eventCommunityUpdate');
-
 import accountsService from '.';
 import { accounts, auths } from '@linen/database';
 import { create } from '@linen/factory';

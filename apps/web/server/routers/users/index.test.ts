@@ -3,9 +3,8 @@
  */
 import { testApiHandler } from 'next-test-api-route-handler';
 import { create } from '@linen/factory';
-import { createUser } from '__tests__/login';
+import { createUserAndSignIn, attachHeaders } from '__tests__/helpers';
 import handler from 'pages/api/users/[[...slug]]';
-import { attachHeaders } from '__tests__/pages/api/auth/login';
 import { prisma } from '@linen/database';
 import { qs } from '@linen/utilities/url';
 import { v4 } from 'uuid';
@@ -26,8 +25,8 @@ describe('users api (internal)', () => {
 
   beforeAll(async () => {
     store.account = await create('account', {});
-    store.admin = await createUser(store.account.id, 'ADMIN');
-    store.member = await createUser(store.account.id, 'MEMBER');
+    store.admin = await createUserAndSignIn(store.account.id, 'ADMIN');
+    store.member = await createUserAndSignIn(store.account.id, 'MEMBER');
     store.invite = await prisma.invites.create({
       data: {
         email: v4(),

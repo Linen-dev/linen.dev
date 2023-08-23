@@ -5,7 +5,7 @@
 import handler from 'pages/api/channels/[[...slug]]';
 import { createAccount } from '@linen/factory';
 import { prisma } from '@linen/database';
-import { createUser as createLogin } from '__tests__/login';
+import { createUserAndSignIn } from '__tests__/helpers';
 import { v4 } from 'uuid';
 import { testApiHandler } from 'next-test-api-route-handler';
 
@@ -15,7 +15,7 @@ describe('channels', () => {
       const community = await createAccount({
         name: v4(),
       });
-      const { token } = await createLogin(community.id, 'ADMIN');
+      const { token } = await createUserAndSignIn(community.id, 'ADMIN');
 
       const channelName = `c${v4()}`;
 
@@ -83,7 +83,7 @@ describe('channels', () => {
         const community = await createAccount({
           name: v4(),
         });
-        const { token } = await createLogin(community.id, 'MEMBER');
+        const { token } = await createUserAndSignIn(community.id, 'MEMBER');
 
         const channelName = `c${v4()}`;
 
@@ -116,7 +116,7 @@ describe('channels', () => {
         const community = await createAccount({
           name: v4(),
         });
-        const { token } = await createLogin(community.id, 'ADMIN');
+        const { token } = await createUserAndSignIn(community.id, 'ADMIN');
 
         const channelName = `c${v4()}`;
 

@@ -1,8 +1,8 @@
 import { v4 } from 'uuid';
-import { login } from '__tests__/pages/api/auth/login';
+import { login } from './login';
 import { createUser as factoryCreateUser, createAuth } from '@linen/factory';
 
-export async function createUser(
+export async function createUserAndSignIn(
   accountId: string,
   role: 'ADMIN' | 'MEMBER' | 'OWNER'
 ) {

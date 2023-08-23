@@ -2,9 +2,8 @@
  * @jest-environment node
  */
 
-import { createUser } from '__tests__/login';
+import { createUserAndSignIn } from './helpers';
 import ApplicationMailer from 'mailers/ApplicationMailer';
-import { eventNewThread } from '__mocks__/eventNewThreadMock';
 import { invitesServices } from '__mocks__/invitesServicesMock';
 import { updateInvitation } from 'services/invites';
 import {
@@ -30,17 +29,12 @@ const fakeEmail = () => `${v4()}@linen.dev`;
 
 const acceptInviteMock = jest.spyOn(invitesServices, 'acceptInvite');
 
-const eventNewThreadMock = jest
-  .spyOn(eventNewThread, 'eventNewThread')
-  .mockImplementation();
-
 const mailerSendMock = jest
   .spyOn(ApplicationMailer, 'send')
   .mockImplementation();
 
 function cleanMock() {
   acceptInviteMock.mockClear();
-  eventNewThreadMock.mockClear();
   mailerSendMock.mockClear();
 }
 
@@ -81,7 +75,7 @@ describe('invite flow', () => {
         chat: ChatType.MEMBERS,
       });
       store.channel = await createChannel({ accountId: store.account.id });
-      store.owner = await createUser(store.account.id, Roles.OWNER);
+      store.owner = await createUserAndSignIn(store.account.id, Roles.OWNER);
       store.invited = { email: fakeEmail() } as any;
 
       cleanMock();
@@ -126,7 +120,7 @@ describe('invite flow', () => {
         slackDomain: v4(),
       });
       store.channel = await createChannel({ accountId: store.account.id });
-      store.owner = await createUser(store.account.id, Roles.OWNER);
+      store.owner = await createUserAndSignIn(store.account.id, Roles.OWNER);
       store.invited = { email: fakeEmail() } as any;
 
       cleanMock();

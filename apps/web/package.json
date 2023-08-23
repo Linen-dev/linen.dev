@@ -29,6 +29,7 @@
     "@linen/integration-linear": "*",
     "@linen/serializers": "*",
     "@linen/styles": "*",
+    "@linen/pagination": "*",
     "@linen/types": "*",
     "@linen/ui": "*",
     "@linen/utilities": "*",

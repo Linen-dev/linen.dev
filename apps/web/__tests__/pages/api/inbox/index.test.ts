@@ -2,10 +2,9 @@
  * @jest-environment node
  */
 
-jest.mock('services/events/eventNewSignUp');
 import { v4 } from 'uuid';
 import { testApiHandler } from 'next-test-api-route-handler';
-import { createUser as createLogin } from '__tests__/login';
+import { createUserAndSignIn } from '__tests__/helpers';
 import handler from 'pages/api/inbox';
 import {
   createAccount,
@@ -41,7 +40,7 @@ describe('channels', () => {
         sentAt: new Date(),
       });
 
-      const { token } = await createLogin(community.id, 'MEMBER');
+      const { token } = await createUserAndSignIn(community.id, 'MEMBER');
 
       await testApiHandler({
         handler,
@@ -100,7 +99,7 @@ describe('channels', () => {
           usersId: user.id,
         });
 
-        const { token } = await createLogin(community.id, 'MEMBER');
+        const { token } = await createUserAndSignIn(community.id, 'MEMBER');
 
         await testApiHandler({
           handler,

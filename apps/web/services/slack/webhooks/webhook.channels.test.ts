@@ -1,4 +1,3 @@
-jest.mock('services/events/eventChannelUpdate');
 import { accounts, prisma } from '@linen/database';
 import { createAccount, createChannel } from '@linen/factory';
 import { handleWebhook } from 'services/slack/webhooks';

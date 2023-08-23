@@ -6,10 +6,7 @@ import * as s3Helper from 'services/aws/s3';
 import { saveAllThreads } from './saveAllThreads';
 import { prisma } from '@linen/database';
 import { v4 } from 'uuid';
-
-function generateRandomDate(from = new Date(0), to = new Date()) {
-  return from.getTime() + Math.random() * (to.getTime() - from.getTime());
-}
+import { generateRandomDate } from '__mocks__/generateRandomDate';
 
 describe('slackSync :: saveAllThreads', () => {
   test('saveAllThreads', async () => {
@@ -94,10 +91,12 @@ describe('slackSync :: saveAllThreads', () => {
     expect(check?._count.messages).toBe(4);
     expect(check?._count.threads).toBe(2);
 
-    const thread = await prisma.threads.findFirst({
+    const thread = await prisma.threads.findUnique({
       where: {
-        channelId: account.channels[0].id,
-        externalThreadId: history.messages[0].thread_ts,
+        channelId_externalThreadId: {
+          channelId: account.channels[0].id,
+          externalThreadId: history.messages[0].thread_ts,
+        },
       },
       select: {
         _count: {
@@ -107,10 +106,12 @@ describe('slackSync :: saveAllThreads', () => {
     });
     expect(thread?._count.messages).toBe(4);
 
-    const thread2 = await prisma.threads.findFirst({
+    const thread2 = await prisma.threads.findUnique({
       where: {
-        channelId: account.channels[0].id,
-        externalThreadId: history.messages[1].thread_ts,
+        channelId_externalThreadId: {
+          channelId: account.channels[0].id,
+          externalThreadId: history.messages[1].thread_ts,
+        },
       },
       select: {
         _count: {

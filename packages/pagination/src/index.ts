@@ -7,3 +7,5 @@ export async function run() {
     await buildPages(account);
   }
 }
+
+export { buildPages };

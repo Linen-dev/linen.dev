@@ -1,5 +1,4 @@
 import '@testing-library/jest-dom/extend-expect';
-import { prisma } from '@linen/database';
 import { TextEncoder, TextDecoder } from 'util';
 
 if (typeof window !== 'undefined') {
@@ -18,10 +17,12 @@ global.setImmediate = jest.useRealTimers;
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
-beforeAll(async () => {
-  await prisma.$connect();
+beforeAll(() => {
+  jest.mock('queue/jobs');
+  jest.mock('services/push');
+  jest.mock('services/customerIo/trackEvents');
 });
 
-afterAll(async () => {
-  await prisma.$disconnect();
+afterAll(() => {
+  jest.clearAllMocks();
 });

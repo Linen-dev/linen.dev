@@ -1,16 +1,15 @@
-jest.mock('services/events/eventNewMessage');
-jest.mock('services/events/eventNewThread');
 import { accounts, channels } from '@linen/database';
 import { v4 } from 'uuid';
 import { create } from '@linen/factory';
 import { handleWebhook } from '.';
+import { generateRandomDate } from '__mocks__/generateRandomDate';
 
-describe.skip('webhook', () => {
+describe('webhook', () => {
   describe('bot messages', () => {
     let account: accounts;
     let channel: channels;
     let messageBody: string;
-    let ts = '1673634786.206689';
+    let originalTs: string;
 
     const bot_profile = (account: any) => ({
       id: 'id',
@@ -51,6 +50,7 @@ describe.skip('webhook', () => {
         externalChannelId: v4(),
         accountId: account.id,
       });
+      originalTs = generateRandomDate();
     });
 
     test('new message', async () => {
@@ -65,13 +65,13 @@ describe.skip('webhook', () => {
           type: 'message',
           text: '',
           user: v4(),
-          ts,
+          ts: originalTs,
           app_id: v4(),
           team: account.slackTeamId,
           bot_profile: bot_profile(account),
           attachments,
           channel: channel.externalChannelId,
-          event_ts: ts,
+          event_ts: originalTs,
           channel_type: 'channel',
         },
         type: 'event_callback',
@@ -82,13 +82,14 @@ describe.skip('webhook', () => {
         event_context: v4(),
       };
 
-      const result = await handleWebhook(newMessage);
+      const result = await handleWebhook(newMessage, console);
       expect(result?.message?.body).not.toBe('');
 
       messageBody = result?.message?.body;
     });
 
     test('edit message', async () => {
+      const ts = generateRandomDate();
       const editMessage = {
         token: v4(),
         team_id: account.slackTeamId,
@@ -108,7 +109,7 @@ describe.skip('webhook', () => {
             bot_profile: bot_profile(account),
             edited: {
               user: v4(),
-              ts: '1673634786.000000',
+              ts: originalTs,
             },
             attachments,
             ts,
@@ -128,8 +129,8 @@ describe.skip('webhook', () => {
           },
           channel: channel.externalChannelId,
           hidden: true, // ???
-          ts: '1673634786.001900',
-          event_ts: '1673634786.001900',
+          ts: originalTs,
+          event_ts: originalTs,
           channel_type: 'channel',
         },
         type: 'event_callback',

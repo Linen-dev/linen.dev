@@ -1,12 +1,11 @@
-import { accounts, channels, threads, prisma } from '@linen/database';
+jest.mock('services/session');
+import { accounts, channels, threads } from '@linen/database';
 import { v4 as random } from 'uuid';
 import { channelGetServerSideProps } from 'services/ssr/channels';
-import { encodeCursor } from 'utilities/cursor';
 import { SerializedThread } from '@linen/types';
 import { createThreadsOneByDay } from 'bin/factory/threads';
 import { channelNextPage } from 'services/channels/channelNextPage';
-
-jest.mock('services/session');
+import { createAccount, createChannel } from '@linen/factory';
 
 const reqWithBotHeaders = {
   req: {
@@ -27,6 +26,7 @@ const reqWithUserHeaders = {
 };
 
 describe('channels services', () => {
+  jest.setTimeout(10 * 1000);
   let scope: any;
 
   beforeAll(async () => {
@@ -34,28 +34,22 @@ describe('channels services', () => {
       account: {} as accounts,
       channel: {} as channels,
       threads: [] as threads[],
-      threadsCount: 25,
+      threadsCount: 70,
       isSubdomain: true,
       nextCursor: '',
-      threadIndex: 0,
+      pageSize: 30,
     };
-    scope.threadIndex = Math.ceil(scope.threadsCount / 2);
-    scope.account = await prisma.accounts.create({
-      include: { channels: true },
-      data: {
-        premium: true,
-        redirectDomain: `linen.${random()}.com`,
-        slackDomain: `linen-${random()}`,
-        discordDomain: `linen-${random()}`,
-      },
+    scope.account = await createAccount({
+      premium: true,
+      redirectDomain: `linen.${random()}.com`,
+      slackDomain: `linen-${random()}`,
+      discordDomain: `linen-${random()}`,
     });
-    scope.channel = await prisma.channels.create({
-      data: {
-        channelName: `linen-${random()}`,
-        externalChannelId: `linen-${random()}`,
-        hidden: false,
-        accountId: scope.account.id,
-      },
+    scope.channel = await createChannel({
+      channelName: `linen-${random()}`,
+      externalChannelId: `linen-${random()}`,
+      hidden: false,
+      accountId: scope.account.id,
     });
     scope.threads = await createThreadsOneByDay(
       scope.channel,
@@ -81,7 +75,7 @@ describe('channels services', () => {
         );
       });
 
-      it('it should return the latest 10 threads', async () => {
+      it('it should return the latest 30 threads', async () => {
         expect(channelProps.props?.threads).toBeInstanceOf(Array);
         const threadsProps = channelProps.props?.threads!.reverse()!;
         for (let idx = 0; idx < threadsProps.length; idx++) {
@@ -113,12 +107,13 @@ describe('channels services', () => {
         });
       });
 
-      it('it should return the previous 10 threads', async () => {
+      it('it should return the previous 30 threads', async () => {
         expect(fetchMore.threads).toBeInstanceOf(Array);
         const threadsProps = fetchMore.threads.reverse();
         for (let idx = 0; idx < threadsProps.length; idx++) {
           expect(threadsProps[idx].incrementId).toBe(
-            scope.threads[scope.threads.length - 1 - 10 - idx].incrementId
+            scope.threads[scope.threads.length - 1 - scope.pageSize - idx]
+              .incrementId
           );
         }
       });
@@ -131,8 +126,8 @@ describe('channels services', () => {
     });
   });
 
-  describe.skip('from channel view (bots)', () => {
-    describe('access the channel page with pathCursor as asc:0', () => {
+  describe('from channel view (bots)', () => {
+    describe('access the channel page 1', () => {
       let channelProps: any;
       beforeAll(async () => {
         channelProps = await channelGetServerSideProps(
@@ -140,14 +135,14 @@ describe('channels services', () => {
             params: {
               communityName: scope.account.redirectDomain as string,
               channelName: scope.channel.channelName,
-              page: encodeCursor('asc:gt:0'),
+              page: 1,
             },
             ...reqWithBotHeaders,
           } as any,
           scope.isSubdomain
         );
       });
-      it('it should return the first 10 threads', async () => {
+      it('it should return the first 30 threads', async () => {
         expect(channelProps.props?.threads).toBeInstanceOf(Array);
         const threadsProps = channelProps.props?.threads!;
         for (let idx = 0; idx < threadsProps.length; idx++) {
@@ -156,16 +151,9 @@ describe('channels services', () => {
           );
         }
       });
-      it('it should have the next cursor set', async () => {
-        expect(channelProps.props?.nextCursor.next).not.toBeNull();
-        scope.nextCursor = channelProps.props?.nextCursor.next as string;
-      });
-      it('it should have the prev cursor as null', async () => {
-        expect(channelProps.props?.nextCursor.prev).toBeNull();
-      });
     });
 
-    describe('access the channel page with pathCursor from next page', () => {
+    describe('access the channel page 2', () => {
       let channelProps: any;
       beforeAll(async () => {
         channelProps = await channelGetServerSideProps(
@@ -173,31 +161,25 @@ describe('channels services', () => {
             params: {
               communityName: scope.account.redirectDomain as string,
               channelName: scope.channel.channelName,
-              page: scope.nextCursor,
+              page: 2,
             },
             ...reqWithBotHeaders,
           } as any,
           scope.isSubdomain
         );
       });
-      it('it should return the next 10 threads', async () => {
+      it('it should return the next 30 threads', async () => {
         expect(channelProps.props?.threads).toBeInstanceOf(Array);
         const threadsProps = channelProps.props?.threads!;
         for (let idx = 0; idx < threadsProps.length; idx++) {
           expect(threadsProps[idx].incrementId).toBe(
-            scope.threads[idx + 10].incrementId
+            scope.threads[idx + 30].incrementId
           );
         }
       });
-      it('it should have the next cursor set', async () => {
-        expect(channelProps.props?.nextCursor.next).not.toBeNull();
-      });
-      it('it should have the prev cursor set', async () => {
-        expect(channelProps.props?.nextCursor.prev).not.toBeNull();
-      });
     });
 
-    describe('access the channel page with pathCursor from thread view', () => {
+    describe('access the channel page latest', () => {
       let channelProps: any;
       beforeAll(async () => {
         channelProps = await channelGetServerSideProps(
@@ -205,85 +187,20 @@ describe('channels services', () => {
             params: {
               communityName: scope.account.redirectDomain as string,
               channelName: scope.channel.channelName,
-              page: encodeCursor(
-                `asc:gte:${scope.threads[scope.threadIndex].sentAt}`
-              ),
             },
             ...reqWithBotHeaders,
           } as any,
           scope.isSubdomain
         );
       });
-      it('it should return the thread + next 9 threads', async () => {
+      it('it should return the last 30 threads', async () => {
         expect(channelProps.props?.threads).toBeInstanceOf(Array);
-        const threadsProps = channelProps.props?.threads!;
+        const threadsProps = channelProps.props?.threads!.reverse()!;
         for (let idx = 0; idx < threadsProps.length; idx++) {
           expect(threadsProps[idx].incrementId).toBe(
-            scope.threads[idx + scope.threadIndex].incrementId
+            scope.threads[scope.threads.length - 1 - idx].incrementId
           );
         }
-      });
-      it('it should have the next cursor set', async () => {
-        expect(channelProps.props?.nextCursor.next).not.toBeNull();
-      });
-      it('next cursor should return the next 10 threads', async () => {
-        const fetchMore = await channelNextPage({
-          channelId: channelProps.props?.currentChannel.id!,
-          cursor: channelProps.props?.nextCursor.next!,
-        });
-        for (let idx = 0; idx < fetchMore.threads.length; idx++) {
-          expect(fetchMore.threads[idx].incrementId).toBe(
-            scope.threads[idx + scope.threadIndex + 10].incrementId
-          );
-        }
-      });
-      it('it should have the prev cursor set', async () => {
-        expect(channelProps.props?.nextCursor.prev).not.toBeNull();
-      });
-      it('prev cursor should return the prev 10 threads', async () => {
-        const fetchMore = await channelNextPage({
-          channelId: channelProps.props?.currentChannel.id!,
-          cursor: channelProps.props?.nextCursor.prev!,
-        });
-        for (let idx = 0; idx < fetchMore.threads.length; idx++) {
-          expect(fetchMore.threads[idx].incrementId).toBe(
-            scope.threads[scope.threadIndex - 10 + idx].incrementId
-          );
-        }
-      });
-    });
-
-    describe('access the channel page with pathCursor from last 3 threads', () => {
-      let channelProps: any;
-      beforeAll(async () => {
-        channelProps = await channelGetServerSideProps(
-          {
-            params: {
-              communityName: scope.account.redirectDomain as string,
-              channelName: scope.channel.channelName,
-              page: encodeCursor(
-                `asc:gte:${scope.threads[scope.threadsCount - 3].sentAt}`
-              ),
-            },
-            ...reqWithBotHeaders,
-          } as any,
-          scope.isSubdomain
-        );
-      });
-      it('it should return the thread + next 2 threads', async () => {
-        expect(channelProps.props?.threads).toBeInstanceOf(Array);
-        const threadsProps = channelProps.props?.threads!;
-        for (let idx = 0; idx < threadsProps.length; idx++) {
-          expect(threadsProps[idx].incrementId).toBe(
-            scope.threads[idx + scope.threadsCount - 3].incrementId
-          );
-        }
-      });
-      it('it should have the next cursor set', async () => {
-        expect(channelProps.props?.nextCursor.next).toBeNull();
-      });
-      it('it should have the prev cursor set', async () => {
-        expect(channelProps.props?.nextCursor.prev).not.toBeNull();
       });
     });
   });

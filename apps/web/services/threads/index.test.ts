@@ -1,6 +1,3 @@
-jest.mock('services/events/eventThreadUpdated');
-jest.mock('services/events/eventThreadReopened');
-jest.mock('services/events/eventThreadClosed');
 import { ThreadState } from '@linen/types';
 import ThreadsServices from '.';
 import { create } from '@linen/factory';

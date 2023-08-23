@@ -1,6 +1,0 @@
-@host=http://localhost/api/v2
-
-
-### 
-
-get {{host}}/ping

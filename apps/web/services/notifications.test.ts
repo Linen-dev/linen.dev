@@ -137,7 +137,7 @@ describe('notification service', () => {
 
     const mockCreateMailingJob = jest.spyOn(queue, 'createMailingJob');
 
-    const thread = await prisma.threads.findFirst({
+    const thread = await prisma.threads.findUnique({
       where: { id: mockThread1.id },
       include: {
         messages: {
@@ -187,7 +187,7 @@ describe('notification service', () => {
       },
     });
 
-    const thread = await prisma.threads.findFirst({
+    const thread = await prisma.threads.findUnique({
       where: { id: mockThread2.id },
       include: {
         messages: {

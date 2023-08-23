@@ -1,266 +1,249 @@
 jest.mock('services/users');
-jest.mock('services/events/eventNewMessage');
-jest.mock('services/events/eventNewThread');
 import { handleWebhook } from 'services/slack/webhooks';
 import { v4 } from 'uuid';
 import { prisma } from '@linen/database';
+import { generateRandomDate } from '__mocks__/generateRandomDate';
+import { createAccount, createChannel } from '@linen/factory';
+type ReturnedPromiseResolvedType<T> = T extends (
+  ...args: any[]
+) => Promise<infer R>
+  ? R
+  : never;
 
-const addMessageEvent = {
-  token: 'RudepRJuMOjy8zENRCLdXW7t',
-  team_id: 'T036DSF9RJT',
-  api_app_id: 'A03CA2AHMAL',
+const addMessageEvent = ({
+  team_id,
+  ts = generateRandomDate(),
+  channel_id,
+}: {
+  team_id: string;
+  ts?: string;
+  channel_id: string;
+}) => ({
+  token: v4(),
+  team_id,
+  api_app_id: v4(),
   event: {
-    client_msg_id: '4fa352fb-f83c-4401-aaa3-7b062737b00d',
+    client_msg_id: v4(),
     type: 'message',
     text: 'this is test3',
-    user: 'U037T5JG1NY',
-    ts: '1650644364.126099',
-    team: 'T036DSF9RJT',
+    user: v4(),
+    ts,
+    team: team_id,
     blocks: [{ type: 'rich_text', block_id: '9hC', elements: [] }],
-    channel: 'C03ATK7RWNS',
-    event_ts: '1650644364.126099',
+    channel: channel_id,
+    event_ts: ts,
     channel_type: 'channel',
   },
   type: 'event_callback',
-  event_id: 'Ev03DDKEJ2DN',
+  event_id: v4(),
   event_time: 1650805199,
-  authorizations: [[Object]],
+  authorizations: [
+    {
+      enterprise_id: null,
+      team_id,
+      user_id: v4(),
+      is_bot: false,
+      is_enterprise_install: false,
+    },
+  ],
   is_ext_shared_channel: false,
-  event_context:
-    '4-eyJldCI6Im1lc3NhZ2UiLCJ0aWQiOiJUMDM2RFNGOVJKVCIsImFpZCI6IkEwM0NBMkFITUFMIiwiY2lkIjoiQzAzQVRLN1JXTlMifQ',
-};
+  event_context: v4(),
+});
 
-const deleteMessageEvent = {
-  token: 'RudepRJuMOjy8zENRCLdXW7t',
-  team_id: 'T036DSF9RJT',
-  api_app_id: 'A03CA2AHMAL',
+const deleteMessageEvent = ({
+  team_id,
+  ts = generateRandomDate(),
+  channel_id,
+}: {
+  team_id: string;
+  ts: string;
+  channel_id: string;
+}) => ({
+  token: v4(),
+  team_id,
+  api_app_id: v4(),
   event: {
     type: 'message',
     subtype: 'message_deleted',
     previous_message: {
-      client_msg_id: '3ff2b5dd-787e-4762-b2f6-0b6cc15b97cd',
+      client_msg_id: v4(),
       type: 'message',
       text: 'yet another test',
-      user: 'U037T5JG1NY',
-      ts: '1651046601.602859',
-      team: 'T036DSF9RJT',
-      blocks: [Array],
+      user: v4(),
+      ts,
+      team: team_id,
+      blocks: [],
     },
-    channel: 'C03ATK7RWNS',
+    channel: channel_id,
     hidden: true,
-    deleted_ts: '1651046601.602859',
-    event_ts: '1651046639.000300',
-    ts: '1651046639.000300',
+    deleted_ts: ts,
+    event_ts: generateRandomDate(),
+    ts: generateRandomDate(),
     channel_type: 'channel',
   },
   type: 'event_callback',
-  event_id: 'Ev03D3UYJSG3',
+  event_id: v4(),
   event_time: 1651046639,
   authorizations: [
     {
       enterprise_id: null,
-      team_id: 'T036DSF9RJT',
-      user_id: 'U037T5JG1NY',
+      team_id,
+      user_id: v4(),
       is_bot: false,
       is_enterprise_install: false,
     },
   ],
   is_ext_shared_channel: false,
-  event_context:
-    '4-eyJldCI6Im1lc3NhZ2UiLCJ0aWQiOiJUMDM2RFNGOVJKVCIsImFpZCI6IkEwM0NBMkFITUFMIiwiY2lkIjoiQzAzQVRLN1JXTlMifQ',
-};
+  event_context: v4(),
+});
 
-const changeMessageEvent = {
-  token: 'RudepRJuMOjy8zENRCLdXW7t',
-  team_id: 'T036DSF9RJT',
-  api_app_id: 'A03CA2AHMAL',
+const changeMessageEvent = ({
+  team_id,
+  ts,
+  channel_id,
+}: {
+  team_id: string;
+  ts: string;
+  channel_id: string;
+}) => ({
+  token: v4(),
+  team_id: team_id,
+  api_app_id: v4(),
   event: {
     type: 'message',
     subtype: 'message_changed',
     message: {
-      client_msg_id: 'f9a0d446-a326-4f9d-a952-eb03bc2859f1',
+      client_msg_id: v4(),
       type: 'message',
       text: 'Lets test_4',
-      user: 'U037T5JG1NY',
-      team: 'T036DSF9RJT',
-      edited: [Object],
+      user: v4(),
+      team: team_id,
+      edited: [{}],
       blocks: [{ type: 'rich_text', block_id: '9hC', elements: [] }],
-      ts: '1652127600.388019',
-      source_team: 'T036DSF9RJT',
-      user_team: 'T036DSF9RJT',
+      ts: ts,
+      source_team: team_id,
+      user_team: team_id,
     },
     previous_message: {
-      client_msg_id: 'f9a0d446-a326-4f9d-a952-eb03bc2859f1',
+      client_msg_id: v4(),
       type: 'message',
-      text: 'Lets test_4 witn mention <@U036UEMK143> again',
-      user: 'U037T5JG1NY',
-      ts: '1652127600.388019',
-      team: 'T036DSF9RJT',
+      text: v4(),
+      user: v4(),
+      ts: ts,
+      team: team_id,
       blocks: [{ type: 'rich_text', block_id: '9hC', elements: [] }],
     },
-    channel: 'C03ATK7RWNS',
+    channel: channel_id,
     hidden: true,
-    ts: '1652202460.000600',
-    event_ts: '1652202460.000600',
+    ts: generateRandomDate(),
+    event_ts: generateRandomDate(),
     channel_type: 'channel',
   },
   type: 'event_callback',
-  event_id: 'Ev03ESDMQFM3',
+  event_id: v4(),
   event_time: 1652202460,
   authorizations: [
     {
       enterprise_id: null,
-      team_id: 'T036DSF9RJT',
-      user_id: 'U037T5JG1NY',
+      team_id: team_id,
+      user_id: v4(),
       is_bot: false,
       is_enterprise_install: false,
     },
   ],
   is_ext_shared_channel: false,
-  event_context:
-    '4-eyJldCI6Im1lc3NhZ2UiLCJ0aWQiOiJUMDM2RFNGOVJKVCIsImFpZCI6IkEwM0NBMkFITUFMIiwiY2lkIjoiQzAzQVRLN1JXTlMifQ',
-};
+  event_context: v4(),
+});
 
-describe.skip('webhook', () => {
+describe('webhook', () => {
+  let addEvent: ReturnType<typeof addMessageEvent>;
+  let changeEvent: ReturnType<typeof changeMessageEvent>;
+  let deleteEvent: ReturnType<typeof deleteMessageEvent>;
+  let account: ReturnedPromiseResolvedType<typeof createAccount>;
+  let channel: ReturnedPromiseResolvedType<typeof createChannel>;
+
+  beforeAll(async () => {
+    const team_id = v4();
+    const channel_id = v4();
+
+    addEvent = addMessageEvent({ team_id, channel_id });
+    changeEvent = changeMessageEvent({
+      channel_id,
+      team_id,
+      ts: addEvent.event.ts,
+    });
+    deleteEvent = deleteMessageEvent({
+      channel_id,
+      team_id,
+      ts: addEvent.event.ts,
+    });
+    account = await createAccount({
+      slackTeamId: addEvent.team_id,
+    });
+    channel = await createChannel({
+      channelName: v4(),
+      externalChannelId: addEvent.event.channel,
+      accountId: account.id,
+      hidden: false,
+    });
+  });
+
   it('add message - new thread', async () => {
-    const account = await prisma.accounts.create({
-      data: {},
-    });
-    const channelMock = await prisma.channels.create({
-      data: {
-        channelName: v4(),
-        externalChannelId: v4(),
-        accountId: account.id,
-        hidden: false,
-      },
-    });
-
-    const res = await handleWebhook(
-      {
-        ...addMessageEvent,
-        event: {
-          ...addMessageEvent.event,
-          channel: channelMock.externalChannelId!,
-        },
-      },
-      console
-    );
-    // result OK:200
+    const res = await handleWebhook(addEvent, console);
     expect(res.status).toBe(200);
     expect(res.message.body).toStrictEqual('this is test3');
 
-    const message = await prisma.messages.findFirst({
-      where: { externalMessageId: addMessageEvent.event.ts },
+    const message = await prisma.messages.findUnique({
+      where: {
+        channelId_externalMessageId: {
+          channelId: channel.id,
+          externalMessageId: addEvent.event.ts,
+        },
+      },
     });
     expect(message).toBeDefined();
+    expect(message?.body).toStrictEqual('this is test3');
     expect(message?.id).toBe(res.message.id);
-    expect(message?.channelId).toBe(channelMock.id);
+    expect(message?.channelId).toBe(channel.id);
 
-    const thread = await prisma.threads.findFirst({
+    const thread = await prisma.threads.findUnique({
       where: { id: message?.threadId! },
     });
     expect(thread).toBeDefined();
     expect(message?.externalMessageId).toBe(thread?.externalThreadId);
-  });
+    // });
 
-  it('delete message', async () => {
-    const message = await prisma.messages.create({
-      include: { channel: true },
-      data: {
-        body: v4(),
-        sentAt: new Date(),
-        externalMessageId: v4(),
-        channel: {
-          create: {
-            channelName: v4(),
-            externalChannelId: v4(),
-            account: { create: {} },
-          },
-        },
-      },
-    });
+    // it('change message', async () => {
+    const res2 = await handleWebhook(changeEvent, console);
+    expect(res2?.status).toBe(200);
+    expect(res2?.message.body).toStrictEqual('Lets test_4');
 
-    const messageShouldExist = await prisma.messages.findUnique({
-      where: { id: message.id },
-    });
-    expect(messageShouldExist).toBeDefined();
-
-    const res = await handleWebhook(
-      {
-        ...deleteMessageEvent,
-        event: {
-          ...deleteMessageEvent.event,
-          deleted_ts: message.externalMessageId!,
-          channel: message.channel.externalChannelId!,
-        },
-      },
-      console
-    );
-
-    const messageShouldNotExist = await prisma.messages.findUnique({
-      where: { id: message.id },
-    });
-    expect(messageShouldNotExist).toBeNull();
-
-    // result OK:200
-    expect(res.status).toBe(200);
-    expect(res.message).toStrictEqual({});
-  });
-
-  it('change message', async () => {
-    const message = await prisma.messages.create({
-      include: { channel: true },
-      data: {
-        body: v4(),
-        sentAt: new Date(),
-        externalMessageId: v4(),
-        channel: {
-          create: {
-            channelName: v4(),
-            externalChannelId: v4(),
-            account: { create: {} },
-          },
-        },
-      },
-    });
-
-    const messageShouldExist = await prisma.messages.findUnique({
-      where: { id: message.id },
-    });
-    expect(messageShouldExist).toBeDefined();
-
-    const res = await handleWebhook(
-      {
-        ...changeMessageEvent,
-        event: {
-          ...changeMessageEvent.event,
-          previous_message: {
-            ...changeMessageEvent.event.previous_message,
-            ts: message.externalMessageId!,
-          },
-          message: {
-            ...changeMessageEvent.event.message,
-            ts: message.externalMessageId!,
-          },
-          channel: message.channel.externalChannelId!,
-        },
-      },
-      console
-    );
-
-    const messageShouldHaveBeenUpdated = await prisma.messages.findFirst({
+    const updatedMessage = await prisma.messages.findUnique({
       where: {
-        externalMessageId: message.externalMessageId!,
+        channelId_externalMessageId: {
+          channelId: channel.id,
+          externalMessageId: addEvent.event.ts,
+        },
       },
     });
 
-    expect(messageShouldHaveBeenUpdated?.body).not.toStrictEqual(
-      messageShouldExist?.body
-    );
+    expect(updatedMessage?.body).toStrictEqual('Lets test_4');
 
-    expect(messageShouldHaveBeenUpdated?.body).toStrictEqual('Lets test_4');
-    // result OK:200
-    expect(res.status).toBe(200);
-    expect(res.message.body).toStrictEqual('Lets test_4');
+    // });
+
+    // it('delete message', async () => {
+    const res3 = await handleWebhook(deleteEvent, console);
+    expect(res3.status).toBe(200);
+    expect(res3.message).toStrictEqual({});
+
+    const deletedMessage = await prisma.messages.findUnique({
+      where: {
+        channelId_externalMessageId: {
+          channelId: channel.id,
+          externalMessageId: addEvent.event.ts,
+        },
+      },
+    });
+    expect(deletedMessage).toBeNull();
   });
 });

@@ -4,9 +4,8 @@
 jest.mock('services/threads');
 import { testApiHandler } from 'next-test-api-route-handler';
 import { create } from '@linen/factory';
-import { createUser } from '__tests__/login';
+import { createUserAndSignIn, attachHeaders } from '__tests__/helpers';
 import handler from 'pages/api/threads/[[...slug]]';
-import { attachHeaders } from '__tests__/pages/api/auth/login';
 import { v4 } from 'uuid';
 import { qs } from '@linen/utilities/url';
 import { AccountType, ChatType, postThreadType } from '@linen/types';
@@ -28,11 +27,20 @@ describe('threads api (internal)', () => {
       chat: ChatType.MEMBERS,
     });
 
-    store.adminPrivate = await createUser(store.accountPrivate.id, 'ADMIN');
-    store.author = await createUser(store.accountPrivate.id, 'MEMBER');
-    store.member = await createUser(store.accountPrivate.id, 'MEMBER');
-    store.adminPublic = await createUser(store.accountPublic.id, 'ADMIN');
-    store.memberPublic = await createUser(store.accountPublic.id, 'MEMBER');
+    store.adminPrivate = await createUserAndSignIn(
+      store.accountPrivate.id,
+      'ADMIN'
+    );
+    store.author = await createUserAndSignIn(store.accountPrivate.id, 'MEMBER');
+    store.member = await createUserAndSignIn(store.accountPrivate.id, 'MEMBER');
+    store.adminPublic = await createUserAndSignIn(
+      store.accountPublic.id,
+      'ADMIN'
+    );
+    store.memberPublic = await createUserAndSignIn(
+      store.accountPublic.id,
+      'MEMBER'
+    );
   });
 
   async function callApi({

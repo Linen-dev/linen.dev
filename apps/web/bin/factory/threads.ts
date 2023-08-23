@@ -1,7 +1,7 @@
 import { accounts, channels, prisma } from '@linen/database';
 import { v4 as random } from 'uuid';
 import { MessageFormat } from '@linen/types';
-
+import { buildPages } from '@linen/pagination';
 /** this function will create N threads (threadsCount parameter)
  * where each one will have a incremental timestamp date
  * the first thread will get the N amount of day in the past from now.
@@ -65,5 +65,6 @@ export async function createThreadsOneByDay(
     });
     threads.push(thread);
   }
+  await buildPages(account);
   return threads;
 }
