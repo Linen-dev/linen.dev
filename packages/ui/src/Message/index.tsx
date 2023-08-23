@@ -155,6 +155,7 @@ function Message({
           <BlockCode
             key={node.cid}
             value={(node as PreNode).value}
+            language={(node as PreNode).language}
             placeholder={placeholder}
           />
         );

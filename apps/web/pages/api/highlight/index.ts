@@ -2,14 +2,34 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import highlightjs from 'highlight.js';
 import { cors, preflight } from 'utilities/cors';
 
-export async function create({ input }: { input: string }) {
-  const output = highlightjs.highlightAuto(input).value;
-  return {
-    status: 200,
-    data: {
-      output,
-    },
-  };
+const LANGUAGES = highlightjs.listLanguages();
+
+export async function create({
+  input,
+  language,
+}: {
+  input: string;
+  language: string;
+}) {
+  try {
+    const output =
+      language && LANGUAGES.includes(language)
+        ? highlightjs.highlight(language, input).value
+        : highlightjs.highlightAuto(input).value;
+    return {
+      status: 200,
+      data: {
+        output,
+      },
+    };
+  } catch (exception) {
+    return {
+      status: 200,
+      data: {
+        output: input,
+      },
+    };
+  }
 }
 
 export default async function handler(
@@ -21,9 +41,10 @@ export default async function handler(
   }
   cors(request, response);
   if (request.method === 'POST') {
-    const { input } = request.body;
+    const { input, language } = request.body;
     const { status, data } = await create({
       input,
+      language,
     });
     return response.status(status).json(data || {});
   }

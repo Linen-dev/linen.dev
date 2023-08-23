@@ -66,6 +66,10 @@ const JSON_EXAMPLE = `
 {"foo": "bar", "baz": "qux"}
 `.trim();
 
+const BASH_EXAMPLE = `bash
+ssh -l johndoe -p 1234 foo.bar
+`.trim();
+
 const STATIC_TEXT = `
 Hey!
 
@@ -224,6 +228,10 @@ export default function MessageExample() {
         />
         <Message
           text={`\`\`\`${PYTHON_EXAMPLE}\`\`\``}
+          format={MessageFormat.LINEN}
+        />
+        <Message
+          text={`\`\`\`${BASH_EXAMPLE}\`\`\``}
           format={MessageFormat.LINEN}
         />
         <Message

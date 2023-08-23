@@ -7,25 +7,32 @@ interface Props {
   className?: string;
   content: string;
   highlight?: boolean;
+  language?: string;
   inline?: boolean;
 }
 
-function Code({ className, content, highlight, inline }: Props): JSX.Element {
+function Code({
+  className,
+  content,
+  language,
+  highlight,
+  inline,
+}: Props): JSX.Element {
   const [highlighted, setHighlighted] = useState<any>();
 
-  // useEffect(() => {
-  //   let mounted = true;
-  //   if (highlight && !highlighted) {
-  //     highlightCode(content).then((output) => {
-  //       if (mounted) {
-  //         setHighlighted(output);
-  //       }
-  //     });
-  //   }
-  //   return () => {
-  //     mounted = false;
-  //   };
-  // }, [highlight, highlighted]);
+  useEffect(() => {
+    let mounted = true;
+    if (highlight && !highlighted) {
+      highlightCode(content, language).then((output) => {
+        if (mounted) {
+          setHighlighted(output);
+        }
+      });
+    }
+    return () => {
+      mounted = false;
+    };
+  }, [highlight, highlighted, language]);
 
   if (!highlight) {
     return (
