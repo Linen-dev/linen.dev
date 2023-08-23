@@ -33,7 +33,7 @@ async function task(payload: Payload, logger: Logger) {
       },
     });
 
-    const thread = await prisma.threads.findFirst({
+    const thread = await prisma.threads.findUnique({
       where: { id: threadId },
       include: { messages: true },
     });

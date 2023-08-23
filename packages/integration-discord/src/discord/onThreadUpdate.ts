@@ -43,7 +43,10 @@ export function onThreadUpdate(botId: number) {
         return;
       }
 
-      const linenThread = await findThreadByExternalId(externalThreadId);
+      const linenThread = await findThreadByExternalId(
+        externalThreadId,
+        linenChannel.id
+      );
 
       if (linenThread) {
         if (linenThread.channel.account?.id === linenAccount.id) {

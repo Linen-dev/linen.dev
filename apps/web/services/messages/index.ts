@@ -194,7 +194,7 @@ export default class MessagesService {
     });
 
     if (message.threadId) {
-      const thread = await prisma.threads.findFirst({
+      const thread = await prisma.threads.findUnique({
         where: {
           id: message.threadId,
         },

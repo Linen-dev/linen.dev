@@ -25,7 +25,12 @@ async function saveMessagesSynchronous(
   const threadHead = messages[0];
   if (threadHead.ts === threadHead.thread_ts) {
     await prisma.threads.update({
-      where: { externalThreadId: threadHead.thread_ts },
+      where: {
+        channelId_externalThreadId: {
+          externalThreadId: threadHead.thread_ts,
+          channelId,
+        },
+      },
       data: {
         messageCount: (threadHead.reply_count || 0) + 1,
         slug: slugify(threadHead.text),

@@ -40,7 +40,7 @@ class ThreadsServices {
     messageId: string;
     threadId: string;
   }) {
-    const thread = await prisma.threads.findFirst({
+    const thread = await prisma.threads.findUnique({
       select: { firstManagerReplyAt: true, firstUserReplyAt: true },
       where: { id: threadId },
     });
@@ -383,7 +383,10 @@ export async function upsertThreadByExternalId(upsertData: {
   return await prisma.threads.upsert({
     select: { id: true },
     where: {
-      externalThreadId: upsertData.externalThreadId,
+      channelId_externalThreadId: {
+        channelId: upsertData.channelId,
+        externalThreadId: upsertData.externalThreadId,
+      },
     },
     update: upsertData,
     create: upsertData,
@@ -399,12 +402,22 @@ export const findOrCreateThread = async (thread: {
   messageCount?: number;
   title?: string;
 }) => {
-  return await prisma.threads.upsert({
+  const exist = await prisma.threads.findUnique({
     where: {
-      externalThreadId: thread.externalThreadId,
+      channelId_externalThreadId: {
+        channelId: thread.channelId,
+        externalThreadId: thread.externalThreadId,
+      },
     },
-    update: {},
-    create: thread,
+    include: {
+      messages: true,
+    },
+  });
+  if (exist) {
+    return exist;
+  }
+  return await prisma.threads.create({
+    data: thread,
     include: {
       messages: true,
     },

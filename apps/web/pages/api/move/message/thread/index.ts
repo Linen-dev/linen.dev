@@ -66,7 +66,7 @@ export async function create({
   const owner = permissions.user.id === message.usersId;
 
   if (permissions.manage || owner) {
-    const previous = await prisma.threads.findFirst({
+    const previous = await prisma.threads.findUnique({
       where: { id: message.threadId },
       include: { messages: true },
     });

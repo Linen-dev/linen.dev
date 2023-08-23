@@ -83,7 +83,7 @@ model threads {
   createdAt         DateTime            @default(now())
   updatedAt         DateTime?           @updatedAt()
 
-  @@unique([externalThreadId])
+  @@unique([channelId, externalThreadId])
   @@unique([incrementId])
   @@index([channelId, sentAt])
   @@index([channelId, sentAt, hidden])

@@ -102,10 +102,18 @@ export async function findThreadWithMessage(threadId: string) {
   });
 }
 
-export async function findThreadByExternalId(externalThreadId: string) {
+export async function findThreadByExternalId(
+  externalThreadId: string,
+  channelId: string
+) {
   return await prisma.threads.findUnique({
     include: { channel: { include: { account: { select: { id: true } } } } },
-    where: { externalThreadId },
+    where: {
+      channelId_externalThreadId: {
+        externalThreadId,
+        channelId,
+      },
+    },
   });
 }
 
