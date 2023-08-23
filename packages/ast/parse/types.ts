@@ -81,6 +81,7 @@ export interface PreNode {
   type: string;
   value: string;
   source: string;
+  language?: string;
 }
 
 export interface HeaderNode {
