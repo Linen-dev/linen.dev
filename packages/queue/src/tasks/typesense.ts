@@ -31,6 +31,12 @@ export const typesenseSetup = async (payload: any, helpers: JobHelpers) => {
   await setup({ accountId, logger });
 
   keepAlive.end();
+
+  // trigger dump
+  await helpers.addJob('typesenseDump', payload, {
+    maxAttempts: 1,
+    queueName: 'typesenseDump',
+  });
 };
 
 export const typesenseDump = async (payload: any, helpers: JobHelpers) => {
