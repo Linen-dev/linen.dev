@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 import Code from '@/Code';
 import { decodeHTML } from '@linen/utilities/string';
 import {
@@ -8,7 +7,6 @@ import {
   isFormattable,
   LANGUAGES,
 } from './utilities';
-import styles from './index.module.scss';
 
 interface Props {
   value: string;
@@ -28,7 +26,7 @@ export default function BlockCode({ value, language, placeholder }: Props) {
   const content = decodeHTML(input);
   return (
     <Code
-      className={classNames(styles.code, styles.block)}
+      block
       content={isFormattable(content) ? formatCode(content) : content}
       language={language}
       highlight={!placeholder && isHighlighted(value)}
