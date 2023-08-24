@@ -7,6 +7,8 @@ import {
   isFormattable,
   LANGUAGES,
 } from './utilities';
+import { copyToClipboard } from '@linen/utilities/clipboard';
+import Toast from '@/Toast';
 
 interface Props {
   value: string;
@@ -30,6 +32,10 @@ export default function BlockCode({ value, language, placeholder }: Props) {
       content={isFormattable(content) ? formatCode(content) : content}
       language={language}
       highlight={!placeholder && isHighlighted(value)}
+      onClick={(content) => {
+        copyToClipboard(content);
+        Toast.success('Copied code to clipboard');
+      }}
     />
   );
 }

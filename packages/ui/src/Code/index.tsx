@@ -9,6 +9,7 @@ interface Props {
   language?: string;
   block?: boolean;
   inline?: boolean;
+  onClick(content: string): void;
 }
 
 function Code({
@@ -17,6 +18,7 @@ function Code({
   highlight,
   inline,
   block,
+  onClick,
 }: Props): JSX.Element {
   const [highlighted, setHighlighted] = useState<any>();
 
@@ -34,22 +36,10 @@ function Code({
     };
   }, [highlight, highlighted, language]);
 
-  if (!highlight) {
-    return (
-      <pre
-        className={classNames(styles.pre, {
-          [styles.block]: block,
-          [styles.inline]: inline,
-        })}
-      >
-        <code className={styles.code}>{content}</code>
-      </pre>
-    );
-  }
-
   if (highlighted) {
     return (
       <pre
+        onClick={() => onClick(content)}
         className={classNames('hljs', styles.pre, {
           [styles.block]: block,
           [styles.inline]: inline,
@@ -65,6 +55,7 @@ function Code({
 
   return (
     <pre
+      onClick={() => onClick(content)}
       className={classNames(styles.pre, {
         [styles.block]: block,
         [styles.inline]: inline,
