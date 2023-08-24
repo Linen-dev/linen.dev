@@ -37,9 +37,9 @@
     opacity: 1;
   }
   input {
+    border-bottom: 1px solid var(--color-input);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
     font-weight: 600;
-  }
-  textarea {
-    padding-top: 0;
   }
 }
