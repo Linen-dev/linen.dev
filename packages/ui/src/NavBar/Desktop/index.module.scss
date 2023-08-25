@@ -6,8 +6,14 @@
   max-width: 52px;
   background-color: var(--color-background);
   color: var(--color-text);
-  max-height: calc(100dvh - var(--push-height));
+  max-height: calc(100vh - var(--push-height));
   overflow: hidden;
+}
+
+@media screen and (max-width: 1023px) {
+  .switch {
+    max-height: calc(100dvh - var(--push-height));
+  }
 }
 
 .switch:hover {
@@ -43,8 +49,8 @@
 .navbar {
   background-color: var(--color-background);
   color: var(--color-text);
-  max-height: calc(100dvh - var(--push-height));
-  min-height: calc(100dvh - var(--push-height));
+  max-height: calc(100vh - var(--push-height));
+  min-height: calc(100vh - var(--push-height));
   overflow-y: auto;
   width: 200px;
   padding: 0.5rem 0 0;
@@ -53,6 +59,13 @@
   justify-content: space-between;
   flex-direction: column;
   overflow-x: hidden;
+}
+
+@media screen and (max-width: 1023px) {
+  .navbar {
+    max-height: calc(100dvh - var(--push-height));
+    min-height: calc(100dvh - var(--push-height));
+  }
 }
 
 .navbar::-webkit-scrollbar {
