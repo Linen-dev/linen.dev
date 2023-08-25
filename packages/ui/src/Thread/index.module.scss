@@ -1,8 +1,14 @@
 .container {
   background: var(--color-background);
-  min-height: calc(100dvh - var(--push-height));
+  min-height: calc(100vh - var(--push-height));
   overflow-y: auto;
   width: 520px;
+}
+
+@media screen and (max-width: 1023px) {
+  .container {
+    min-height: calc(100dvh - var(--push-height));
+  }
 }
 
 .container::-webkit-scrollbar {
@@ -26,12 +32,6 @@
   margin: 0 auto;
   max-width: 52rem;
   width: 100%;
-}
-
-@media screen and (min-width: 768px) and (max-width: 1023px) {
-  .container {
-    min-height: calc(100dvh - 102px);
-  }
 }
 
 .thread {

@@ -17,7 +17,13 @@
   overflow: auto;
   width: 100%;
   justify-content: center;
-  height: calc(100dvh - var(--push-height));
+  height: calc(100vh - var(--push-height));
+}
+
+@media screen and (max-width: 1023px) {
+  .container {
+    height: calc(100dvh - var(--push-height));
+  }
 }
 
 .container::-webkit-scrollbar {

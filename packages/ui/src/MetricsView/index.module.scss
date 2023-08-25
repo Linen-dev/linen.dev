@@ -1,8 +1,14 @@
 .container {
   background: var(--color-background);
   color: var(--color-text);
-  max-height: calc(100dvh - var(--push-height));
+  max-height: calc(100vh - var(--push-height));
   overflow-x: hidden;
   overflow-y: scroll;
   width: 100%;
+}
+
+@media screen and (max-width: 1023px) {
+  .container {
+    max-height: calc(100dvh - var(--push-height));
+  }
 }

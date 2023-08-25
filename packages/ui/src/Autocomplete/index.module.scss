@@ -36,7 +36,13 @@
   top: 40px;
   left: 0;
   right: 0;
-  max-height: calc(100dvh - 200px);
+  max-height: calc(100vh - 200px);
+}
+
+@media screen and (max-width: 1023px) {
+  .suggestions {
+    max-height: calc(100dvh - 200px);
+  }
 }
 
 .suggestions::-webkit-scrollbar {

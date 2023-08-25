@@ -1,11 +1,17 @@
 .container {
   background: var(--color-gray-50);
-  height: 100dvh;
+  height: 100vh;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+}
+
+@media screen and (max-width: 1023px) {
+  .container {
+    height: 100dvh;
+  }
 }
 
 .community {
