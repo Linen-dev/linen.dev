@@ -7,7 +7,8 @@
   "scripts": {
     "tsx": "dotenv -e ../../.env tsx",
     "prebuild": "rimraf dist",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "jest"
   },
   "keywords": [],
   "author": "Sandro de Souza",
@@ -16,11 +17,15 @@
     "@linen/database": "*",
     "@linen/serializers": "*",
     "@linen/types": "*",
+    "axios": "0.27.2",
+    "dotenv": "^16.3.1",
     "envalid": "^7.3.1",
-    "typesense": "1.7.1",
-    "axios": "0.27.2"
+    "typesense": "1.7.1"
   },
   "devDependencies": {
+    "@linen/factory": "*",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.0.5",
     "tsx": "^3.12.7",
     "typescript": "^5.1.6"
   }

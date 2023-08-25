@@ -4,5 +4,6 @@ export const env = cleanEnv(process.env, {
   TYPESENSE_ADMIN: str(),
   DATABASE_URL: url(),
   NEXT_PUBLIC_TYPESENSE_HOST: host(),
-  TYPESENSE_SEARCH_ONLY: str(),
+  TYPESENSE_SEARCH_ONLY: str({ default: 'xyz' }),
+  TYPESENSE_DATABASE: str({ default: 'threads' }),
 });

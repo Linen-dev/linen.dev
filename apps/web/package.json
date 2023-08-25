@@ -34,7 +34,6 @@
     "@linen/ui": "*",
     "@linen/utilities": "*",
     "@react-icons/all-files": "^4.1.0",
-    "@sentry/node": "^7.47.0",
     "autoprefixer": "^10.4.12",
     "axios": "^0.27.2",
     "cheerio": "^1.0.0-rc.12",

@@ -10,5 +10,6 @@
     "emitDeclarationOnly": false,
     "outDir": "dist",
     "declaration": true
-  }
+  },
+  "exclude": ["__tests__"]
 }

@@ -1,7 +1,8 @@
 import type { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
+import { env } from './env';
 
 export const collectionSchema: CollectionCreateSchema = {
-  name: `threads`,
+  name: env.TYPESENSE_DATABASE,
   fields: [
     {
       name: 'id',

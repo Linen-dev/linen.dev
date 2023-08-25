@@ -1,5 +1,5 @@
 import { auths, prisma } from '@linen/database';
-import { createHmac, randomBytes } from 'crypto';
+import { createHmac, randomBytes, randomUUID } from 'crypto';
 
 // dup from utilities to avoid circular dependency
 function generateSalt(): string {
@@ -17,7 +17,7 @@ export default function createAuth(options?: Partial<auths>): Promise<auths> {
   const salt = generateSalt();
   const hash = generateHash(password, salt);
   const data = {
-    email: 'john@doe.com',
+    email: `${randomUUID()}@${randomUUID()}.com`,
     token: 'token',
     password: '',
     salt: '',
