@@ -15,11 +15,12 @@ export async function sync({
   accountId: string;
   logger: Logger;
 }) {
-  const { searchSettings } = await getAccountSettings(accountId);
-  await syncUpdatedThreads(searchSettings, accountId, logger);
+  const accountSettings = await getAccountSettings(accountId, logger);
+  if (!accountSettings) return;
+  await syncUpdatedThreads(accountSettings.searchSettings, accountId, logger);
 
   // set cursor for next sync job
-  await persistEndFlag(searchSettings, accountId);
+  await persistEndFlag(accountSettings.searchSettings, accountId);
 }
 
 async function syncUpdatedThreads(

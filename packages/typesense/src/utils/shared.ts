@@ -18,7 +18,7 @@ import { collectionSchema } from './model';
 import { env } from './env';
 import { createUserKey, createAccountKey } from './keys';
 
-export async function getAccountSettings(accountId: string) {
+export async function getAccountSettings(accountId: string, logger: Logger) {
   const account = await prisma.accounts.findUnique({
     where: {
       id: accountId,
@@ -26,11 +26,13 @@ export async function getAccountSettings(accountId: string) {
   });
 
   if (!account) {
-    throw new Error(`account not found: ${accountId}`);
+    logger.warn({ warn: `account not found: ${accountId}` });
+    return;
   }
 
   if (!account.searchSettings) {
-    throw new Error(`account missing searchSettings`);
+    logger.warn({ warn: `account missing searchSettings` });
+    return;
   }
 
   const searchSettings: SerializedSearchSettings = JSON.parse(

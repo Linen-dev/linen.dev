@@ -123,10 +123,10 @@ describe('private community', () => {
   });
 
   test('community token should not exist', async () => {
-    const accountSettings = await getAccountSettings(accountId);
-    expect(accountSettings.searchSettings).toBeDefined();
-    expect(accountSettings.searchSettings.apiKey).toBeDefined();
-    expect(accountSettings.searchSettings.scope).toBe('private');
+    const accountSettings = await getAccountSettings(accountId, logger);
+    expect(accountSettings?.searchSettings).toBeDefined();
+    expect(accountSettings?.searchSettings.apiKey).toBeDefined();
+    expect(accountSettings?.searchSettings.scope).toBe('private');
   });
 
   describe('using user token', () => {

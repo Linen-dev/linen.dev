@@ -14,7 +14,8 @@ export async function dump({
   accountId: string;
   logger: Logger;
 }) {
-  const { searchSettings } = await getAccountSettings(accountId);
+  const accountSettings = await getAccountSettings(accountId, logger);
+  if (!accountSettings) return;
   let cursor = 0;
   do {
     const threads = await queryThreads({
@@ -34,11 +35,11 @@ export async function dump({
 
     await pushToTypesense({
       threads,
-      is_restrict: searchSettings.scope === 'private',
+      is_restrict: accountSettings.searchSettings.scope === 'private',
       logger,
     });
   } while (true);
 
   // set cursor for next sync job
-  await persistEndFlag(searchSettings, accountId);
+  await persistEndFlag(accountSettings.searchSettings, accountId);
 }

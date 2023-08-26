@@ -160,6 +160,8 @@ export const typesenseOnCommunityTypeUpdate = async (
   payload: any,
   helpers: JobHelpers
 ) => {
+  const logger = new Logger(helpers.logger);
+
   const { accountId } = z
     .object({
       accountId: z.string().uuid(),
@@ -169,7 +171,7 @@ export const typesenseOnCommunityTypeUpdate = async (
   const keepAlive = new KeepAlive(helpers);
   keepAlive.start();
 
-  await handleCommunityUpdate({ accountId });
+  await handleCommunityUpdate({ accountId, logger });
 
   keepAlive.end();
 };

@@ -16,7 +16,8 @@ export async function deletion({
   threadId: string;
   logger: Logger;
 }) {
-  const { searchSettings } = await getAccountSettings(accountId);
+  const accountSettings = await getAccountSettings(accountId, logger);
+  if (!accountSettings) return;
 
   const threads = await queryThreads({
     where: {
@@ -28,7 +29,7 @@ export async function deletion({
     // upsert
     await pushToTypesense({
       threads,
-      is_restrict: searchSettings.scope === 'private',
+      is_restrict: accountSettings.searchSettings.scope === 'private',
       logger,
     });
   } else {

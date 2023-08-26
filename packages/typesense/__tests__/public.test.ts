@@ -66,11 +66,11 @@ describe('public community', () => {
   });
 
   test('community token should exist', async () => {
-    const accountSettings = await getAccountSettings(accountId);
-    expect(accountSettings.searchSettings).toBeDefined();
-    expect(accountSettings.searchSettings.apiKey).toBeDefined();
-    expect(accountSettings.searchSettings.scope).toBe('public');
-    searchSettings = accountSettings.searchSettings;
+    const accountSettings = await getAccountSettings(accountId, logger);
+    expect(accountSettings?.searchSettings).toBeDefined();
+    expect(accountSettings?.searchSettings.apiKey).toBeDefined();
+    expect(accountSettings?.searchSettings.scope).toBe('public');
+    searchSettings = accountSettings?.searchSettings!;
   });
 
   test('query for any text should work', async () => {

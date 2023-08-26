@@ -15,9 +15,20 @@ export async function handleUserNameUpdate({
   accountId: string;
   logger: Logger;
 }) {
-  const { searchSettings } = await getAccountSettings(accountId);
-  await processQuery(userId, logger, searchSettings, queryByAuthor);
-  await processQuery(userId, logger, searchSettings, queryByMentioned);
+  const accountSettings = await getAccountSettings(accountId, logger);
+  if (!accountSettings) return;
+  await processQuery(
+    userId,
+    logger,
+    accountSettings.searchSettings,
+    queryByAuthor
+  );
+  await processQuery(
+    userId,
+    logger,
+    accountSettings.searchSettings,
+    queryByMentioned
+  );
 }
 
 async function queryByMentioned(userId: string, cursor: Date) {

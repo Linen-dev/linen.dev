@@ -18,7 +18,7 @@ export async function handleChannelTypeUpdate({
   });
 
   if (!channel) {
-    throw new Error('channel not found: ' + channelId);
+    return `channel not found: ${channelId}`;
   }
 
   const document = {
@@ -42,10 +42,13 @@ export async function handleChannelNameUpdate({
     where: { id: channelId },
   });
   if (!channel || !channel?.accountId) {
-    throw new Error('channel not found: ' + channelId);
+    return `channel not found: ${channelId}`;
   }
 
-  const { searchSettings } = await getAccountSettings(channel?.accountId);
+  const accountSettings = await getAccountSettings(channel?.accountId, logger);
+  if (!accountSettings?.searchSettings) {
+    return;
+  }
 
   let cursor = 0;
   do {
@@ -66,7 +69,7 @@ export async function handleChannelNameUpdate({
 
     await pushToTypesense({
       threads,
-      is_restrict: searchSettings.scope === 'private',
+      is_restrict: accountSettings.searchSettings.scope === 'private',
       logger,
     });
   } while (true);
