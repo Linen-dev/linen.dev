@@ -10,9 +10,9 @@
 
 .code,
 .pre {
-  background: #0d1117;
+  background: #f1f5f9;
   border: none;
-  color: #c9d1d9;
+  color: #0f172a;
   cursor: copy;
   font-size: 13px;
   font-family: var(--monospace-font);
@@ -20,6 +20,13 @@
   word-break: break-word;
   letter-spacing: 0;
   outline: none;
+}
+@media (prefers-color-scheme: dark) {
+  .code,
+  .pre {
+    background: #1e293b;
+    color: #c9d1d9;
+  }
 }
 
 .pre.inline {
