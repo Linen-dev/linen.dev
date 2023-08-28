@@ -30,6 +30,7 @@ export const updateChannelSchema = z.object({
   channelDefault: z.boolean().optional(),
   hidden: z.boolean().optional(),
   landing: z.boolean().optional(),
+  readonly: z.boolean().optional(),
   viewType: z.enum(['CHAT', 'FORUM']).optional(),
 });
 export type updateChannelType = z.infer<typeof updateChannelSchema>;

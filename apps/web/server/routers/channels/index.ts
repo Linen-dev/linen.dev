@@ -361,6 +361,7 @@ channelsRouter.put(
       channelPrivate,
       viewType,
       landing,
+      readonly,
       hidden,
     } = request.body;
     const channel = await prisma.channels.findUnique({
@@ -392,6 +393,7 @@ channelsRouter.put(
         viewType,
         default: channelDefault,
         landing,
+        readonly,
         hidden,
       },
     });
