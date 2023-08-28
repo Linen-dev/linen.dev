@@ -56,6 +56,7 @@ export default function ChannelsView({
         channelPrivate: channel.type === 'PRIVATE',
         viewType: channel.viewType,
         landing: channel.landing,
+        readonly: channel.readonly,
         hidden: channel.hidden,
       })
     ),
@@ -179,6 +180,11 @@ export default function ChannelsView({
                 Landing
                 <br />
                 <small>First channel a new member sees</small>
+              </th>
+              <th>
+                Readonly
+                <br />
+                <small>Can anyone chat in this channel</small>
               </th>
               <th>
                 Type
@@ -383,6 +389,32 @@ export default function ChannelsView({
                             }
                             return c;
                           });
+                        });
+                      }}
+                    />
+                  </td>
+                  <td>
+                    <Toggle
+                      checked={channel.readonly}
+                      onChange={(checked) => {
+                        debouncedUpdateChannel({
+                          ...channel,
+                          readonly: checked,
+                        });
+                        setChannels((channels: SerializedChannel[]) => {
+                          const result = channels.map(
+                            (c: SerializedChannel) => {
+                              if (c.id === channel.id) {
+                                return {
+                                  ...c,
+                                  readonly: checked,
+                                };
+                              }
+                              return c;
+                            }
+                          );
+
+                          return result;
                         });
                       }}
                     />

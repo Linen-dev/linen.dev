@@ -254,6 +254,7 @@ export default class ApiClient {
     channelPrivate,
     viewType,
     landing,
+    readonly,
     hidden,
   }: {
     accountId: string;
@@ -263,6 +264,7 @@ export default class ApiClient {
     viewType: ChannelViewType;
     channelDefault?: boolean;
     landing?: boolean;
+    readonly?: boolean;
     hidden?: boolean;
   }) =>
     this.put(`/api/channels/${channelId}`, {
@@ -273,6 +275,7 @@ export default class ApiClient {
       channelDefault,
       viewType,
       landing,
+      readonly,
       hidden,
     });
 
