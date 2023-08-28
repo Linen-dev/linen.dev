@@ -17,6 +17,23 @@ export async function handleUserNameUpdate({
 }) {
   const accountSettings = await getAccountSettings(accountId, logger);
   if (!accountSettings) return;
+
+  if (accountSettings.account.anonymize === 'ALL') {
+    // all users are anonymous
+    return;
+  }
+
+  if (accountSettings.account.anonymize === 'MEMBERS') {
+    const user = await prisma.users.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    });
+    if (user?.role === 'MEMBER') {
+      // this user is anonymous, no need for update
+      return;
+    }
+  }
+
   await processQuery(
     userId,
     logger,
