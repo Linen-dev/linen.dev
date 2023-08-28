@@ -64,7 +64,6 @@ function anonymizeMentions(message: Messages, anonymize: AnonymizeType): any {
 
 function anonymizeUser(user: users, anonymize: AnonymizeType): users {
   const isAdminOrOwner = user.role === Roles.ADMIN || user.role === Roles.OWNER;
-  console.log(user, anonymize);
   if (isAdminOrOwner && anonymize === AnonymizeType.MEMBERS) {
     return user;
   }
