@@ -9,6 +9,7 @@ export default function createChannel(options?: Partial<channels>): channels {
     hidden: false,
     landing: false,
     default: false,
+    readonly: false,
     externalPageCursor: null,
     lastPageBuildAt: null,
     pages: null,

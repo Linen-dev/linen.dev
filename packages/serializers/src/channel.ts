@@ -13,6 +13,7 @@ export function serializeChannel(
     hidden: channel.hidden,
     default: channel.default,
     landing: channel.landing,
+    readonly: channel.readonly,
     accountId: channel.accountId,
     pages: channel.pages,
     type: channel.type,
