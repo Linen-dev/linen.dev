@@ -47,6 +47,10 @@ export default class MessagesService {
       throw new Error("can't find the channel");
     }
 
+    if (channel.readonly) {
+      throw new Error('channel is readonly');
+    }
+
     const sentAt = new Date();
 
     const tree = parse.linen(body);
