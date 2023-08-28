@@ -196,7 +196,11 @@ class ThreadsServices {
     });
 
     if (!channel || !channel.accountId || channel.accountId !== accountId) {
-      throw { error: "Can't find the channel" };
+      throw new Error("can't find the channel");
+    }
+
+    if (channel.readonly) {
+      throw new Error('channel is readonly');
     }
 
     sentAt = sentAt || new Date();
