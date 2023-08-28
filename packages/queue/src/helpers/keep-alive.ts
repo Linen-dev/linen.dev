@@ -3,7 +3,7 @@ import type { JobHelpers } from 'graphile-worker';
 export class KeepAlive {
   intervalID: NodeJS.Timer | undefined;
   helpers: JobHelpers;
-  interval = 1000 * 60 * 5; // 5 minutes
+  interval = 1000 * 60 * 2; // 2 minutes
 
   constructor(helpers: JobHelpers) {
     this.helpers = helpers;
@@ -17,6 +17,7 @@ export class KeepAlive {
           [new Date(), this.helpers.job.id]
         )
       );
+      this.helpers.logger.info('keep alive');
     }, this.interval);
   }
 
