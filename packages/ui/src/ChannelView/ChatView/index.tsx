@@ -605,27 +605,28 @@ export default function Channel({
                   </>
                 ) : (
                   <>
-                    {!currentCommunity.communityInviteUrl && (
-                      <Chat
-                        channelId={currentChannel.id}
-                        currentUser={currentUser}
-                        currentCommunity={currentCommunity}
-                        onDrop={handleDrop}
-                        sendMessage={sendMessage}
-                        progress={progress}
-                        uploads={uploads}
-                        uploading={uploading}
-                        uploadFiles={currentUser ? uploadFiles : undefined}
-                        useUsersContext={useUsersContext}
-                        fetchMentions={(term?: string) => {
-                          if (!currentUser) {
-                            return Promise.resolve([]);
-                          }
-                          if (!term) return Promise.resolve([]);
-                          return api.fetchMentions(term, currentCommunity.id);
-                        }}
-                      />
-                    )}
+                    {!currentCommunity.communityInviteUrl &&
+                      !currentChannel.readonly && (
+                        <Chat
+                          channelId={currentChannel.id}
+                          currentUser={currentUser}
+                          currentCommunity={currentCommunity}
+                          onDrop={handleDrop}
+                          sendMessage={sendMessage}
+                          progress={progress}
+                          uploads={uploads}
+                          uploading={uploading}
+                          uploadFiles={currentUser ? uploadFiles : undefined}
+                          useUsersContext={useUsersContext}
+                          fetchMentions={(term?: string) => {
+                            if (!currentUser) {
+                              return Promise.resolve([]);
+                            }
+                            if (!term) return Promise.resolve([]);
+                            return api.fetchMentions(term, currentCommunity.id);
+                          }}
+                        />
+                      )}
                     {!currentUser && <Footer />}
                   </>
                 )
