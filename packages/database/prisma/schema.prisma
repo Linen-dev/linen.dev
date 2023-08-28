@@ -111,6 +111,7 @@ model channels {
   hidden             Boolean       @default(false)
   default            Boolean       @default(false)
   landing            Boolean       @default(false)
+  readonly           Boolean       @default(false)
   externalPageCursor String?
   memberships        memberships[]
   readStatus         readStatus[]
