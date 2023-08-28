@@ -29,7 +29,7 @@ import {
   FindThreadsByCursorType,
   ThreadsWithMessagesFull,
 } from '@linen/types';
-import { anonymizeMessages } from 'utilities/anonymizeMessages';
+import { anonymizeMessages } from '@linen/serializers/anonymizeMessages';
 import { PAGE_SIZE } from 'config';
 
 class ThreadsServices {

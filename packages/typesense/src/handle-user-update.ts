@@ -1,10 +1,10 @@
-import { Logger, SerializedSearchSettings } from '@linen/types';
+import { AnonymizeType, Logger, SerializedSearchSettings } from '@linen/types';
 import {
   getAccountSettings,
   pushToTypesense,
   queryThreads,
 } from './utils/shared';
-import { prisma } from '@linen/database';
+import { accounts, prisma } from '@linen/database';
 
 export async function handleUserNameUpdate({
   userId,
@@ -21,12 +21,14 @@ export async function handleUserNameUpdate({
     userId,
     logger,
     accountSettings.searchSettings,
+    accountSettings.account,
     queryByAuthor
   );
   await processQuery(
     userId,
     logger,
     accountSettings.searchSettings,
+    accountSettings.account,
     queryByMentioned
   );
 }
@@ -69,6 +71,7 @@ async function processQuery(
   userId: string,
   logger: Logger,
   searchSettings: SerializedSearchSettings,
+  account: accounts,
   query: (
     userId: string,
     cursor: Date
@@ -95,6 +98,9 @@ async function processQuery(
       threads,
       is_restrict: searchSettings.scope === 'private',
       logger,
+      anonymize: account.anonymizeUsers
+        ? (account.anonymize as AnonymizeType)
+        : undefined,
     });
   } while (true);
 }

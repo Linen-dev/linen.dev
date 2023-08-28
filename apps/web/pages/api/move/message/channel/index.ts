@@ -3,7 +3,7 @@ import { prisma } from '@linen/database';
 import Permissions from 'services/permissions';
 import CommunityService from 'services/community';
 import { serializeThread } from '@linen/serializers/thread';
-import { anonymizeMessages } from 'utilities/anonymizeMessages';
+import { anonymizeMessages } from '@linen/serializers/anonymizeMessages';
 import { Permissions as PermissionsType } from '@linen/types';
 import { cors, preflight } from 'utilities/cors';
 import { AnonymizeType } from '@linen/types';

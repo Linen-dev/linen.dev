@@ -1,4 +1,4 @@
-import { anonymizeSerializedMessages } from 'utilities/anonymizeMessages';
+import { anonymizeSerializedMessages } from '@linen/serializers/anonymizeMessages';
 import type { NextApiRequest, NextApiResponse } from 'next/types';
 import { AccountType, prisma } from '@linen/database';
 import PermissionsService from 'services/permissions';

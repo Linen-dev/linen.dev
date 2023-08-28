@@ -25,6 +25,7 @@
   },
   "exports": {
     "./account": "./dist/account.js",
+    "./anonymizeMessages": "./dist/anonymizeMessages.js",
     "./channel": "./dist/channel.js",
     "./email": "./dist/email.js",
     "./message": "./dist/message.js",
@@ -40,6 +41,9 @@
     "*": {
       "account": [
         "./dist/account.d.ts"
+      ],
+      "anonymizeMessages": [
+        "./dist/anonymizeMessages.d.ts"
       ],
       "channel": [
         "./dist/channel.d.ts"

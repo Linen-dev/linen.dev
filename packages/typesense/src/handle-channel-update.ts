@@ -6,7 +6,7 @@ import {
   pushToTypesense,
   queryThreads,
 } from './utils/shared';
-import { Logger } from '@linen/types';
+import { AnonymizeType, Logger } from '@linen/types';
 
 export async function handleChannelTypeUpdate({
   channelId,
@@ -71,6 +71,9 @@ export async function handleChannelNameUpdate({
       threads,
       is_restrict: accountSettings.searchSettings.scope === 'private',
       logger,
+      anonymize: accountSettings.account.anonymizeUsers
+        ? (accountSettings.account.anonymize as AnonymizeType)
+        : undefined,
     });
   } while (true);
 }

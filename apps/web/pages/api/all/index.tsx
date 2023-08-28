@@ -4,7 +4,7 @@ import CommunityService from 'services/community';
 import { prisma } from '@linen/database';
 import { serializeThread } from '@linen/serializers/thread';
 import ChannelsService from 'services/channels';
-import { anonymizeMessages } from 'utilities/anonymizeMessages';
+import { anonymizeMessages } from '@linen/serializers/anonymizeMessages';
 import { cors, preflight } from 'utilities/cors';
 import { AnonymizeType } from '@linen/types';
 

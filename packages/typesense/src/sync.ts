@@ -1,4 +1,8 @@
-import type { Logger, SerializedSearchSettings } from '@linen/types';
+import type {
+  AnonymizeType,
+  Logger,
+  SerializedSearchSettings,
+} from '@linen/types';
 import {
   getAccountSettings,
   persistEndFlag,
@@ -6,7 +10,7 @@ import {
   queryThreads,
   threadsWhere,
 } from './utils/shared';
-import { prisma } from '@linen/database';
+import { accounts, prisma } from '@linen/database';
 
 export async function sync({
   accountId,
@@ -17,7 +21,11 @@ export async function sync({
 }) {
   const accountSettings = await getAccountSettings(accountId, logger);
   if (!accountSettings) return;
-  await syncUpdatedThreads(accountSettings.searchSettings, accountId, logger);
+  await syncUpdatedThreads(
+    accountSettings.searchSettings,
+    accountSettings.account,
+    logger
+  );
 
   // set cursor for next sync job
   await persistEndFlag(accountSettings.searchSettings, accountId);
@@ -25,7 +33,7 @@ export async function sync({
 
 async function syncUpdatedThreads(
   searchSettings: SerializedSearchSettings,
-  accountId: string,
+  account: accounts,
   logger: Logger
 ) {
   let cursor = new Date(searchSettings.lastSync || 0);
@@ -35,7 +43,7 @@ async function syncUpdatedThreads(
       select: { threadId: true, updatedAt: true },
       where: {
         threads: {
-          ...threadsWhere({ accountId }),
+          ...threadsWhere({ accountId: account.id }),
         },
         updatedAt: { gt: cursor },
       },
@@ -60,6 +68,9 @@ async function syncUpdatedThreads(
       threads,
       is_restrict: searchSettings.scope === 'private',
       logger,
+      anonymize: account.anonymizeUsers
+        ? (account.anonymize as AnonymizeType)
+        : undefined,
     });
   } while (true);
   logger.log({ syncUpdatedThreads: stats });

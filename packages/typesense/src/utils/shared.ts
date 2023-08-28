@@ -10,13 +10,14 @@ import {
   users,
   accounts,
 } from '@linen/database';
-import { SerializedSearchSettings, Logger } from '@linen/types';
+import { SerializedSearchSettings, Logger, AnonymizeType } from '@linen/types';
 import { client } from './client';
 import { serializer } from './serializer';
 import { serializeThread } from '@linen/serializers/thread';
 import { collectionSchema } from './model';
 import { env } from './env';
 import { createUserKey, createAccountKey } from './keys';
+import { anonymizeMessages } from '@linen/serializers/anonymizeMessages';
 
 export async function getAccountSettings(accountId: string, logger: Logger) {
   const account = await prisma.accounts.findUnique({
@@ -108,6 +109,7 @@ export async function pushToTypesense({
   threads,
   is_restrict,
   logger,
+  anonymize,
 }: {
   threads: (threads & {
     messages: (messages & {
@@ -129,11 +131,14 @@ export async function pushToTypesense({
   })[];
   is_restrict: boolean;
   logger: Logger;
+  anonymize?: AnonymizeType;
 }) {
   const documents = threads
     .map((t) =>
       serializer({
-        thread: serializeThread(t),
+        thread: serializeThread(
+          anonymize ? anonymizeMessages(t, anonymize) : t
+        ),
         is_public: t.channel.type === 'PUBLIC',
         is_restrict,
         accessible_to: t.channel.memberships

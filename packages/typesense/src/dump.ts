@@ -1,4 +1,4 @@
-import type { Logger } from '@linen/types';
+import type { AnonymizeType, Logger } from '@linen/types';
 import {
   getAccountSettings,
   persistEndFlag,
@@ -37,6 +37,9 @@ export async function dump({
       threads,
       is_restrict: accountSettings.searchSettings.scope === 'private',
       logger,
+      anonymize: accountSettings.account.anonymizeUsers
+        ? (accountSettings.account.anonymize as AnonymizeType)
+        : undefined,
     });
   } while (true);
 

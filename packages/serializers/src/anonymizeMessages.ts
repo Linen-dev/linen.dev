@@ -5,9 +5,7 @@ import type {
   threads,
   users,
 } from '@linen/database';
-import type { SerializedMessage } from '@linen/types';
-import { Roles } from '@linen/types';
-import { AnonymizeType } from '@linen/types';
+import { SerializedMessage, Roles, AnonymizeType } from '@linen/types';
 
 type Messages =
   | (messages & {
