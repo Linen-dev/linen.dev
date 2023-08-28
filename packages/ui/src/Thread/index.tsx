@@ -125,6 +125,8 @@ export default function Thread({
   const [editedMessage, setEditedMessage] = useState<SerializedMessage>();
   const [activeUsers, setActiveUsers] = useState<string[]>([]);
 
+  const currentChannel = thread.channel!;
+
   const handleScroll = () =>
     setTimeout(() => scrollToBottom(ref.current as HTMLDivElement), 0);
 
@@ -293,7 +295,7 @@ export default function Thread({
             )}
           </div>
         </div>
-        {!currentCommunity.communityInviteUrl && (
+        {!currentCommunity.communityInviteUrl && !currentChannel.readonly && (
           <div className={styles.chat}>
             {manage && state === ThreadState.OPEN ? (
               <MessageForm
