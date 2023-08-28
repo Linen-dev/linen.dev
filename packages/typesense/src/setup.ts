@@ -1,9 +1,18 @@
 import { prisma } from '@linen/database';
-import type { Logger } from '@linen/types';
+import type {
+  AnonymizeType,
+  Logger,
+  SerializedSearchSettings,
+} from '@linen/types';
 import {
-  createAccountKeyAndPersist,
   createUserKeyAndPersist,
+  persistEndFlag,
+  pushToTypesense,
+  queryThreads,
+  threadsWhere,
 } from './utils/shared';
+import { createAccountKey } from './utils/keys';
+import { env } from './utils/env';
 
 export async function setup({
   accountId,
@@ -22,9 +31,51 @@ export async function setup({
     throw new Error(`account not found: ${accountId}`);
   }
 
-  await createAccountKeyAndPersist({ account });
-
   const isPublic = account.type === 'PUBLIC';
+
+  const key = isPublic
+    ? createAccountKey({
+        keyWithSearchPermissions: env.TYPESENSE_SEARCH_ONLY,
+        accountId: account.id,
+      })
+    : undefined;
+
+  const searchSettings: SerializedSearchSettings = {
+    engine: 'typesense',
+    scope: isPublic ? 'public' : 'private',
+    apiKey: key?.value || 'private',
+    apiKeyExpiresAt: key?.expires_at,
+  };
+
+  let cursor = 0;
+  do {
+    const threads = await queryThreads({
+      where: {
+        ...threadsWhere({ accountId }),
+        incrementId: { gt: cursor },
+      },
+      orderBy: { incrementId: 'asc' },
+      take: 300,
+    });
+
+    if (!threads.length) {
+      break;
+    }
+
+    cursor = threads.at(threads.length - 1)?.incrementId!;
+
+    await pushToTypesense({
+      threads,
+      is_restrict: searchSettings.scope === 'private',
+      logger,
+      anonymize: account.anonymizeUsers
+        ? (account.anonymize as AnonymizeType)
+        : undefined,
+    });
+  } while (true);
+
+  // set cursor for next sync job
+  await persistEndFlag(searchSettings, accountId);
 
   const users = await prisma.users.findMany({
     where: { accountsId: account.id, authsId: { not: null } },

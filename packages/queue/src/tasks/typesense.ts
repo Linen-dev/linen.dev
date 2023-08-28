@@ -1,5 +1,4 @@
 import {
-  dump,
   setup,
   sync,
   syncAll,
@@ -29,30 +28,6 @@ export const typesenseSetup = async (payload: any, helpers: JobHelpers) => {
   keepAlive.start();
 
   await setup({ accountId, logger });
-
-  keepAlive.end();
-
-  // trigger dump
-  await helpers.addJob('typesenseDump', payload, {
-    maxAttempts: 1,
-    queueName: 'typesenseDump',
-  });
-};
-
-export const typesenseDump = async (payload: any, helpers: JobHelpers) => {
-  const logger = new Logger(helpers.logger);
-  logger.info(payload);
-
-  const { accountId } = z
-    .object({
-      accountId: z.string().uuid(),
-    })
-    .parse(payload);
-
-  const keepAlive = new KeepAlive(helpers);
-  keepAlive.start();
-
-  await dump({ accountId, logger });
 
   keepAlive.end();
 };

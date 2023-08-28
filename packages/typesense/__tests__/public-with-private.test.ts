@@ -7,7 +7,7 @@ import {
   createUser,
 } from '@linen/factory';
 import { SerializedSearchSettings } from '@linen/types';
-import { dump, setup } from '../src';
+import { setup } from '../src';
 import { logger } from './logger';
 import { prisma } from '@linen/database';
 import { getAccountSettings } from '../src/utils/shared';
@@ -114,7 +114,6 @@ describe('public community with one private channel', () => {
     });
 
     await setup({ accountId: account.id, logger });
-    await dump({ accountId: account.id, logger });
   });
 
   afterAll(async () => {

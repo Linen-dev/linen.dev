@@ -18,7 +18,6 @@ import { checkPropagation } from './tasks/custom-domain-propagate';
 import { cleanupUserThreadStatusTask } from './tasks/cleanup-user-thread-status';
 import {
   typesenseSetup,
-  typesenseDump,
   typesenseSyncAll,
   typesenseSync,
   typesenseDeletion,
@@ -72,7 +71,6 @@ async function runWorker() {
       buildFeed,
       checkPropagation,
       typesenseSetup,
-      typesenseDump,
       typesenseSync,
       typesenseSyncAll,
       typesenseDeletion,

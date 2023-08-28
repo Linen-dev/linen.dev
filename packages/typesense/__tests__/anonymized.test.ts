@@ -7,7 +7,7 @@ import {
 } from '@linen/factory';
 import { getAccountSettings } from '../src/utils/shared';
 import { logger } from './logger';
-import { setup, dump } from '../src';
+import { setup } from '../src';
 import { SerializedSearchSettings } from '@linen/types';
 import { fetcher } from './fetcher';
 import { prisma } from '@linen/database';
@@ -65,7 +65,6 @@ describe('anonymous community', () => {
     });
 
     await setup({ accountId: account.id, logger });
-    await dump({ accountId: account.id, logger });
   });
 
   afterAll(async () => {
