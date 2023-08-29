@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import Droppable from '../Row/Droppable';
 import Avatars from '@/Avatars';
 import GridRow from '@/GridRow';
+import Votes from '@/Votes';
 import styles from './index.module.scss';
 import {
   Permissions,
@@ -123,61 +124,14 @@ export default function ChannelRow({
       text: a.displayName,
     }));
 
-  const upvotes = message.reactions.find(
-    (reaction: SerializedReaction) => reaction.type === ':thumbsup:'
-  ) || { count: 0 };
-  const downvotes = message.reactions.find(
-    (reaction: SerializedReaction) => reaction.type === ':thumbsdown:'
-  ) || { count: 0 };
-  const votes = upvotes.count - downvotes.count;
-  const isThumbsUpActive = hasReaction(message, ':thumbsup:', currentUser?.id);
-  const isThumbsDownActive = hasReaction(
-    message,
-    ':thumbsdown:',
-    currentUser?.id
-  );
-
   return (
     <>
       {thread?.channel?.viewType === 'FORUM' && onReaction && (
-        <div
-          className={classNames(styles.left, {
-            [styles.positive]: votes > 0,
-            [styles.negative]: votes < 0,
-          })}
-        >
-          <FiChevronUp
-            onClick={(event) => {
-              event.stopPropagation();
-              event.preventDefault();
-              onReaction({
-                threadId: thread.id,
-                messageId: message.id,
-                type: ':thumbsup:',
-                active: isThumbsUpActive,
-              });
-            }}
-            className={classNames(styles.icon, {
-              [styles.active]: isThumbsUpActive,
-            })}
-          />
-          {votes}
-          <FiChevronDown
-            onClick={(event) => {
-              event.stopPropagation();
-              event.preventDefault();
-              onReaction({
-                threadId: thread.id,
-                messageId: message.id,
-                type: ':thumbsdown:',
-                active: isThumbsDownActive,
-              });
-            }}
-            className={classNames(styles.icon, {
-              [styles.active]: isThumbsDownActive,
-            })}
-          />
-        </div>
+        <Votes
+          thread={thread}
+          currentUser={currentUser}
+          onReaction={onReaction}
+        />
       )}
       <Droppable
         id={thread.id}

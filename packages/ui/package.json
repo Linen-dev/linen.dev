@@ -200,6 +200,7 @@
     "./Tooltip": "./dist/Tooltip/index.js",
     "./Typesense": "./dist/Typesense/index.js",
     "./UserMessage": "./dist/UserMessage/index.js",
+    "./Votes": "./dist/Votes/index.js",
     "./YCombinatorLogo": "./dist/YCombinatorLogo/index.js",
     "./index.css": "./dist/index.css"
   },
@@ -591,6 +592,9 @@
       ],
       "UserMessage": [
         "./dist/UserMessage/index.d.ts"
+      ],
+      "Votes": [
+        "./dist/Votes/index.d.ts"
       ],
       "YCombinatorLogo": [
         "./dist/YCombinatorLogo/index.d.ts"

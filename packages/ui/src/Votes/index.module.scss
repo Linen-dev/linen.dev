@@ -1,0 +1,36 @@
+.votes {
+  align-self: stretch;
+  align-items: center;
+  cursor: normal;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  color: var(--color-gray-700);
+  padding: 0 1rem;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.votes.positive {
+  color: var(--color-green-600);
+}
+
+.votes.negative {
+  color: var(--color-red-600);
+}
+
+.votes .icon {
+  cursor: pointer;
+  font-size: 20px;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  transition: border-color 0.2s ease;
+}
+
+.votes .icon.active {
+  border: 1px solid var(--color-gray-300);
+}
+
+.votes .icon:hover {
+  border: 1px solid var(--color-gray-300);
+}
