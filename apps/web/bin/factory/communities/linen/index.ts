@@ -842,6 +842,7 @@ export default async function createLinenCommunity() {
         sentAt: timestamp,
         lastReplyAt: timestamp,
         messageCount: 3,
+        feed: true,
         messages: {
           create: [
             {
