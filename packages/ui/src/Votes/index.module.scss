@@ -1,22 +1,19 @@
 .votes {
   align-self: stretch;
   align-items: center;
-  cursor: normal;
   display: flex;
   justify-content: center;
-  flex-direction: column;
-  color: var(--color-gray-700);
-  padding: 0 1rem;
-  font-weight: 700;
-  font-size: 16px;
+  flex-direction: row;
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: 12px;
+  height: 26px;
+  background: var(--color-gray-100);
+  border-radius: 9999px;
+  padding: 0 0.25rem;
 }
-
-.votes.positive {
-  color: var(--color-green-600);
-}
-
-.votes.negative {
-  color: var(--color-red-600);
+.votes .count {
+  padding: 0 0.375rem;
 }
 
 .votes .icon {
@@ -25,10 +22,15 @@
   border: 1px solid transparent;
   border-radius: 0.25rem;
   transition: border-color 0.2s ease;
+  border-radius: 9999px;
 }
 
-.votes .icon.active {
-  border: 1px solid var(--color-gray-300);
+.votes .icon.active:first-child {
+  stroke: var(--color-green-500);
+}
+
+.votes .icon.active:last-child {
+  stroke: var(--color-red-500);
 }
 
 .votes .icon:hover {
