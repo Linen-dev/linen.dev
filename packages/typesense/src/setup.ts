@@ -55,7 +55,7 @@ export async function setup({
         incrementId: { gt: cursor },
       },
       orderBy: { incrementId: 'asc' },
-      take: 300,
+      take: 50,
     });
 
     if (!threads.length) {

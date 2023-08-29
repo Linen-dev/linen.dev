@@ -4,11 +4,9 @@ import { sync } from './sync';
 
 export async function syncAll({ logger }: { logger: Logger }) {
   const accounts = await prisma.accounts.findMany({
-    select: { id: true, searchSettings: true },
+    select: { id: true, slackDomain: true, searchSettings: true },
     where: { searchSettings: { not: null } },
   });
-
-  logger.log(accounts);
 
   for (const account of accounts) {
     if (!account.searchSettings) {
@@ -20,6 +18,7 @@ export async function syncAll({ logger }: { logger: Logger }) {
     if (!searchSettings.lastSync) {
       continue;
     }
+    logger.log({ account });
     await sync({ accountId: account.id, logger });
   }
 }

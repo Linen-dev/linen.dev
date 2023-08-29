@@ -48,7 +48,7 @@ async function syncUpdatedThreads(
         updatedAt: { gt: cursor },
       },
       orderBy: { updatedAt: 'asc' },
-      take: 50,
+      take: 10,
     });
 
     const threads = await queryThreads({
