@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import Droppable from './Droppable';
 import Avatars from '@/Avatars';
 import GridRow from '@/GridRow';
+import Votes from '@/Votes';
 import styles from './index.module.scss';
 import {
   Permissions,
@@ -161,41 +162,57 @@ export default function Row({
             <FiCheck className={styles.check} />
           )
         }
-        footer={({ inView }) =>
-          messages.length > 1 && (
-            <div className={styles.footer}>
-              <Avatars
-                size="sm"
-                users={avatars}
-                placeholder={!inView || isBot}
-                isBot={isBot}
-              />
-              <ul className={styles.list}>
-                <li className={styles.info}>
-                  {authors.length}{' '}
-                  {authors.length > 1 ? <FiUsers /> : <FiUser />}
-                </li>
-                <li className={styles.info}>
-                  {messages.length - 1} <FiMessageCircle />
-                </li>
-                {userMentionCount > 0 && (
-                  <li className={styles.info}>
-                    {userMentionCount} <FiAtSign />
-                  </li>
+        footer={({ inView }) => {
+          const showVotes = thread?.channel?.viewType === 'FORUM' && onReaction;
+          const showMessages = messages.length > 1;
+          const showFooter = showVotes || showMessages;
+          return (
+            showFooter && (
+              <div className={styles.footer}>
+                {showVotes && (
+                  <Votes
+                    thread={thread}
+                    currentUser={currentUser}
+                    onReaction={onReaction}
+                  />
                 )}
-                {signalMentionCount > 0 && (
-                  <li
-                    className={classNames(styles.info, {
-                      [styles.signal]: userMentions.includes('signal'),
-                    })}
-                  >
-                    {signalMentionCount} <FiAlertCircle />
-                  </li>
+                {showMessages && (
+                  <>
+                    <Avatars
+                      size="sm"
+                      users={avatars}
+                      placeholder={!inView || isBot}
+                      isBot={isBot}
+                    />
+                    <ul className={styles.list}>
+                      <li className={styles.info}>
+                        {authors.length}{' '}
+                        {authors.length > 1 ? <FiUsers /> : <FiUser />}
+                      </li>
+                      <li className={styles.info}>
+                        {messages.length - 1} <FiMessageCircle />
+                      </li>
+                      {userMentionCount > 0 && (
+                        <li className={styles.info}>
+                          {userMentionCount} <FiAtSign />
+                        </li>
+                      )}
+                      {signalMentionCount > 0 && (
+                        <li
+                          className={classNames(styles.info, {
+                            [styles.signal]: userMentions.includes('signal'),
+                          })}
+                        >
+                          {signalMentionCount} <FiAlertCircle />
+                        </li>
+                      )}
+                    </ul>
+                  </>
                 )}
-              </ul>
-            </div>
-          )
-        }
+              </div>
+            )
+          );
+        }}
       />
     </Droppable>
   );
