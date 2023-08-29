@@ -32,6 +32,7 @@ describe('Header', () => {
           signOut={jest.fn()}
           usePath={jest.fn()}
           handleSelect={jest.fn()}
+          isSubDomainRouting={false}
         />
       );
       expect(container).toHaveTextContent('Open user menu');
@@ -58,6 +59,7 @@ describe('Header', () => {
           signOut={jest.fn()}
           usePath={jest.fn()}
           handleSelect={jest.fn()}
+          isSubDomainRouting={false}
         />
       );
       // expect(container).toHaveTextContent('Sign InSign Up');

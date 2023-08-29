@@ -6,6 +6,7 @@ import { Hits as HitsUI } from './ui/Hits';
 export function Hits(
   props: UseHitsProps & {
     settings: Settings;
+    isSubDomainRouting: boolean;
   }
 ) {
   const { hits } = useHits(props);
@@ -16,5 +17,6 @@ export function Hits(
     setPreview,
     preview,
     settings: props.settings,
+    isSubDomainRouting: props.isSubDomainRouting,
   });
 }

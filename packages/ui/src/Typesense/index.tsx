@@ -22,6 +22,7 @@ export function TypesenseSearch({
   settings,
   routing,
   middlewares,
+  isSubDomainRouting,
 }: {
   apiKey: string;
   indexName?: string;
@@ -29,6 +30,7 @@ export function TypesenseSearch({
   settings: Settings;
   routing?: any;
   middlewares?: any[];
+  isSubDomainRouting: boolean;
 }) {
   const [open, setOpen] = useState<boolean>(false);
 
@@ -79,7 +81,7 @@ export function TypesenseSearch({
               root: styles.stats,
             }}
           />
-          <Hits settings={settings} />
+          <Hits settings={settings} isSubDomainRouting={isSubDomainRouting} />
           <Pagination
             classNames={{
               list: styles.list,

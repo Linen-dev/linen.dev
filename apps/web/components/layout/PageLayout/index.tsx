@@ -147,6 +147,7 @@ function PageLayout({
             routing,
             middlewares: [analyticsMiddleware],
           }}
+          isSubDomainRouting={isSubDomainRouting}
         />
       </div>
       {seo && (

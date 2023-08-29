@@ -12,6 +12,7 @@ export function Hits({
   setPreview,
   preview,
   settings,
+  isSubDomainRouting,
 }: {
   hits: any[];
   setPreview: React.Dispatch<
@@ -19,6 +20,7 @@ export function Hits({
   >;
   preview: SerializedThread | undefined;
   settings: Settings;
+  isSubDomainRouting: boolean;
 }) {
   useEffect(() => {
     document
@@ -32,7 +34,7 @@ export function Hits({
         {hits.map((hit) => {
           const thread = JSON.parse((hit as any).thread);
           const url = getThreadUrl({
-            isSubDomainRouting: false,
+            isSubDomainRouting,
             settings,
             incrementId: thread.incrementId,
             slug: thread.slug,
@@ -52,7 +54,7 @@ export function Hits({
             >
               <Row
                 currentUser={undefined as any}
-                isSubDomainRouting={false}
+                isSubDomainRouting={isSubDomainRouting}
                 settings={settings}
                 thread={thread}
                 truncate
@@ -70,7 +72,7 @@ export function Hits({
             currentCommunity={{ communityInviteUrl: true } as any}
             currentUser={{} as any}
             fetchMentions={async () => []}
-            isSubDomainRouting={false}
+            isSubDomainRouting={isSubDomainRouting}
             onMessage={() => {}}
             permissions={{ chat: false } as any}
             sendMessage={async () => {}}
@@ -84,7 +86,7 @@ export function Hits({
             breadcrumb={
               <Breadcrumb
                 thread={preview}
-                isSubDomainRouting={false}
+                isSubDomainRouting={isSubDomainRouting}
                 settings={settings}
               />
             }

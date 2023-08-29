@@ -44,6 +44,7 @@ interface Props {
     routing: any;
     middlewares?: any[];
   };
+  isSubDomainRouting: boolean;
 }
 
 function isWhiteColor(color: string) {
@@ -66,6 +67,7 @@ export default function Header({
   handleSelect,
   logoClassName,
   typesense,
+  isSubDomainRouting,
 }: Props) {
   const brandColor = currentCommunity.brandColor || 'var(--color-navbar)';
   const fontColor = pickTextColorBasedOnBgColor(brandColor, 'white', 'black');
@@ -100,6 +102,7 @@ export default function Header({
           settings={settings}
           routing={typesense.routing}
           middlewares={typesense.middlewares}
+          isSubDomainRouting={isSubDomainRouting}
         />
       ) : (
         <SearchBar
