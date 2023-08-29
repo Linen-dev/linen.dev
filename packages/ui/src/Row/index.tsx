@@ -34,6 +34,7 @@ interface Props {
   currentUser: SerializedUser | null;
   mode?: Mode;
   showActions?: boolean;
+  showVotes?: boolean;
   subheader?: React.ReactNode;
   truncate?: boolean;
   onClick?(): void;
@@ -83,6 +84,7 @@ export default function Row({
   currentUser,
   mode,
   showActions,
+  showVotes,
   subheader,
   truncate,
   onClick,
@@ -163,20 +165,22 @@ export default function Row({
           )
         }
         footer={({ inView }) => {
-          const showVotes = thread?.channel?.viewType === 'FORUM' && onReaction;
-          const showMessages = messages.length > 1;
-          const showFooter = showVotes || showMessages;
+          const renderVotes =
+            (showVotes && onReaction) ||
+            (thread?.channel?.viewType === 'FORUM' && onReaction);
+          const renderMessages = messages.length > 1;
+          const showFooter = renderVotes || renderMessages;
           return (
             showFooter && (
               <div className={styles.footer}>
-                {showVotes && (
+                {renderVotes && (
                   <Votes
                     thread={thread}
                     currentUser={currentUser}
                     onReaction={onReaction}
                   />
                 )}
-                {showMessages && (
+                {renderMessages && (
                   <>
                     <Avatars
                       size="sm"
