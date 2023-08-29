@@ -5,7 +5,7 @@
   justify-content: center;
   flex-direction: row;
   color: var(--color-text);
-  font-weight: 600;
+  font-weight: 400;
   font-size: 12px;
   height: 26px;
   background: var(--color-gray-100);
@@ -18,7 +18,7 @@
 
 .votes .icon {
   cursor: pointer;
-  font-size: 20px;
+  font-size: 18px;
   border: 1px solid transparent;
   border-radius: 0.25rem;
   transition: border-color 0.2s ease;

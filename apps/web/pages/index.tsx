@@ -253,6 +253,9 @@ export default function Feed({
                           </a>
                         </>
                       }
+                      onReaction={() => {
+                        window.location.href = url;
+                      }}
                     />
                   </div>
                 </div>
