@@ -7,8 +7,9 @@ import {
   SerializedUser,
 } from '@linen/types';
 import styles from './index.module.scss';
-import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
-import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
+import { FiArrowDownCircle } from '@react-icons/all-files/fi/FiArrowDownCircle';
+import { FiArrowUpCircle } from '@react-icons/all-files/fi/FiArrowUpCircle';
+import Toast from '@/Toast';
 
 interface Props {
   thread: SerializedThread;
@@ -66,8 +67,11 @@ export default function Votes({ thread, currentUser, onReaction }: Props) {
         [styles.negative]: votes < 0,
       })}
     >
-      <FiChevronUp
+      <FiArrowUpCircle
         onClick={(event) => {
+          if (!currentUser) {
+            return Toast.info('Please sign in.');
+          }
           event.stopPropagation();
           event.preventDefault();
           onReaction({
@@ -81,9 +85,12 @@ export default function Votes({ thread, currentUser, onReaction }: Props) {
           [styles.active]: isThumbsUpActive,
         })}
       />
-      {votes}
-      <FiChevronDown
+      <span className={styles.count}>{votes}</span>
+      <FiArrowDownCircle
         onClick={(event) => {
+          if (!currentUser) {
+            return Toast.info('Please sign in.');
+          }
           event.stopPropagation();
           event.preventDefault();
           onReaction({

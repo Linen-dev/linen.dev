@@ -125,76 +125,78 @@ export default function ChannelRow({
     }));
 
   return (
-    <>
-      {thread?.channel?.viewType === 'FORUM' && onReaction && (
-        <Votes
-          thread={thread}
-          currentUser={currentUser}
-          onReaction={onReaction}
-        />
-      )}
-      <Droppable
-        id={thread.id}
-        className={styles.container}
-        onClick={onClick}
-        onDrop={onDrop}
-      >
-        <GridRow
-          className={className}
-          thread={thread}
-          message={message}
-          isSubDomainRouting={isSubDomainRouting}
-          isBot={isBot}
-          settings={settings}
-          permissions={permissions}
-          currentUser={currentUser}
-          truncate={message.body.length > 280}
-          mode={mode}
-          drag="thread"
-          onDelete={onDelete}
-          onEdit={onEdit}
-          onLoad={onLoad}
-          onMute={onMute}
-          onUnmute={onUnmute}
-          onPin={onPin}
-          onStar={onStar}
-          onResolution={onResolution}
-          onReaction={onReaction}
-          onRead={onRead}
-          onRemind={onRemind}
-          onUnread={onUnread}
-          onImageClick={onImageClick}
-          header={
-            thread.title && <div className={styles.header}>{thread.title}</div>
-          }
-          info={
-            thread.state === ThreadState.CLOSE && (
-              <FiCheck className={styles.check} />
-            )
-          }
-          footer={({ inView }) =>
-            messages.length > 1 && (
-              <div className={styles.footer}>
-                <Avatars
-                  size="sm"
-                  users={avatars}
-                  placeholder={!inView || isBot}
-                  isBot={isBot}
+    <Droppable
+      id={thread.id}
+      className={styles.container}
+      onClick={onClick}
+      onDrop={onDrop}
+    >
+      <GridRow
+        className={className}
+        thread={thread}
+        message={message}
+        isSubDomainRouting={isSubDomainRouting}
+        isBot={isBot}
+        settings={settings}
+        permissions={permissions}
+        currentUser={currentUser}
+        truncate={message.body.length > 280}
+        mode={mode}
+        drag="thread"
+        onDelete={onDelete}
+        onEdit={onEdit}
+        onLoad={onLoad}
+        onMute={onMute}
+        onUnmute={onUnmute}
+        onPin={onPin}
+        onStar={onStar}
+        onResolution={onResolution}
+        onReaction={onReaction}
+        onRead={onRead}
+        onRemind={onRemind}
+        onUnread={onUnread}
+        onImageClick={onImageClick}
+        header={
+          thread.title && <div className={styles.header}>{thread.title}</div>
+        }
+        info={
+          thread.state === ThreadState.CLOSE && (
+            <FiCheck className={styles.check} />
+          )
+        }
+        footer={({ inView }) => {
+          return (
+            <div className={styles.footer}>
+              {thread?.channel?.viewType === 'FORUM' && onReaction && (
+                <Votes
+                  thread={thread}
+                  currentUser={currentUser}
+                  onReaction={onReaction}
                 />
-                <ul className={styles.list}>
-                  <li className={styles.info}>
-                    {authors.length}{' '}
-                    {authors.length > 1 ? <FiUsers /> : <FiUser />}
-                  </li>
-                  <li className={styles.info}>
-                    {messages.length - 1} <FiMessageCircle />
-                  </li>
-                </ul>
-              </div>
-            )
-          }
-        />
-      </Droppable>
-    </>
+              )}
+              {messages.length > 1 && (
+                <>
+                  <Avatars
+                    size="sm"
+                    users={avatars}
+                    placeholder={!inView || isBot}
+                    isBot={isBot}
+                  />
+                  <ul className={styles.list}>
+                    <li className={styles.info}>
+                      {authors.length}{' '}
+                      {authors.length > 1 ? <FiUsers /> : <FiUser />}
+                    </li>
+                    <li className={styles.info}>
+                      {messages.length - 1} <FiMessageCircle />
+                    </li>
+                  </ul>
+                </>
+              )}
+            </div>
+          );
+        }}
+      />
+    </Droppable>
   );
 }
