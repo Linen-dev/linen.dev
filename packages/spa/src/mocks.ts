@@ -18,6 +18,7 @@ export const mockAccount: SerializedAccount = {
   syncStatus: '',
   type: AccountType.PUBLIC,
   anonymize: AnonymizeType.NONE,
+  featurePreview: false,
 };
 
 export const mockSettings: Settings = {

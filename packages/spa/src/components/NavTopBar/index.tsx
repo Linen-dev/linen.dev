@@ -79,6 +79,7 @@ export default function NavTopBar() {
             api,
             reload: () => navigate(0),
           })}
+          isSubDomainRouting={false}
         />
       </div>
     </>
