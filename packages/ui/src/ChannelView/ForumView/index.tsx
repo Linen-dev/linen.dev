@@ -11,7 +11,6 @@ import Thread from '@/Thread';
 import Empty from './Empty';
 import Chat from './Chat';
 import Grid from '@/GridContent';
-import ForumRow from '@/ForumRow';
 import Footer from './Footer';
 import classNames from 'classnames';
 import PinnedThread from './PinnedThread';
@@ -594,7 +593,7 @@ export default function Channel({
                           onRemind={onRemind}
                           onUnread={unreadThread}
                           onDrop={handleDrop}
-                          Row={ForumRow}
+                          Row={Row}
                         />
                       </ul>
                     </div>
