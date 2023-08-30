@@ -140,6 +140,15 @@ export default function Chat({
           onKeyUp={(event: React.KeyboardEvent<HTMLInputElement>) => {
             event.stopPropagation();
             event.preventDefault();
+
+            if (event.key === 'Enter') {
+              const textarea = document.getElementById(
+                `channel-message-form-${channelId}-textarea`
+              );
+              if (textarea) {
+                textarea.focus();
+              }
+            }
           }}
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
