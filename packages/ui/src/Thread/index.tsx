@@ -76,6 +76,7 @@ interface Props {
   fetchMentions(term?: string | undefined): Promise<SerializedUser[]>;
   api: ApiClient;
   breadcrumb?: React.ReactNode;
+  chat?: boolean;
   classContainer?: string;
 }
 
@@ -84,7 +85,7 @@ enum ModalView {
   EDIT_MESSAGE_MODAL,
 }
 
-export default function Thread({
+function Thread({
   thread,
   channelId,
   channelName,
@@ -111,6 +112,7 @@ export default function Thread({
   api,
   fetchMentions,
   breadcrumb,
+  chat,
   ...props
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
@@ -282,7 +284,7 @@ export default function Thread({
             </div>
           </div>
         </div>
-        {!currentChannel.readonly && (
+        {chat && !currentChannel.readonly && (
           <div className={styles.chat}>
             {manage && state === ThreadState.OPEN ? (
               <MessageForm
@@ -376,3 +378,9 @@ export default function Thread({
     </>
   );
 }
+
+Thread.defaultProps = {
+  chat: true,
+};
+
+export default Thread;
