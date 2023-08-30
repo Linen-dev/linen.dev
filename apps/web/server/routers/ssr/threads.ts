@@ -106,28 +106,12 @@ function getThreadUrl(
   let threadUrl: string | null = null;
 
   if (thread.externalThreadId) {
-    if (currentCommunity.communityInviteUrl) {
-      if (
-        currentCommunity.communityInviteUrl.includes(
-          'slack.com/join/shared_invite'
-        )
-      ) {
-        threadUrl =
-          currentCommunity.communityInviteUrl &&
-          `${currentCommunity.communityInviteUrl}/archives/${
-            thread?.channel?.externalChannelId
-          }/p${(parseFloat(thread.externalThreadId) * 1000000).toString()}`;
-      } else {
-        threadUrl = currentCommunity.communityInviteUrl;
-      }
-    } else {
-      threadUrl =
-        currentCommunity.communityUrl +
-        '/archives/' +
-        thread?.channel?.externalChannelId +
-        '/p' +
-        (parseFloat(thread.externalThreadId) * 1000000).toString();
-    }
+    threadUrl =
+      currentCommunity.communityUrl +
+      '/archives/' +
+      thread?.channel?.externalChannelId +
+      '/p' +
+      (parseFloat(thread.externalThreadId) * 1000000).toString();
   }
 
   if (currentCommunity.discordServerId) {

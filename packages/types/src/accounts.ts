@@ -34,7 +34,6 @@ export type Settings = {
   docsUrl: string;
   logoUrl: string;
   communityUrl: string;
-  communityInviteUrl: string;
   communityName: string;
   redirectDomain?: string;
   prefix?: 'd' | 's';
@@ -64,7 +63,6 @@ export interface SerializedAccount {
   slackDomain?: string;
   discordDomain?: string;
   discordServerId?: string;
-  communityInviteUrl?: string;
   chat: ChatType | null;
   communityUrl?: string;
   newChannelsConfig: string;

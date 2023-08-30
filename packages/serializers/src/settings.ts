@@ -3,19 +3,6 @@ import { ChatType, CommunityType, Settings } from '@linen/types';
 import { appendProtocol } from '@linen/utilities/url';
 import { getLinenUrl } from '@linen/utilities/domain';
 
-function buildInviteUrl(account: accounts, communityType: CommunityType) {
-  if (account.communityInviteUrl) {
-    return account.communityInviteUrl;
-  }
-  if (communityType === CommunityType.discord) {
-    return `https://discord.com/channels/${account.discordServerId}`;
-  }
-  if (communityType === CommunityType.slack) {
-    return `https://${account.slackDomain}.slack.com`;
-  }
-  return '';
-}
-
 export const communityMapping: Record<string, 'd' | 's'> = {
   discord: 'd',
   slack: 's',
@@ -75,7 +62,6 @@ export function serializeSettings(account: accounts): Settings {
     prefix: communityMapping[communityType],
     ...(account.redirectDomain && { redirectDomain: account.redirectDomain }),
     communityUrl: account.communityUrl || '',
-    communityInviteUrl: buildInviteUrl(account, communityType),
     communityName: getCommunityName(account),
     name: account.name,
     brandColor: account.brandColor || 'var(--color-navbar)',

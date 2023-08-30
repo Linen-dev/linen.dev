@@ -69,7 +69,7 @@ export function Hits({
             api={{ threadIncrementView: () => {} } as any}
             channelId={preview.channelId}
             channelName={preview.channel?.channelName!}
-            currentCommunity={{ communityInviteUrl: true } as any}
+            currentCommunity={{} as any}
             currentUser={{} as any}
             fetchMentions={async () => []}
             isSubDomainRouting={isSubDomainRouting}
