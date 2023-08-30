@@ -63,6 +63,7 @@ export default function Chat({
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
   const [allUsers] = useUsersContext();
+  const [focus, setFocus] = useState(false);
   const ref = createRef<HTMLDivElement>();
 
   function handleDragEnter() {
@@ -128,7 +129,7 @@ export default function Chat({
           badge
         />
       )}
-      <Field className={styles.field}>
+      <Field className={classNames(styles.field, { [styles.focus]: focus })}>
         <TextInput
           id="channel-title"
           placeholder="Title..."
@@ -140,6 +141,8 @@ export default function Chat({
             event.stopPropagation();
             event.preventDefault();
           }}
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
         />
         <MessageForm
           id={`channel-message-form-${channelId}`}
@@ -161,6 +164,8 @@ export default function Chat({
           fetchMentions={fetchMentions}
           useUsersContext={useUsersContext}
           preview={false}
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
         />
       </Field>
     </div>

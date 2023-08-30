@@ -27,6 +27,7 @@
 .field {
   border: 1px solid var(--color-input);
   border-radius: 0.375rem;
+  transition: border 0.2s ease;
 
   input, textarea {
     border: none;
@@ -41,5 +42,13 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     font-weight: 600;
+  }
+
+  &.focus {
+    border-color: var(--color-primary);
+
+    input {
+      border-color: var(--color-primary);
+    }
   }
 }

@@ -43,6 +43,8 @@ interface Props {
   fetchMentions(term?: string): Promise<SerializedUser[]>;
   upload?(files: File[]): Promise<any>;
   useUsersContext(): any;
+  onFocus?(): void;
+  onBlur?(): void;
   mentions?: SerializedUser[];
 }
 
@@ -156,6 +158,8 @@ function MessageForm({
   onSend,
   onSendAndClose,
   onMessageChange,
+  onFocus,
+  onBlur,
   fetchMentions,
   upload,
   useUsersContext,
@@ -361,6 +365,8 @@ function MessageForm({
             setMessage(message);
             setTimeout(() => setPosition(getCaretPosition(ref)), 0);
           }}
+          onFocus={onFocus}
+          onBlur={onBlur}
           onKeyDown={(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
             if (mode === Mode.Mention && isMentionKey(event.key)) {
               return event.preventDefault();
