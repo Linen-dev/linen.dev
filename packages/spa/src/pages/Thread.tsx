@@ -60,7 +60,6 @@ function View() {
       currentChannel={threadProps?.currentChannel || ({} as any)}
       isSubDomainRouting={false}
       thread={threadProps?.thread || mockThread}
-      threadUrl={threadProps?.threadUrl || 'loading'}
       isBot={false}
       currentCommunity={currentCommunity || mockAccount}
       permissions={permissions || ({} as any)}

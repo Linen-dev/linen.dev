@@ -32,7 +32,6 @@ export interface ThreadProps {
   currentChannel: SerializedChannel;
   currentCommunity: SerializedAccount;
   channels: SerializedChannel[];
-  threadUrl: string | null;
   settings: Settings;
   dms: SerializedChannel[];
 }
@@ -93,7 +92,4 @@ export type apiGetChannelProps = Pick<
   | 'pathCursor'
 >;
 
-export type apiGetThreadProps = Pick<
-  ThreadProps,
-  'thread' | 'currentChannel' | 'threadUrl'
->;
+export type apiGetThreadProps = Pick<ThreadProps, 'thread' | 'currentChannel'>;

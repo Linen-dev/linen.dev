@@ -76,8 +76,6 @@ ssrRouter.get(
       return res.end();
     }
 
-    const threadUrl: string | null = getThreadUrl(thread, currentCommunity);
-
     const currentChannel = [
       ...joinedChannels,
       ...dmChannels,
@@ -92,32 +90,10 @@ ssrRouter.get(
     const props: apiGetThreadProps = {
       thread: serializeThread(thread),
       currentChannel: serializeChannel(currentChannel),
-      threadUrl,
     };
     res.json(props);
     res.end();
   }
 );
-
-function getThreadUrl(
-  thread: threads & { channel?: channels },
-  currentCommunity: SerializedAccount
-) {
-  let threadUrl: string | null = null;
-
-  if (thread.externalThreadId) {
-    threadUrl =
-      currentCommunity.communityUrl +
-      '/archives/' +
-      thread?.channel?.externalChannelId +
-      '/p' +
-      (parseFloat(thread.externalThreadId) * 1000000).toString();
-  }
-
-  if (currentCommunity.discordServerId) {
-    threadUrl = `https://discord.com/channels/${currentCommunity.discordServerId}/${thread?.channel?.externalChannelId}/${thread.externalThreadId}`;
-  }
-  return threadUrl;
-}
 
 export default ssrRouter;

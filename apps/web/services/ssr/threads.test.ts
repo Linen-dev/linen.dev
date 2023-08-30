@@ -236,7 +236,6 @@ describe('threads services', () => {
           title: null,
           viewCount: 0,
         },
-        threadUrl: expect.any(String),
         token: null,
       });
     });

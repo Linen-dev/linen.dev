@@ -13,7 +13,6 @@ export function ThreadPage({
   communities,
   currentChannel,
   currentCommunity,
-  threadUrl,
   isBot,
   isSubDomainRouting,
   settings,
@@ -57,7 +56,6 @@ export function ThreadPage({
         permissions={permissions}
         settings={settings}
         thread={thread}
-        threadUrl={threadUrl}
         isBot={isBot}
         useJoinContext={useJoinContext}
         api={api}

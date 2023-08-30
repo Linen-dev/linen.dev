@@ -22,7 +22,6 @@ interface Props {
   thread: SerializedThread;
   currentChannel: SerializedChannel;
   currentCommunity: SerializedAccount;
-  threadUrl: string | null;
   isBot?: boolean;
   isSubDomainRouting: boolean;
   settings: Settings;
@@ -37,7 +36,6 @@ export default function Content({
   thread: initialThread,
   currentChannel,
   currentCommunity,
-  threadUrl,
   isBot,
   isSubDomainRouting,
   settings,
@@ -158,7 +156,6 @@ export default function Content({
         key={thread.id}
         channelId={currentChannel.id}
         channelName={currentChannel.channelName}
-        threadUrl={threadUrl}
         settings={settings}
         currentUser={currentUser}
         isBot={isBot}
