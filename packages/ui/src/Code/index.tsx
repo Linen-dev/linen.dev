@@ -4,21 +4,21 @@ import styles from './index.module.scss';
 import { highlightCode } from './utilities/highlight';
 
 interface Props {
+  className?: string;
   content: string;
   highlight?: boolean;
   language?: string;
   block?: boolean;
   inline?: boolean;
-  onClick(content: string): void;
 }
 
 function Code({
+  className,
   content,
   language,
   highlight,
   inline,
   block,
-  onClick,
 }: Props): JSX.Element {
   const [highlighted, setHighlighted] = useState<any>();
 
@@ -39,8 +39,7 @@ function Code({
   if (highlighted) {
     return (
       <pre
-        onClick={() => onClick(content)}
-        className={classNames('hljs', styles.pre, {
+        className={classNames('hljs', styles.pre, className, {
           [styles.block]: block,
           [styles.inline]: inline,
         })}
@@ -55,8 +54,7 @@ function Code({
 
   return (
     <pre
-      onClick={() => onClick(content)}
-      className={classNames(styles.pre, {
+      className={classNames(styles.pre, className, {
         [styles.block]: block,
         [styles.inline]: inline,
       })}
