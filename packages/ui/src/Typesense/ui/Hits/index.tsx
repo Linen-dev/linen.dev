@@ -82,6 +82,7 @@ export function Hits({
             updateThread={() => {}}
             useUsersContext={() => [[], () => {}]}
             expanded
+            chat={false}
             classContainer={styles.threadContainer}
             breadcrumb={
               <Breadcrumb
