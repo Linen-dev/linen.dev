@@ -1,0 +1,24 @@
+.label {
+  background: var(--color-gray-200);
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  color: var(--color-text);
+  display: flex;
+  font-family: var(--monospace-font);
+  font-size: 12px;
+  justify-content: space-between;
+  padding: 0.125rem 0.5rem;
+  position: relative;
+}
+
+.label .right {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  gap: 0;
+}
+
+.code {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}

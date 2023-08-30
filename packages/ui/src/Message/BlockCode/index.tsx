@@ -9,6 +9,8 @@ import {
 } from './utilities';
 import { copyToClipboard } from '@linen/utilities/clipboard';
 import Toast from '@/Toast';
+import { FiClipboard } from '@react-icons/all-files/fi/FiClipboard';
+import styles from './index.module.scss';
 
 interface Props {
   value: string;
@@ -27,15 +29,26 @@ export default function BlockCode({ value, language, placeholder }: Props) {
   const input = normalize(value, language);
   const content = decodeHTML(input);
   return (
-    <Code
-      block
-      content={isFormattable(content) ? formatCode(content) : content}
-      language={language}
-      highlight={!placeholder && isHighlighted(value)}
-      onClick={(content) => {
-        copyToClipboard(content);
-        Toast.success('Copied code to clipboard');
-      }}
-    />
+    <>
+      <div className={styles.label}>
+        <span>{language}</span>
+        <span
+          className={styles.right}
+          onClick={() => {
+            copyToClipboard(value);
+            Toast.success('Copied code to clipboard');
+          }}
+        >
+          <FiClipboard /> Copy code
+        </span>
+      </div>
+      <Code
+        className={styles.code}
+        block
+        content={isFormattable(content) ? formatCode(content) : content}
+        language={language}
+        highlight={!placeholder && isHighlighted(value)}
+      />
+    </>
   );
 }
