@@ -1,4 +1,5 @@
 import React, { createRef, useState } from 'react';
+import classNames from 'classnames';
 import MessageForm from '@/MessageForm';
 import MessagePreview from '@/MessagePreview';
 import TextInput from '@/TextInput';
@@ -54,6 +55,7 @@ export default function Chat({
 }: Props) {
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
+  const [focus, setFocus] = useState(false);
   const [allUsers] = useUsersContext();
   const ref = createRef<HTMLDivElement>();
 
@@ -120,7 +122,7 @@ export default function Chat({
           badge
         />
       )}
-      <Field className={styles.field}>
+      <Field className={classNames(styles.field, { [styles.focus]: focus })}>
         <TextInput
           id="channel-title"
           placeholder="Title..."
@@ -132,6 +134,8 @@ export default function Chat({
             event.stopPropagation();
             event.preventDefault();
           }}
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
         />
         <MessageForm
           id={`channel-message-form-${channelId}`}
@@ -153,6 +157,8 @@ export default function Chat({
           fetchMentions={fetchMentions}
           useUsersContext={useUsersContext}
           preview={false}
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
         />
       </Field>
     </div>
