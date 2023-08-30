@@ -128,25 +128,19 @@ export default function Chat({
           badge
         />
       )}
-      <Field
-        className={classNames({
-          [styles.field]: currentCommunity.featurePreview,
-        })}
-      >
-        {currentCommunity.featurePreview && (
-          <TextInput
-            id="channel-title"
-            placeholder="Title..."
-            value={title}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setTitle(event.target.value)
-            }
-            onKeyUp={(event: React.KeyboardEvent<HTMLInputElement>) => {
-              event.stopPropagation();
-              event.preventDefault();
-            }}
-          />
-        )}
+      <Field className={styles.field}>
+        <TextInput
+          id="channel-title"
+          placeholder="Title..."
+          value={title}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            setTitle(event.target.value)
+          }
+          onKeyUp={(event: React.KeyboardEvent<HTMLInputElement>) => {
+            event.stopPropagation();
+            event.preventDefault();
+          }}
+        />
         <MessageForm
           id={`channel-message-form-${channelId}`}
           currentUser={currentUser}

@@ -117,16 +117,6 @@ export default function GridContent({
     ...threads
       .filter((thread) => thread.messages.length > 0)
       .map((thread) => {
-        if (
-          currentCommunity.featurePreview &&
-          currentChannel.viewType === 'CHAT'
-        ) {
-          return {
-            type: RowType.Thread,
-            content: thread,
-            timestamp: Number(thread.lastReplyAt),
-          };
-        }
         return {
           type: RowType.Thread,
           content: thread,
