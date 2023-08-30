@@ -127,6 +127,59 @@ export default function Feed({
     rootMargin: '0px 0px 640px 0px',
     delayInMs: 0,
   });
+
+  function WhatIsLinen() {
+    return (
+      <>
+        <div className={styles.actions}>
+          {session.status === 'authenticated' ? (
+            <>
+              <Link className={styles.link} href="/getting-started">
+                Get started
+              </Link>
+              <a className={styles.link} onClick={() => signOut()}>
+                Sign out
+              </a>
+            </>
+          ) : (
+            <>
+              <Link className={styles.link} href="/signin">
+                Log in
+              </Link>
+              <Link className={styles.link} href="/signup">
+                Sign up
+              </Link>
+            </>
+          )}
+        </div>
+        <h1>What is Linen?</h1>
+        <p>
+          <small>
+            Linen is a search-engine friendly community platform. We offer two
+            way integrations with existing Slack/Discord communities and make
+            those conversations Google-searchable.
+          </small>
+        </p>
+        <h2>What is this page?</h2>
+        <p>
+          <small>
+            This page aggregates conversations from across all types of
+            communities into a single feed. This way, we can showcase
+            interesting content/discussions in different communities.
+          </small>
+        </p>
+        <a
+          className={styles.link}
+          href="https://linen.dev/landing"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Read more
+        </a>
+      </>
+    );
+  }
+
   return (
     <BlankLayout>
       <div className={styles.grid}>
@@ -154,55 +207,8 @@ export default function Feed({
               }}
             />
           </div>
-          {/* <div className={styles.right}> */}
-          <div className="px-6 py-4 lg:hidden border-solid border-b border-gray-100">
-            <div className={styles.actions}>
-              {session.status === 'authenticated' ? (
-                <>
-                  <Link className={styles.link} href="/getting-started">
-                    Get started
-                  </Link>
-                  <a className={styles.link} onClick={() => signOut()}>
-                    Sign out
-                  </a>
-                </>
-              ) : (
-                <>
-                  <Link className={styles.link} href="/signin">
-                    Log in
-                  </Link>
-                  <Link className={styles.link} href="/signup">
-                    Sign up
-                  </Link>
-                </>
-              )}
-            </div>
-            <div className="pb-2">
-              <h1>What is Linen?</h1>
-              <p>
-                <small>
-                  Linen is a search-engine friendly community platform. We offer
-                  two way integrations with existing Slack/Discord communities
-                  and make those conversations Google-searchable.
-                </small>
-              </p>
-            </div>
-            <h2>What is this page?</h2>
-            <p>
-              <small>
-                This page aggregates conversations from across all types of
-                communities into a single feed. This way, we can showcase
-                interesting content/discussions in different communities.
-              </small>
-            </p>
-            <a
-              className={styles.link}
-              href="https://linen.dev/landing"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Read more
-            </a>
+          <div className={styles.mobileWhatIsLinen}>
+            <WhatIsLinen />
           </div>
           <div>
             {threads.map((thread) => {
@@ -270,51 +276,7 @@ export default function Feed({
         </main>
         <div className={styles.right}>
           <div className={styles.sticky}>
-            <div className={styles.actions}>
-              {session.status === 'authenticated' ? (
-                <>
-                  <Link className={styles.link} href="/getting-started">
-                    Get started
-                  </Link>
-                  <a className={styles.link} onClick={() => signOut()}>
-                    Sign out
-                  </a>
-                </>
-              ) : (
-                <>
-                  <Link className={styles.link} href="/signin">
-                    Log in
-                  </Link>
-                  <Link className={styles.link} href="/signup">
-                    Sign up
-                  </Link>
-                </>
-              )}
-            </div>
-            <h1>What is Linen?</h1>
-            <p>
-              <small>
-                Linen is a search-engine friendly community platform. We offer
-                two way integrations with existing Slack/Discord communities and
-                make those conversations Google-searchable.
-              </small>
-            </p>
-            <h2>What is this page?</h2>
-            <p>
-              <small>
-                This page aggregates conversations from across all types of
-                communities into a single feed. This way, we can showcase
-                interesting content/discussions in different communities.
-              </small>
-            </p>
-            <a
-              className={styles.link}
-              href="https://linen.dev/landing"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Read more
-            </a>
+            <WhatIsLinen />
           </div>
         </div>
       </div>

@@ -107,9 +107,9 @@
 }
 
 @media screen and (max-width: 1023px) {
-.center .logo {
-  display: flex;
-}
+  .center .logo {
+    display: flex;
+  }
 }
 
 @media screen and (min-width: 1024px) {
@@ -182,14 +182,14 @@
 
 .wrapper .overlay {
   position: absolute;
-  left:0;
-  top:0;
-  bottom:0;
-  right:0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
 }
 
 .wrapper .row {
-  position:relative;
+  position: relative;
   pointer-events: none;
   z-index: 1;
 }
@@ -212,4 +212,19 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.25rem;
+}
+
+.mobileWhatIsLinen {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border-style: solid;
+  border-bottom-width: 1px;
+  border-color: var(--color-gray-100);
+}
+@media (min-width: 1024px) {
+  .mobileWhatIsLinen {
+    display: none;
+  }
 }
