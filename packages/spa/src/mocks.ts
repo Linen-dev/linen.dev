@@ -25,7 +25,6 @@ export const mockSettings: Settings = {
   brandColor: '',
   chat: null,
   communityId: '',
-  communityInviteUrl: '',
   communityName: '',
   communityType: CommunityType.linen,
   communityUrl: '',

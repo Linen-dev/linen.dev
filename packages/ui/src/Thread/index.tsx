@@ -295,7 +295,7 @@ export default function Thread({
             )}
           </div>
         </div>
-        {!currentCommunity.communityInviteUrl && !currentChannel.readonly && (
+        {!currentChannel.readonly && (
           <div className={styles.chat}>
             {manage && state === ThreadState.OPEN ? (
               <MessageForm

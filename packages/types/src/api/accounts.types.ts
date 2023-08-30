@@ -26,7 +26,6 @@ export const updateAccountSchema = z.object({
   anonymize: z
     .enum([AnonymizeType.ALL, AnonymizeType.MEMBERS, AnonymizeType.NONE])
     .optional(),
-  communityInviteUrl: z.string().url().or(z.literal('')).optional(),
   type: z.enum([AccountType.PRIVATE, AccountType.PUBLIC]).optional(),
   chat: z.enum([ChatType.MANAGERS, ChatType.MEMBERS, ChatType.NONE]).optional(),
   newChannelsConfig: z.enum(['HIDDEN', 'NOT_HIDDEN']).optional(),

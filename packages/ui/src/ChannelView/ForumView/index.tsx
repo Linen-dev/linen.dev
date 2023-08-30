@@ -518,27 +518,26 @@ export default function Channel({
                     onHideChannelClick={showHideChannelModal}
                     api={api}
                   > */}
-                  {!currentCommunity.communityInviteUrl &&
-                    !currentChannel.readonly && (
-                      <Chat
-                        channelId={currentChannel.id}
-                        currentUser={currentUser}
-                        onDrop={handleDrop}
-                        sendMessage={sendMessage}
-                        progress={progress}
-                        uploads={uploads}
-                        uploading={uploading}
-                        uploadFiles={currentUser ? uploadFiles : undefined}
-                        useUsersContext={useUsersContext}
-                        fetchMentions={(term?: string) => {
-                          if (!currentUser) {
-                            return Promise.resolve([]);
-                          }
-                          if (!term) return Promise.resolve([]);
-                          return api.fetchMentions(term, currentCommunity.id);
-                        }}
-                      />
-                    )}
+                  {!currentChannel.readonly && (
+                    <Chat
+                      channelId={currentChannel.id}
+                      currentUser={currentUser}
+                      onDrop={handleDrop}
+                      sendMessage={sendMessage}
+                      progress={progress}
+                      uploads={uploads}
+                      uploading={uploading}
+                      uploadFiles={currentUser ? uploadFiles : undefined}
+                      useUsersContext={useUsersContext}
+                      fetchMentions={(term?: string) => {
+                        if (!currentUser) {
+                          return Promise.resolve([]);
+                        }
+                        if (!term) return Promise.resolve([]);
+                        return api.fetchMentions(term, currentCommunity.id);
+                      }}
+                    />
+                  )}
                   {pinnedThread && (
                     <PinnedThread onClick={() => selectThread(pinnedThread.id)}>
                       <Row

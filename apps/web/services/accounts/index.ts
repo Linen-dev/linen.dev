@@ -139,7 +139,6 @@ export default class AccountsService {
       googleAnalyticsId?: string;
       anonymizeUsers?: boolean;
       anonymize?: AnonymizeType;
-      communityInviteUrl?: string;
       type?: AccountType;
       chat?: ChatType;
       newChannelsConfig?: string;
@@ -161,7 +160,6 @@ export default class AccountsService {
       googleAnalyticsId,
       anonymizeUsers,
       anonymize,
-      communityInviteUrl,
       type,
       chat,
       newChannelsConfig,
@@ -177,7 +175,6 @@ export default class AccountsService {
       docsUrl,
       anonymizeUsers,
       anonymize,
-      communityInviteUrl,
       chat,
       newChannelsConfig,
     };
