@@ -1,6 +1,5 @@
 import { serializeThread } from '@linen/serializers/thread';
 import { findThreadByIncrementId } from 'services/threads';
-import { channels, threads } from '@linen/database';
 import { GetServerSidePropsContext } from 'next';
 import { NotFound } from 'utilities/response';
 import { RedirectTo } from 'utilities/response';
@@ -9,7 +8,6 @@ import {
   redirectThreadToDomain,
   shouldRedirectToDomain,
 } from 'utilities/redirects';
-import { SerializedAccount } from '@linen/types';
 import { allowAccess, ssr } from 'services/ssr/common';
 
 export async function threadGetServerSideProps(
@@ -70,8 +68,6 @@ export async function threadGetServerSideProps(
       });
     }
 
-    const threadUrl: string | null = getThreadUrl(thread, currentCommunity);
-
     const currentChannel = [...channels, ...dms, ...publicChannels].find(
       (c) => c.id === thread.channel?.id
     )!;
@@ -81,7 +77,6 @@ export async function threadGetServerSideProps(
         ...props,
         thread: serializeThread(thread),
         currentChannel,
-        threadUrl,
         isBot: isCrawler,
         isSubDomainRouting: isSubdomainbasedRouting,
       },
@@ -90,25 +85,4 @@ export async function threadGetServerSideProps(
     console.error(exception);
     return NotFound();
   }
-}
-
-function getThreadUrl(
-  thread: threads & { channel?: channels },
-  currentCommunity: SerializedAccount
-) {
-  let threadUrl: string | null = null;
-
-  if (thread.externalThreadId) {
-    threadUrl =
-      currentCommunity.communityUrl +
-      '/archives/' +
-      thread?.channel?.externalChannelId +
-      '/p' +
-      (parseFloat(thread.externalThreadId) * 1000000).toString();
-  }
-
-  if (currentCommunity.discordServerId) {
-    threadUrl = `https://discord.com/channels/${currentCommunity.discordServerId}/${thread?.channel?.externalChannelId}/${thread.externalThreadId}`;
-  }
-  return threadUrl;
 }

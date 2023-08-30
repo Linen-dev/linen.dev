@@ -132,7 +132,6 @@
     "./InboxView": "./dist/InboxView/index.js",
     "./IntegrationsModal": "./dist/IntegrationsModal/index.js",
     "./JoinButton": "./dist/JoinButton/index.js",
-    "./JoinChannelLink": "./dist/JoinChannelLink/index.js",
     "./Label": "./dist/Label/index.js",
     "./Layouts": "./dist/Layouts/index.js",
     "./Line": "./dist/Line/index.js",
@@ -387,9 +386,6 @@
       ],
       "JoinButton": [
         "./dist/JoinButton/index.d.ts"
-      ],
-      "JoinChannelLink": [
-        "./dist/JoinChannelLink/index.d.ts"
       ],
       "Label": [
         "./dist/Label/index.d.ts"

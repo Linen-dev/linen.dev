@@ -22,14 +22,12 @@ import { getFormData } from '@linen/utilities/files';
 import PoweredByLinen from '@/PoweredByLinen';
 import EditMessageModal from '@/EditMessageModal';
 import type { ApiClient } from '@linen/api-client';
-import JoinChannelLink from '@/JoinChannelLink';
 
 interface Props {
   thread: SerializedThread;
   channelId: string;
   channelName: string;
   currentCommunity: SerializedAccount;
-  threadUrl?: string | null;
   isBot?: boolean;
   isSubDomainRouting: boolean;
   settings: Settings;
@@ -91,7 +89,6 @@ export default function Thread({
   channelId,
   channelName,
   currentCommunity,
-  threadUrl,
   isBot,
   isSubDomainRouting,
   settings,
@@ -283,16 +280,6 @@ export default function Thread({
                 )}
               </span>
             </div>
-            {/* {ChannelButton({ thread, isSubDomainRouting, settings })} */}
-            {threadUrl && (
-              <>
-                <JoinChannelLink
-                  className={styles.link}
-                  href={threadUrl}
-                  communityType={settings.communityType}
-                />
-              </>
-            )}
           </div>
         </div>
         {!currentChannel.readonly && (

@@ -18,7 +18,6 @@ interface Props {
   thread: SerializedThread;
   currentChannel: SerializedChannel;
   currentCommunity: SerializedAccount;
-  threadUrl: string | null;
   settings: Settings;
   useJoinContext(): any;
   useUsersContext: () => [SerializedUser[], any];
@@ -29,7 +28,6 @@ export default function ThreadView({
   thread,
   currentChannel,
   currentCommunity,
-  threadUrl,
   isBot,
   isSubDomainRouting,
   settings,
@@ -44,7 +42,6 @@ export default function ThreadView({
         thread={thread}
         currentChannel={currentChannel}
         currentCommunity={currentCommunity}
-        threadUrl={threadUrl}
         isBot={isBot}
         isSubDomainRouting={isSubDomainRouting}
         settings={settings}
