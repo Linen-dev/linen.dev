@@ -9,3 +9,5 @@ export {
   handleChannelNameUpdate,
 } from './handle-channel-update';
 export { handleUserNameUpdate } from './handle-user-update';
+export { handleChannelDeletion } from './handle-channel-deletion';
+export { handleCommunityDeletion } from './handle-community-deletion';

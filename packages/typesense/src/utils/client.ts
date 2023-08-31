@@ -40,3 +40,14 @@ export const updateByQuery = ({
     `/collections/${collection}/documents?filter_by=${filter_by}`,
     document
   );
+
+export const deleteByQuery = ({
+  collection,
+  filter_by,
+}: {
+  collection: string;
+  filter_by: string;
+}) =>
+  instance.delete(
+    `/collections/${collection}/documents?filter_by=${filter_by}`
+  );

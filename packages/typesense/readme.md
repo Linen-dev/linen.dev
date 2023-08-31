@@ -87,3 +87,5 @@ same steps as public communities except it will not create a scoped api-key for 
 - [] client: search on feed
 - [] server: channel hidden changes (is_public:=false || accessible_to:=nothing)
 - [] server: channel membership changes
+- [x] handle channel deletion
+- [x] handle community deletion

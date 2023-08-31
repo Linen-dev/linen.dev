@@ -51,6 +51,7 @@ import { serializeChannel } from '@linen/serializers/channel';
 import { serialize } from 'superjson';
 import { serializeUser } from '@linen/serializers/user';
 import { eventChannelUpdate } from 'services/events/eventChannelUpdate';
+import { eventChannelDeletion } from 'services/events/eventChannelDeletion';
 
 const prefix = '/api/channels';
 
@@ -155,14 +156,25 @@ channelsRouter.delete(
     res: Response,
     next: NextFunction
   ) => {
-    const { id, accountId } = req.body;
+    const { id } = req.body;
 
     try {
-      await prisma.channels.deleteMany({
+      const channel = await prisma.channels.findUnique({
+        select: { id: true, accountId: true, channelName: true },
         where: {
           id,
-          accountId,
         },
+        rejectOnNotFound: true,
+      });
+      if (!channel.accountId || channel.accountId !== req.tenant?.id!) {
+        // if channel accountId is missing or belongs to another account, throw forbidden
+        return next(new Forbidden());
+      }
+      await prisma.channels.delete({ where: { id } });
+      await eventChannelDeletion({
+        channelId: channel.id,
+        channelName: channel.channelName,
+        accountId: channel.accountId,
       });
     } catch (exception) {
       return res.status(500).json({});

@@ -26,6 +26,8 @@ import {
   typesenseOnChannelTypeUpdate,
   typesenseOnCommunityTypeUpdate,
   typesenseOnUserNameUpdate,
+  typesenseOnChannelDeletion,
+  typesenseOnCommunityDeletion,
 } from './tasks/typesense';
 
 export type TaskInterface = (
@@ -79,6 +81,8 @@ async function runWorker() {
       typesenseOnChannelTypeUpdate,
       typesenseOnCommunityTypeUpdate,
       typesenseOnUserNameUpdate,
+      typesenseOnChannelDeletion,
+      typesenseOnCommunityDeletion,
     },
     parsedCronItems: parseCronItems([
       {

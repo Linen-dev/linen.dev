@@ -8,6 +8,8 @@ import {
   handleChannelTypeUpdate,
   handleCommunityUpdate,
   handleUserNameUpdate,
+  handleChannelDeletion,
+  handleCommunityDeletion,
 } from '@linen/typesense';
 import type { JobHelpers } from 'graphile-worker';
 import { KeepAlive } from '../helpers/keep-alive';
@@ -131,6 +133,26 @@ export const typesenseOnChannelTypeUpdate = async (
   keepAlive.end();
 };
 
+export const typesenseOnChannelDeletion = async (
+  payload: any,
+  helpers: JobHelpers
+) => {
+  const { channelId, accountId, channelName } = z
+    .object({
+      channelId: z.string().uuid(),
+      accountId: z.string().uuid(),
+      channelName: z.string(),
+    })
+    .parse(payload);
+
+  const keepAlive = new KeepAlive(helpers);
+  keepAlive.start();
+
+  await handleChannelDeletion({ channelId, accountId, channelName });
+
+  keepAlive.end();
+};
+
 export const typesenseOnCommunityTypeUpdate = async (
   payload: any,
   helpers: JobHelpers
@@ -147,6 +169,24 @@ export const typesenseOnCommunityTypeUpdate = async (
   keepAlive.start();
 
   await handleCommunityUpdate({ accountId, logger });
+
+  keepAlive.end();
+};
+
+export const typesenseOnCommunityDeletion = async (
+  payload: any,
+  helpers: JobHelpers
+) => {
+  const { accountId } = z
+    .object({
+      accountId: z.string().uuid(),
+    })
+    .parse(payload);
+
+  const keepAlive = new KeepAlive(helpers);
+  keepAlive.start();
+
+  await handleCommunityDeletion({ accountId });
 
   keepAlive.end();
 };

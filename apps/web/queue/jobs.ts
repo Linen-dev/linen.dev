@@ -115,6 +115,14 @@ export async function createRemoveCommunityJob(accountId: string) {
   const worker = await WorkerSingleton.getInstance();
   const dayInMs = 24 * 60 * 60 * 1000;
   const runAt = new Date(Date.now() + dayInMs);
+  await worker.addJob(
+    'typesenseOnCommunityDeletion',
+    { accountId },
+    {
+      jobKey: `typesenseOnCommunityDeletion:${accountId}`,
+      runAt,
+    }
+  );
   return await worker.addJob(
     'remove-community',
     { accountId },
@@ -159,6 +167,17 @@ export async function createTypesenseChannelTypeUpdate(payload: {
 }) {
   const worker = await WorkerSingleton.getInstance();
   return await worker.addJob('typesenseOnChannelTypeUpdate', payload, {
+    maxAttempts: 1,
+  });
+}
+
+export async function createTypesenseChannelDeletion(payload: {
+  channelId: string;
+  accountId: string;
+  channelName: string;
+}) {
+  const worker = await WorkerSingleton.getInstance();
+  return await worker.addJob('typesenseOnChannelDeletion', payload, {
     maxAttempts: 1,
   });
 }
