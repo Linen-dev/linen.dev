@@ -499,6 +499,7 @@ export default function AllView({
         right={
           thread && (
             <Thread
+              sidebar
               fetchMentions={(term?: string) => {
                 if (!term) return Promise.resolve([]);
                 return api.fetchMentions(term, currentCommunity.id);

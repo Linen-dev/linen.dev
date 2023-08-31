@@ -499,6 +499,7 @@ export default function Content({
         right={
           thread && (
             <Thread
+              sidebar
               api={api}
               useUsersContext={useUsersContext}
               fetchMentions={(term?: string) => {

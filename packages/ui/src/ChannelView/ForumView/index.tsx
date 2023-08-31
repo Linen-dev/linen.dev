@@ -625,6 +625,7 @@ export default function Channel({
         right={
           threadToRender && (
             <Thread
+              sidebar
               fetchMentions={(term?: string) => {
                 if (!term) return Promise.resolve([]);
                 return api.fetchMentions(term, currentCommunity.id);

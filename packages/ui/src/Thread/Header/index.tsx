@@ -20,6 +20,7 @@ interface Props {
   onExpandClick?(): void;
   onReopenThread(): void;
   onSetTitle(title: string): void;
+  sidebar?: boolean;
 }
 
 function Navigation({
@@ -65,6 +66,7 @@ export default function Header({
   onExpandClick,
   onReopenThread,
   onSetTitle,
+  sidebar,
 }: Props) {
   const { title, state } = thread;
   return (
@@ -107,9 +109,11 @@ export default function Header({
               <FiCheck />
             </Icon>
           )}
-          <Icon onClick={onClose}>
-            <FiX />
-          </Icon>
+          {sidebar && (
+            <Icon onClick={onClose}>
+              <FiX />
+            </Icon>
+          )}
         </div>
       </div>
     </StickyHeader>

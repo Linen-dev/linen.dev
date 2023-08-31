@@ -771,6 +771,7 @@ export default function InboxView({
         right={
           thread && (
             <Thread
+              sidebar
               api={api}
               useUsersContext={useUsersContext}
               fetchMentions={(term?: string) => {
