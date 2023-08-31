@@ -76,6 +76,7 @@ interface Props {
   fetchMentions(term?: string | undefined): Promise<SerializedUser[]>;
   api: ApiClient;
   breadcrumb?: React.ReactNode;
+  sidebar?: boolean;
   chat?: boolean;
   classContainer?: string;
 }
@@ -113,6 +114,7 @@ function Thread({
   fetchMentions,
   breadcrumb,
   chat,
+  sidebar,
   ...props
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
@@ -254,6 +256,7 @@ function Thread({
           onSetTitle={(title) => updateThread({ title })}
           manage={manage}
           breadcrumb={breadcrumb}
+          sidebar={sidebar}
         />
         <Summary thread={thread} />
         <div className={styles.thread}>
