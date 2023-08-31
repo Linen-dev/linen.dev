@@ -3,22 +3,18 @@ import classNames from 'classnames';
 import Title from './Title';
 import Icon from '@/Icon';
 import StickyHeader from '@/StickyHeader';
-import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
 import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft';
 import { FiX } from '@react-icons/all-files/fi/FiX';
-import { ThreadState, SerializedThread } from '@linen/types';
+import { SerializedThread } from '@linen/types';
 import styles from './index.module.scss';
 
 interface Props {
   thread: SerializedThread;
-  channelName: string;
   manage: boolean;
   expanded?: boolean;
   breadcrumb?: React.ReactNode;
   onClose?(): void;
-  onCloseThread(): void;
   onExpandClick?(): void;
-  onReopenThread(): void;
   onSetTitle(title: string): void;
   sidebar?: boolean;
 }
@@ -57,14 +53,11 @@ function Navigation({
 
 export default function Header({
   thread,
-  channelName,
   manage,
   expanded,
   breadcrumb,
   onClose,
-  onCloseThread,
   onExpandClick,
-  onReopenThread,
   onSetTitle,
   sidebar,
 }: Props) {
@@ -94,21 +87,6 @@ export default function Header({
           </div>
         </div>
         <div className={styles.icons}>
-          {manage && (
-            <Icon
-              active={state === ThreadState.CLOSE}
-              onClick={() => {
-                if (state === ThreadState.OPEN) {
-                  onCloseThread();
-                }
-                if (state === ThreadState.CLOSE) {
-                  onReopenThread();
-                }
-              }}
-            >
-              <FiCheck />
-            </Icon>
-          )}
           {sidebar && (
             <Icon onClick={onClose}>
               <FiX />

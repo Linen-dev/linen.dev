@@ -38,11 +38,12 @@ interface Props {
   message?: string;
   draft?: boolean;
   onSend?(message: string, files: UploadedFile[]): Promise<any>;
-  onSendAndClose?(message: string, files: UploadedFile[]): Promise<any>;
   onMessageChange?(message: string): void;
   fetchMentions(term?: string): Promise<SerializedUser[]>;
   upload?(files: File[]): Promise<any>;
   useUsersContext(): any;
+  onCloseThread?(): void;
+  onReopenThread?(): void;
   onFocus?(): void;
   onBlur?(): void;
   mentions?: SerializedUser[];
@@ -156,8 +157,9 @@ function MessageForm({
   preview,
   message: initialMessage,
   onSend,
-  onSendAndClose,
   onMessageChange,
+  onCloseThread,
+  onReopenThread,
   onFocus,
   onBlur,
   fetchMentions,
@@ -221,8 +223,6 @@ function MessageForm({
   };
   const handleSend = async (event: React.SyntheticEvent) =>
     handleSubmit(event, onSend);
-  const handleSendAndClose = (event: React.SyntheticEvent) =>
-    handleSubmit(event, onSendAndClose);
 
   useEffect(() => {
     ref.current && autosize(ref.current);
@@ -414,17 +414,36 @@ function MessageForm({
           </div>
         )}
         <div className={styles.buttons}>
-          {onSendAndClose && (
+          {onCloseThread && (
             <Button
-              onClick={(event: React.SyntheticEvent) =>
-                handleSendAndClose(event)
-              }
+              onClick={(event: React.SyntheticEvent) => {
+                if (message) {
+                  handleSend(event);
+                }
+                onCloseThread();
+              }}
               size="xs"
               weight="normal"
-              color="gray"
-              disabled={!message || uploading}
+              color={message ? 'gray' : 'blue'}
+              disabled={uploading}
             >
-              Post &amp; Close
+              {message ? 'Post & Close' : 'Close'}
+            </Button>
+          )}
+          {onReopenThread && message && (
+            <Button
+              onClick={(event: React.SyntheticEvent) => {
+                if (message) {
+                  handleSend(event);
+                }
+                onReopenThread();
+              }}
+              size="xs"
+              weight="normal"
+              color={message ? 'gray' : 'blue'}
+              disabled={uploading}
+            >
+              {message ? 'Post & Reopen' : 'Reopen'}
             </Button>
           )}
           {onSend && (
