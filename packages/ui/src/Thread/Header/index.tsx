@@ -5,7 +5,7 @@ import Icon from '@/Icon';
 import StickyHeader from '@/StickyHeader';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
 import { FiChevronLeft } from '@react-icons/all-files/fi/FiChevronLeft';
-import { FiChevronRight } from '@react-icons/all-files/fi/FiChevronRight';
+import { FiX } from '@react-icons/all-files/fi/FiX';
 import { ThreadState, SerializedThread } from '@linen/types';
 import styles from './index.module.scss';
 
@@ -107,6 +107,9 @@ export default function Header({
               <FiCheck />
             </Icon>
           )}
+          <Icon onClick={onClose}>
+            <FiX />
+          </Icon>
         </div>
       </div>
     </StickyHeader>
