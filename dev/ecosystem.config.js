@@ -4,21 +4,13 @@ module.exports = {
   apps: [
     {
       name: 'nextjs',
-      script: 'yarn dev',
-      cwd: '../apps/web',
-      env: {
-        PORT: process.env.PORT || 3000,
-      },
+      script: 'yarn td web',
+      cwd: '..',
     },
     {
       name: 'queue',
-      script: 'npx tsx watch queue/index.ts',
-      cwd: '../apps/web',
-    },
-    {
-      name: 'discord-bots',
-      script: 'bash up.sh',
-      cwd: '../apps/discord-bots',
+      script: 'yarn td queue',
+      cwd: '..',
     },
     {
       name: 'push-service',
@@ -32,10 +24,10 @@ module.exports = {
         SECRET_KEY_BASE: process.env.SECRET_KEY_BASE,
       },
     },
-    {
-      name: 'https-proxy',
-      cwd: '/opt/homebrew/bin/',
-      script: `ngrok http --region=us --hostname=${process.env.NGROK_HOSTNAME} 3000`,
-    },
+    // {
+    //   name: 'https-proxy',
+    //   cwd: '/opt/homebrew/bin/',
+    //   script: `ngrok http --region=us --hostname=${process.env.NGROK_HOSTNAME} 3000`,
+    // },
   ],
 };

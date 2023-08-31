@@ -24,8 +24,8 @@
     "build:web": "yarn web build",
     "migrate:db": "yarn dotenv -e .env prisma migrate dev",
     "migrate:test:db": "yarn dotenv -e ./apps/web/.env.test prisma migrate dev",
-    "build:all": "yarn turbo build --filter '!s3-lambda-processing'",
-    "test:all": "yarn turbo test --filter '!s3-lambda-processing'",
+    "build:all": "yarn turbo build --filter '!s3-lambda-processing' --filter '!spa'",
+    "test:all": "yarn turbo test --filter '!s3-lambda-processing' --filter '!spa'",
     "td": "yarn turbo dev --filter",
     "tb": "yarn turbo build --filter",
     "tf": "yarn turbo --filter"
