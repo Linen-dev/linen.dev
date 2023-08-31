@@ -163,6 +163,9 @@ function Thread({
     ) {
       onMessage(thread.id, message, messageId, imitationId);
       handleScroll();
+      if (currentUser?.id) {
+        api.notificationsMark({ threadId: thread.id });
+      }
     },
     onPresenceState(state: any) {
       const users = Object.keys(state);
