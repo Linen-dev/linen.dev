@@ -247,12 +247,9 @@ function Thread({
       >
         <Header
           thread={thread}
-          channelName={channelName}
           onClose={onClose}
-          onCloseThread={() => updateThread({ state: ThreadState.CLOSE })}
           expanded={expanded}
           onExpandClick={onExpandClick}
-          onReopenThread={() => updateThread({ state: ThreadState.OPEN })}
           onSetTitle={(title) => updateThread({ title })}
           manage={manage}
           breadcrumb={breadcrumb}
@@ -289,63 +286,39 @@ function Thread({
         </div>
         {chat && !currentChannel.readonly && (
           <div className={styles.chat}>
-            {manage && state === ThreadState.OPEN ? (
-              <MessageForm
-                id={`thread-message-form-${thread.id}`}
-                currentUser={currentUser}
-                onSend={(message: string, files: UploadedFile[]) => {
-                  onSend?.();
-                  const promise = sendMessage({
-                    message,
-                    files,
-                    channelId,
-                    threadId: id,
-                  }).then(() => {
-                    setUploads([]);
-                  });
-                  handleScroll();
-                  return promise;
-                }}
-                onSendAndClose={(message: string, files: UploadedFile[]) => {
-                  onSend?.();
-                  handleScroll();
-                  return Promise.all([
-                    sendMessage({ message, files, channelId, threadId: id }),
-                    updateThread({ state: ThreadState.CLOSE }),
-                  ]).then(() => {
-                    setUploads([]);
-                  });
-                }}
-                progress={progress}
-                uploading={uploading}
-                uploads={uploads}
-                upload={uploadFiles}
-                useUsersContext={useUsersContext}
-                fetchMentions={fetchMentions}
-              />
-            ) : (
-              <MessageForm
-                id={`thread-message-form-${thread.id}`}
-                currentUser={currentUser}
-                onSend={(message: string, files: UploadedFile[]) => {
-                  onSend?.();
-                  const promise = sendMessage({
-                    message,
-                    files,
-                    channelId,
-                    threadId: id,
-                  });
-                  handleScroll();
-                  return promise;
-                }}
-                progress={progress}
-                uploading={uploading}
-                uploads={uploads}
-                upload={uploadFiles}
-                useUsersContext={useUsersContext}
-                fetchMentions={fetchMentions}
-              />
-            )}
+            <MessageForm
+              id={`thread-message-form-${thread.id}`}
+              currentUser={currentUser}
+              onSend={(message: string, files: UploadedFile[]) => {
+                onSend?.();
+                const promise = sendMessage({
+                  message,
+                  files,
+                  channelId,
+                  threadId: id,
+                }).then(() => {
+                  setUploads([]);
+                });
+                handleScroll();
+                return promise;
+              }}
+              onCloseThread={
+                manage && state === ThreadState.OPEN
+                  ? () => updateThread({ state: ThreadState.CLOSE })
+                  : undefined
+              }
+              onReopenThread={
+                manage && state === ThreadState.CLOSE
+                  ? () => updateThread({ state: ThreadState.OPEN })
+                  : undefined
+              }
+              progress={progress}
+              uploading={uploading}
+              uploads={uploads}
+              upload={uploadFiles}
+              useUsersContext={useUsersContext}
+              fetchMentions={fetchMentions}
+            />
           </div>
         )}
         {expanded && !currentUser && (
