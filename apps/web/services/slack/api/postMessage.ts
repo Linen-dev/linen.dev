@@ -199,7 +199,7 @@ async function newReply({
   logger: Logger;
 }) {
   if (!externalThreadId) {
-    throw 'thread external id is missing from message';
+    return 'thread external id is missing from message';
   }
   // reply
   const response = await postReply({
