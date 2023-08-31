@@ -11,6 +11,7 @@ export default function createSettings(options?: object): Settings {
     logoUrl: 'https://foo.com/assets/images/logo.svg',
     name: 'foo',
     communityUrl: 'https://foo.com/community',
+    communityInviteUrl: '',
     chat: null,
     googleAnalyticsId: '',
     googleSiteVerification: '',
