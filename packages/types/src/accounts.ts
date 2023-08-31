@@ -34,6 +34,7 @@ export type Settings = {
   docsUrl: string;
   logoUrl: string;
   communityUrl: string;
+  communityInviteUrl: string;
   communityName: string;
   redirectDomain?: string;
   prefix?: 'd' | 's';
