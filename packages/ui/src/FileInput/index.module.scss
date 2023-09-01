@@ -1,21 +1,26 @@
 .label {
   align-items: center;
   background: var(--color-gray-100);
-  border-radius: 28px;
+  border-radius: 24px;
   color: var(--color-gray-700);
   cursor: pointer;
   display: flex;
   font-size: 14px;
-  height: 28px;
+  height: 24px;
   justify-content: center;
-  line-height: 28px;
-  transition: 0.1s ease background, 0.1s ease color;
-  width: 28px;
+  line-height: 24px;
+  transition: background 0.2s ease, color 0.2s ease;
+  width: 24px;
 }
 
 .label:hover {
   background: var(--color-gray-200);
   color: var(--color-gray-900);
+}
+
+.label svg {
+  height: 12px;
+  width: 12px;
 }
 
 .input {
