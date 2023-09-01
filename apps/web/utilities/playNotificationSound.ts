@@ -1,7 +1,7 @@
 export const playNotificationSound = async (volume: number) => {
   console.log('play notification');
   try {
-    const file = '/alert.mp3';
+    const file = 'https://static.main.linendev.com/public/alert.mp3';
     const audio = new Audio(file);
     audio.volume = volume;
 
