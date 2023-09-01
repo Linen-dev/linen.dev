@@ -93,6 +93,25 @@
   }
 }
 
+@media screen and (max-width: 767px) {
+  .chat {
+    padding: 0;
+    border: none;
+
+    textarea {
+      background: var(--color-gray-50);
+      border-left: none;
+      border-right: none;
+      border-radius: 0;
+
+
+      @media (prefers-color-scheme: dark) {
+        background: var(--color-gray-100);
+      }
+    }
+  }
+}
+
 @media (min-width: 768px) {
   .info {
     min-width: 360px;

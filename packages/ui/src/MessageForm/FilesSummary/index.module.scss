@@ -16,7 +16,9 @@
   color: var(--color-gray-700);
   cursor: pointer;
   font-size: 12px;
-  padding: 0.125rem 0.5rem;
+  padding: 0 0.5rem;
+  line-height: 24px;;
+  transition: background 0.2s ease;
 }
 
 .file:hover {

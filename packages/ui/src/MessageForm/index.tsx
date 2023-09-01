@@ -358,7 +358,7 @@ function MessageForm({
           className={styles.textarea}
           name="message"
           placeholder="Message..."
-          rows={rows || 2}
+          rows={rows || 1}
           value={message}
           onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
             const message = event.target.value;
