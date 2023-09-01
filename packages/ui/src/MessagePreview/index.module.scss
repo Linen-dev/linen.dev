@@ -4,6 +4,12 @@
   position: relative;
 }
 
+@media screen and (max-width: 1023px) {
+  .container {
+    display: none;
+  }
+}
+
 .row {
   display: flex;
   gap: 0.75rem;
