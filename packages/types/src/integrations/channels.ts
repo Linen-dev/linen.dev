@@ -9,11 +9,7 @@ export type channelGetType = z.infer<typeof channelGetSchema>;
 
 export const channelGetIntegrationSchema = z.object({
   channelId: z.string().uuid(),
-  type: z.enum([
-    channelsIntegrationType.EMAIL,
-    channelsIntegrationType.GITHUB,
-    channelsIntegrationType.LINEAR,
-  ]),
+  type: z.nativeEnum(channelsIntegrationType),
 });
 export type channelGetIntegrationType = z.infer<
   typeof channelGetIntegrationSchema

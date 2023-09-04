@@ -12,7 +12,7 @@ export const createChannelSchema = z.object({
   slackChannelId: z.string().optional(),
   channelPrivate: z.boolean().optional(),
   usersId: z.array(z.string().uuid()).optional(),
-  viewType: z.enum(['CHAT', 'FORUM']).optional(),
+  viewType: z.nativeEnum(ChannelViewType).optional(),
 });
 export type createChannelType = z.infer<typeof createChannelSchema>;
 
@@ -31,7 +31,7 @@ export const updateChannelSchema = z.object({
   hidden: z.boolean().optional(),
   landing: z.boolean().optional(),
   readonly: z.boolean().optional(),
-  viewType: z.enum(['CHAT', 'FORUM']).optional(),
+  viewType: z.nativeEnum(ChannelViewType).optional(),
 });
 export type updateChannelType = z.infer<typeof updateChannelSchema>;
 
@@ -83,11 +83,7 @@ export type getChannelIntegrationsType = z.infer<
 export const postChannelIntegrationsSchema = z.object({
   accountId: z.string().uuid(),
   channelId: z.string().uuid(),
-  type: z.enum([
-    channelsIntegrationType.EMAIL,
-    channelsIntegrationType.GITHUB,
-    channelsIntegrationType.LINEAR,
-  ]),
+  type: z.nativeEnum(channelsIntegrationType),
   externalId: z.string().optional(),
   data: z.any(),
 });

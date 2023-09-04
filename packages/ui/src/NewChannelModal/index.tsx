@@ -38,7 +38,9 @@ export default function NewChannelModal({
 }: Props) {
   const [loading, setLoading] = useState(false);
   const [channelPrivate, setChannelPrivate] = useState(false);
-  const [viewType, setViewType] = useState<ChannelViewType>('CHAT');
+  const [viewType, setViewType] = useState<ChannelViewType>(
+    ChannelViewType.CHAT
+  );
   const [users, setUsers] = useState<SerializedUser[]>(
     permissions.user ? [permissions.user] : []
   );
@@ -133,8 +135,8 @@ export default function NewChannelModal({
             <NativeSelect
               id="viewType"
               options={[
-                { label: 'Chat', value: 'CHAT' },
-                { label: 'Forum', value: 'FORUM' },
+                { label: 'Chat', value: ChannelViewType.CHAT },
+                { label: 'Forum', value: ChannelViewType.FORUM },
               ]}
               defaultValue={viewType}
               onChange={(event) =>

@@ -1,4 +1,22 @@
+import { makeEnum } from './utils/makeEnum';
 import { SerializedThread } from './threads';
+
+export const ChannelType = makeEnum({
+  PUBLIC: 'PUBLIC',
+  PRIVATE: 'PRIVATE',
+  DM: 'DM',
+});
+
+export type ChannelType = typeof ChannelType[keyof typeof ChannelType];
+
+export const ChannelViewType = makeEnum({
+  CHAT: 'CHAT',
+  FORUM: 'FORUM',
+  TOPIC: 'TOPIC',
+});
+
+export type ChannelViewType =
+  typeof ChannelViewType[keyof typeof ChannelViewType];
 
 export type SerializedChannel = {
   id: string;
@@ -11,17 +29,18 @@ export type SerializedChannel = {
   pages: number | null;
   stats?: string;
   displayOrder: number;
-  viewType: 'CHAT' | 'FORUM';
-  type?: 'DM' | 'PUBLIC' | 'PRIVATE' | null;
+  viewType: ChannelViewType;
+  type?: ChannelType | null;
 };
 
-export type ChannelViewType = 'CHAT' | 'FORUM';
+export const channelsIntegrationType = makeEnum({
+  GITHUB: 'GITHUB',
+  EMAIL: 'EMAIL',
+  LINEAR: 'LINEAR',
+});
 
-export enum channelsIntegrationType {
-  'GITHUB' = 'GITHUB',
-  'EMAIL' = 'EMAIL',
-  'LINEAR' = 'LINEAR',
-}
+export type channelsIntegrationType =
+  typeof channelsIntegrationType[keyof typeof channelsIntegrationType];
 
 export type channelNextPageType = {
   threads: SerializedThread[];
