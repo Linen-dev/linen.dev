@@ -14,7 +14,7 @@ interface Props {
   shadow?: Shadow;
   placeholder?: boolean;
   active?: boolean;
-  onClick?(): void;
+  onClick?(event: React.MouseEvent<HTMLDivElement | HTMLPictureElement>): void;
 }
 
 export type Size = 'sm' | 'md' | 'xl';
@@ -52,6 +52,7 @@ const TextAvatar = function TextAvatar({
           [styles.active]: active,
         }
       )}
+      onClick={onClick}
     >
       {letter}
     </div>
@@ -71,7 +72,10 @@ const ImageAvatar = function ImageAvatar({
     return null;
   }
   return (
-    <picture className={classNames({ [styles.active]: active })}>
+    <picture
+      className={classNames({ [styles.active]: active })}
+      onClick={onClick}
+    >
       <img
         className={classNames(className, styles.image, size && styles[size], {
           [styles.shadow]: shadow === 'sm',

@@ -26,6 +26,7 @@ import {
 import styles from './index.module.scss';
 import Actions from '@/Actions';
 import { getThreadUrl } from '@linen/utilities/url';
+import UserModal from '@/UserModal';
 
 function hasReaction(
   message: SerializedMessage,
@@ -103,6 +104,7 @@ function Left({
   hover,
   inView,
   isUserActive,
+  onAvatarClick,
 }: {
   top: boolean;
   message: SerializedMessage;
@@ -110,6 +112,9 @@ function Left({
   hover?: boolean;
   inView: boolean;
   isUserActive?: boolean;
+  onAvatarClick(
+    event: React.MouseEvent<HTMLDivElement | HTMLPictureElement>
+  ): void;
 }) {
   if (top) {
     return (
@@ -120,6 +125,7 @@ function Left({
         placeholder={!inView || isBot}
         active={isUserActive}
         isBot={isBot}
+        onClick={onAvatarClick}
       />
     );
   }
@@ -138,6 +144,7 @@ enum ModalView {
   REMINDER,
   DELETE,
   EMOJI_PICKER,
+  USER_PROFILE,
 }
 
 function Row({
@@ -238,6 +245,11 @@ function Row({
           hover={hover}
           inView={inView}
           isUserActive={isUserActive}
+          onAvatarClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            setModal(ModalView.USER_PROFILE);
+          }}
         />
         <div className={styles.content}>
           {top && (
@@ -370,6 +382,14 @@ function Row({
             });
             setModal(ModalView.NONE);
           }}
+        />
+      )}
+      {top && (
+        <UserModal
+          open={modal === ModalView.USER_PROFILE}
+          close={() => setModal(ModalView.NONE)}
+          user={message.author!}
+          isUserActive={isUserActive}
         />
       )}
     </div>

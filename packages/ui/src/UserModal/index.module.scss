@@ -1,0 +1,21 @@
+.header {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.title {
+  line-height: 1.3;
+}
+
+.username {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.role {
+  font-size: 0.75rem;
+  color: var(--color-gray-500);
+  text-transform: uppercase;
+  font-weight: 500;
+}

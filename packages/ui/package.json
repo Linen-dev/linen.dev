@@ -198,6 +198,7 @@
     "./Tooltip": "./dist/Tooltip/index.js",
     "./Typesense": "./dist/Typesense/index.js",
     "./UserMessage": "./dist/UserMessage/index.js",
+    "./UserModal": "./dist/UserModal/index.js",
     "./Votes": "./dist/Votes/index.js",
     "./YCombinatorLogo": "./dist/YCombinatorLogo/index.js",
     "./index.css": "./dist/index.css"
@@ -584,6 +585,9 @@
       ],
       "UserMessage": [
         "./dist/UserMessage/index.d.ts"
+      ],
+      "UserModal": [
+        "./dist/UserModal/index.d.ts"
       ],
       "Votes": [
         "./dist/Votes/index.d.ts"
