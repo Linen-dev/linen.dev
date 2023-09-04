@@ -1,24 +1,29 @@
 const EventEmitter = {
-  events: {},
   emit(name, data) {
-    if (!this.events[name]) {
+    this.setup();
+    if (!window.LINEN_EVENT_HANDLERS[name]) {
       return;
     }
-    this.events[name].forEach((callback) => callback(data));
+    window.LINEN_EVENT_HANDLERS[name].forEach((callback) => callback(data));
   },
   on(name, callback) {
-    if (!this.events[name]) {
-      this.events[name] = [];
+    this.setup();
+    if (!window.LINEN_EVENT_HANDLERS[name]) {
+      window.LINEN_EVENT_HANDLERS[name] = [];
     }
-    this.events[name].push(callback);
+    window.LINEN_EVENT_HANDLERS[name].push(callback);
   },
   off(name, callback) {
-    if (!this.events[name]) {
+    this.setup();
+    if (!window.LINEN_EVENT_HANDLERS[name]) {
       return;
     }
-    this.events[name] = this.events[name].filter(
-      (handler) => handler !== callback
-    );
+    window.LINEN_EVENT_HANDLERS[name] = window.LINEN_EVENT_HANDLERS[
+      name
+    ].filter((handler) => handler !== callback);
+  },
+  setup() {
+    window.LINEN_EVENT_HANDLERS = window.LINEN_EVENT_HANDLERS || {};
   },
 };
 

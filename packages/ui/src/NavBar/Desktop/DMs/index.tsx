@@ -3,7 +3,7 @@ import { FiUser } from '@react-icons/all-files/fi/FiUser';
 import Nav from '@/Nav';
 import classNames from 'classnames';
 import styles from './index.module.scss';
-import { Permissions, SerializedChannel } from '@linen/types';
+import { Permissions, SerializedChannel, SerializedUser } from '@linen/types';
 import { FiPlus } from '@react-icons/all-files/fi/FiPlus';
 import { FiX } from '@react-icons/all-files/fi/FiX';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
@@ -22,7 +22,7 @@ type Props = {
   setHighlights: Function;
   Link: (args: any) => JSX.Element;
   api: ApiClient;
-  CustomRouterPush({ path }: { path: string }): void;
+  onWriteMessage(user: SerializedUser): void;
 };
 
 function ToggleIcon({
@@ -47,7 +47,7 @@ export function DMs({
   setHighlights,
   Link,
   api,
-  CustomRouterPush,
+  onWriteMessage,
 }: Props) {
   const [show, toggle] = useState(true);
   const [modal, setModal] = useState(false);
@@ -76,11 +76,10 @@ export function DMs({
 
             <NewDmModal
               communityId={permissions.accountId}
-              setDms={setDms}
               show={modal}
               close={() => setModal(false)}
-              CustomRouterPush={CustomRouterPush}
               api={api}
+              onWriteMessage={onWriteMessage}
             />
           </>
         )}

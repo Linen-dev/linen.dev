@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { FiX } from '@react-icons/all-files/fi/FiX';
-import { SerializedChannel, SerializedUser } from '@linen/types';
+import { SerializedUser } from '@linen/types';
 import type { ApiClient } from '@linen/api-client';
 import H3 from '@/H3';
 import Modal from '@/Modal';
@@ -12,18 +12,16 @@ import styles from './index.module.scss';
 
 export default function NewDmModal({
   communityId,
-  setDms,
   show,
   close,
   api,
-  CustomRouterPush,
+  onWriteMessage,
 }: {
   communityId: string;
-  setDms: React.Dispatch<React.SetStateAction<SerializedChannel[]>>;
   show: boolean;
   close(): void;
   api: ApiClient;
-  CustomRouterPush({ path }: { path: string }): void;
+  onWriteMessage(user: SerializedUser): void;
 }) {
   const ref = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -35,21 +33,9 @@ export default function NewDmModal({
     setLoading(true);
     try {
       e.preventDefault();
-
       if (!user?.id) return;
-
-      const result = await api.createDm({
-        accountId: communityId,
-        userId: user.id,
-      });
-      setDms((dms) => {
-        dms.unshift({ ...result, channelName: user.displayName! });
-        return dms;
-      });
+      onWriteMessage(user);
       close();
-      CustomRouterPush({
-        path: `/c/${result.id}`,
-      });
     } catch (error) {
       Toast.error('Something went wrong');
     } finally {
