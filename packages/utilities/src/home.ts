@@ -8,7 +8,13 @@ const getLinenUrl = () => {
   }
 };
 
-export function getHomeUrl(account?: any): string {
+export function getHomeUrl(account?: {
+  premium: boolean;
+  redirectDomain?: string;
+  slackDomain?: string;
+  discordDomain?: string;
+  discordServerId?: string;
+}): string {
   if (!account) {
     return '/';
   }

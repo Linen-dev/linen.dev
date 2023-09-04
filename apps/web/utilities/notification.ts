@@ -7,10 +7,25 @@ export const isNotificationEnabled = (): boolean => {
   );
 };
 
-export const notify = (text: string): void => {
+const defaultCallback = (callbackUrl: string) => {
+  window.open(callbackUrl, '_self');
+};
+
+export const notify = (
+  text: string,
+  callbackUrl: string,
+  callbackFn: (callbackUrl: string) => void = defaultCallback
+): void => {
+  console.log({ text, callbackUrl });
   if (window.Notification && isNotificationEnabled()) {
-    new window.Notification('Linen Notification', {
+    const notification = new window.Notification('Linen Notification', {
       body: text,
     });
+    if (!!callbackUrl) {
+      notification.onclick = (event) => {
+        event.preventDefault();
+        callbackFn(callbackUrl);
+      };
+    }
   }
 };

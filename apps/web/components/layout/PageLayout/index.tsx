@@ -215,7 +215,17 @@ function PageLayout({
           usePath={usePath}
           getHomeUrl={getHomeUrl}
           api={api}
-          notify={notify}
+          notify={(text: string, callbackUrl: string) => {
+            notify(
+              text,
+              !callbackUrl.startsWith('http')
+                ? getHomeUrl(currentCommunity) + callbackUrl
+                : callbackUrl,
+              (url: string) => {
+                router.push(url);
+              }
+            );
+          }}
           onJoinChannel={onJoinChannel}
           onLeaveChannel={onLeaveChannel}
           onWriteMessage={onWriteMessage}
