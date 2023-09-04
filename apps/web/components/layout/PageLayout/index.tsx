@@ -11,6 +11,7 @@ import type {
   SerializedAccount,
   SerializedChannel,
   SerializedSearchMessage,
+  SerializedUser,
   Settings,
 } from '@linen/types';
 import { LinkContext } from '@linen/contexts/Link';
@@ -25,10 +26,11 @@ import usePath from 'hooks/path';
 import nextRouter, { useRouter } from 'next/router';
 import { notify } from 'utilities/notification';
 import { getHomeUrl } from '@linen/utilities/home';
-import CustomRouterPush from 'components/Link/CustomRouterPush';
+import CreateCustomRouterPush from 'components/Link/CustomRouterPush';
 import { useJoinContext } from 'contexts/Join';
 import { analyticsMiddleware, searchClient } from 'utilities/typesenseClient';
 import { createInstantSearchRouterNext } from 'react-instantsearch-router-nextjs';
+import EventEmitter from '@linen/utilities/event';
 
 interface Props {
   className?: string;
@@ -68,21 +70,52 @@ function PageLayout({
   isSubDomainRouting,
   permissions,
   innerRef,
-  dms,
+  dms: initialDms,
   onDrop,
 }: Props) {
   const [channels, setChannels] = useState(
     initialChannels.filter((c: SerializedChannel) => !c.hidden)
   );
+  const [dms, setDms] = useState(initialDms);
   const { googleAnalyticsId, googleSiteVerification } = settings;
   const { mode } = useMode();
   const router = useRouter();
   const { startSignUp } = useJoinContext();
   const { status } = useSession();
 
+  async function onWriteMessage(user: SerializedUser) {
+    const result = await api.createDm({
+      accountId: permissions.accountId!,
+      userId: user.id,
+    });
+    setDms((dms) => {
+      dms.unshift({ ...result, channelName: user.displayName! });
+      return dms;
+    });
+    CustomRouterPush({
+      path: `/c/${result.id}`,
+    });
+  }
+
   useEffect(() => {
     setChannels(initialChannels.filter((c: SerializedChannel) => !c.hidden));
   }, [initialChannels]);
+
+  useEffect(() => {
+    setDms(initialDms);
+  }, [initialDms]);
+
+  useEffect(() => {
+    const callback = (user: SerializedUser) => {
+      onWriteMessage(user);
+    };
+
+    EventEmitter.on('write:message:clicked', callback);
+
+    return () => {
+      EventEmitter.off('write:message:clicked', callback);
+    };
+  }, []);
 
   const handleSelect = ({ thread }: SerializedSearchMessage) => {
     let path = `/t/${thread.incrementId}/${thread.slug || 'topic'}`;
@@ -107,6 +140,12 @@ function PageLayout({
       return channels.filter(({ id }) => id !== channel.id);
     });
   };
+
+  const CustomRouterPush = CreateCustomRouterPush({
+    isSubDomainRouting,
+    communityName: settings.communityName,
+    communityType: settings.communityType,
+  });
 
   const routing = {
     router: createInstantSearchRouterNext({ singletonRouter: nextRouter }),
@@ -179,11 +218,8 @@ function PageLayout({
           notify={notify}
           onJoinChannel={onJoinChannel}
           onLeaveChannel={onLeaveChannel}
-          CustomRouterPush={CustomRouterPush({
-            isSubDomainRouting,
-            communityName: settings.communityName,
-            communityType: settings.communityType,
-          })}
+          onWriteMessage={onWriteMessage}
+          CustomRouterPush={CustomRouterPush}
         />
         <div className={className || styles.container} ref={innerRef}>
           <ErrorBoundary FallbackComponent={ErrorFallback}>

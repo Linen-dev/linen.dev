@@ -3,6 +3,7 @@ import {
   Permissions,
   SerializedAccount,
   SerializedChannel,
+  SerializedUser,
 } from '@linen/types';
 import DesktopNavBar from './Desktop';
 import { Mode } from '@linen/hooks/mode';
@@ -38,6 +39,7 @@ interface Props {
   notify: (body: string, href: string) => void;
   onJoinChannel(channel: SerializedChannel): void;
   onLeaveChannel(channel: SerializedChannel): void;
+  onWriteMessage(user: SerializedUser): void;
   CustomLink?: (props: {
     href: string;
     className: string;
@@ -64,6 +66,7 @@ export default function NavBar({
   notify,
   onJoinChannel,
   onLeaveChannel,
+  onWriteMessage,
   CustomRouterPush,
   CustomLink,
 }: Props) {
@@ -89,6 +92,7 @@ export default function NavBar({
           notify={notify}
           onJoinChannel={onJoinChannel}
           onLeaveChannel={onLeaveChannel}
+          onWriteMessage={onWriteMessage}
           api={api}
           CustomRouterPush={CustomRouterPush}
           CustomLink={CustomLink}

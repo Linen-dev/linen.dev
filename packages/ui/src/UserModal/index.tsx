@@ -9,21 +9,27 @@ interface Props {
   close(): void;
   user: SerializedUser;
   isUserActive?: boolean;
+  children?: React.ReactNode;
 }
 
-export default function UserModal({ open, close, user, isUserActive }: Props) {
+export default function UserModal({
+  open,
+  close,
+  user,
+  isUserActive,
+  children,
+}: Props) {
   return (
     <Modal open={open} close={close}>
-      <div className={styles.header}>
-        <Avatar
-          src={user.profileImageUrl}
-          text={user.displayName}
-          active={isUserActive}
-        />
-        <div className={styles.title}>
-          <div className={styles.username}>{user.displayName}</div>
-          <div className={styles.role}>{user.role}</div>
+      <div className={styles.container}>
+        <Avatar src={user.profileImageUrl} text={user.displayName} size="xl" />
+        <div className={styles.header}>
+          <div className={styles.title}>
+            <div className={styles.username}>{user.displayName}</div>
+            <div className={styles.role}>{user.role}</div>
+          </div>
         </div>
+        {children && <div className={styles.content}>{children}</div>}
       </div>
     </Modal>
   );

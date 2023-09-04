@@ -6,6 +6,7 @@ import {
   SerializedAccount,
   SerializedChannel,
   SerializedReadStatus,
+  SerializedUser,
 } from '@linen/types';
 import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
@@ -65,6 +66,7 @@ interface Props {
   notify: (body: string, href: string) => void;
   onJoinChannel(channel: SerializedChannel): void;
   onLeaveChannel(channel: SerializedChannel): void;
+  onWriteMessage(user: SerializedUser): void;
   api: ApiClient;
   CustomRouterPush({ path }: { path: string }): void;
   CustomLink?: (props: {
@@ -98,6 +100,7 @@ export default function DesktopNavBar({
   notify,
   onJoinChannel,
   onLeaveChannel,
+  onWriteMessage,
   api,
   CustomRouterPush,
   CustomLink,
@@ -355,7 +358,7 @@ export default function DesktopNavBar({
                 setHighlights={setHighlights}
                 Link={Link}
                 api={api}
-                CustomRouterPush={CustomRouterPush}
+                onWriteMessage={onWriteMessage}
               />
             )}
             {permissions.manage && (

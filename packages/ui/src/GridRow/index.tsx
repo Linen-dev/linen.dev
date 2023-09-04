@@ -27,6 +27,12 @@ import styles from './index.module.scss';
 import Actions from '@/Actions';
 import { getThreadUrl } from '@linen/utilities/url';
 import UserModal from '@/UserModal';
+import Button from '@/Button';
+import EventEmitter from '@linen/utilities/event';
+
+function onWriteMessage(user: SerializedUser) {
+  EventEmitter.emit('write:message:clicked', user);
+}
 
 function hasReaction(
   message: SerializedMessage,
@@ -390,7 +396,21 @@ function Row({
           close={() => setModal(ModalView.NONE)}
           user={message.author!}
           isUserActive={isUserActive}
-        />
+        >
+          {currentUser && currentUser.id !== message.author?.id && (
+            <Button
+              color="gray"
+              tag="a"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                onWriteMessage(message.author!);
+              }}
+            >
+              Write a message
+            </Button>
+          )}
+        </UserModal>
       )}
     </div>
   );

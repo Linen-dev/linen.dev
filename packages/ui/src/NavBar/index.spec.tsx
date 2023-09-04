@@ -34,6 +34,7 @@ describe('NavBar', () => {
           CustomLink: jest.fn(),
           onJoinChannel: jest.fn(),
           onLeaveChannel: jest.fn(),
+          onWriteMessage: jest.fn(),
         }}
       />
     );
