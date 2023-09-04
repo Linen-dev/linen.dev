@@ -14,6 +14,7 @@ interface Props {
   shadow?: Shadow;
   placeholder?: boolean;
   active?: boolean;
+  onClick?(): void;
 }
 
 export type Size = 'sm' | 'md' | 'xl';
@@ -34,6 +35,7 @@ const TextAvatar = function TextAvatar({
   shadow,
   text,
   active,
+  onClick,
 }: Props) {
   const letter = getLetter(text || '');
   const color = getColor(letter);
@@ -43,6 +45,7 @@ const TextAvatar = function TextAvatar({
         className,
         styles.placeholder,
         size && styles[size],
+        onClick && styles.pointer,
         {
           [styles.shadow]: shadow === 'sm',
           [styles[`color-${color}`]]: color,
@@ -62,6 +65,7 @@ const ImageAvatar = function ImageAvatar({
   shadow,
   text,
   active,
+  onClick,
 }: Props) {
   if (!src) {
     return null;
@@ -71,6 +75,7 @@ const ImageAvatar = function ImageAvatar({
       <img
         className={classNames(className, styles.image, size && styles[size], {
           [styles.shadow]: shadow === 'sm',
+          [styles.pointer]: !!onClick,
         })}
         src={normalizeUrl(src)}
         alt={text || 'avatar'}
@@ -90,6 +95,7 @@ function Avatar({
   placeholder,
   active,
   isBot,
+  onClick,
 }: Props & { isBot?: boolean }) {
   const preloaded = !!src && !!cache[src];
   const [loaded, setLoaded] = useState(preloaded);
@@ -124,6 +130,7 @@ function Avatar({
         shadow={shadow}
         src={src}
         active={active}
+        onClick={onClick}
       />
     ) : (
       <TextAvatar
@@ -132,6 +139,7 @@ function Avatar({
         size={size}
         shadow={shadow}
         active={active}
+        onClick={onClick}
       />
     );
   }
@@ -144,6 +152,7 @@ function Avatar({
         size={size}
         shadow={shadow}
         active={active}
+        onClick={onClick}
       />
     );
   }
@@ -157,6 +166,7 @@ function Avatar({
         shadow={shadow}
         src={src}
         active={active}
+        onClick={onClick}
       />
     );
   }
@@ -168,6 +178,7 @@ function Avatar({
       size={size}
       shadow={shadow}
       active={active}
+      onClick={onClick}
     />
   );
 }
