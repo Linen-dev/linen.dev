@@ -20,10 +20,11 @@ import { ChannelContext } from '@linen/contexts/channel';
 import debounce from '@linen/utilities/debounce';
 import { createThreadImitation } from '@linen/serializers/thread';
 import type { ApiClient } from '@linen/api-client';
-import ChatView from './ChatView';
 import { addReaction } from '@linen/utilities/reaction';
 import { copyToClipboard } from '@linen/utilities/clipboard';
+import ChatView from './ChatView';
 import ForumView from './ForumView';
+import TopicView from './TopicView';
 
 const SHORTCUTS_ENABLED = false;
 
@@ -914,7 +915,50 @@ export default function ChannelView({
           startSignUp={startSignUp}
         />
       )}
-      {currentChannel.viewType === 'CHAT' && (
+      {currentChannel.viewType === 'CHAT' && currentCommunity.featurePreview ? (
+        <TopicView
+          queryIntegration={queryIntegration}
+          playNotificationSound={playNotificationSound}
+          useUsersContext={useUsersContext}
+          usePath={usePath}
+          routerPush={routerPush}
+          api={api}
+          key={currentChannel.channelName}
+          threads={threads}
+          pinnedThreads={pinnedThreads}
+          currentChannel={currentChannel}
+          currentCommunity={currentCommunity}
+          settings={settings}
+          channelName={channelName}
+          isSubDomainRouting={isSubDomainRouting}
+          nextCursor={nextCursor}
+          isBot={isBot}
+          permissions={permissions}
+          currentThreadId={currentThreadId}
+          setThreads={setThreads}
+          deleteMessage={deleteMessage}
+          editMessage={editMessage}
+          muteThread={muteThread}
+          unmuteThread={unmuteThread}
+          pinThread={pinThread}
+          starThread={starThread}
+          updateThreadResolution={updateThreadResolution}
+          readThread={readThread}
+          unreadThread={unreadThread}
+          onMessage={onThreadMessage}
+          onDrop={onThreadDrop}
+          onShare={onShare}
+          onRemind={onRemind}
+          sendReaction={sendReaction}
+          onSelectThread={onSelectThread}
+          editThread={editThread}
+          updateThread={updateThread}
+          onThreadMessage={onSocket}
+          token={token}
+          pathCursor={pathCursor}
+          startSignUp={startSignUp}
+        />
+      ) : (
         <ChatView
           queryIntegration={queryIntegration}
           playNotificationSound={playNotificationSound}
