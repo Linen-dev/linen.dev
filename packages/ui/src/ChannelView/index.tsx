@@ -9,6 +9,7 @@ import {
   SerializedChannel,
   SerializedMessage,
   SerializedThread,
+  SerializedTopic,
   SerializedUser,
   Settings,
   ThreadState,
@@ -30,6 +31,7 @@ const SHORTCUTS_ENABLED = false;
 
 export default function ChannelView({
   threads: initialThreads,
+  topics: initialTopics,
   pinnedThreads: initialPinnedThreads,
   currentChannel: initialChannel,
   currentCommunity,
@@ -54,6 +56,7 @@ export default function ChannelView({
   currentChannel: SerializedChannel;
   currentCommunity: SerializedAccount;
   threads: SerializedThread[];
+  topics: SerializedTopic[];
   pinnedThreads: SerializedThread[];
   isSubDomainRouting: boolean;
   nextCursor: {
@@ -73,6 +76,7 @@ export default function ChannelView({
   selectedThreadId?: string;
 }) {
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
+  const [topics, setTopics] = useState<SerializedTopic[]>(initialTopics);
   const [pinnedThreads, setPinnedThreads] =
     useState<SerializedThread[]>(initialPinnedThreads);
   const [currentChannel, setCurrentChannel] = useState(initialChannel);
@@ -95,6 +99,10 @@ export default function ChannelView({
   useEffect(() => {
     setThreads(initialThreads);
   }, [initialThreads]);
+
+  useEffect(() => {
+    setTopics(initialTopics);
+  }, [initialTopics]);
 
   useEffect(() => {
     setPinnedThreads(initialPinnedThreads);
@@ -925,6 +933,7 @@ export default function ChannelView({
           api={api}
           key={currentChannel.channelName}
           threads={threads}
+          topics={topics}
           pinnedThreads={pinnedThreads}
           currentChannel={currentChannel}
           currentCommunity={currentCommunity}

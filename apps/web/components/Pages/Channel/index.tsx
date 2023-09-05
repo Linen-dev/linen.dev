@@ -21,6 +21,7 @@ import usePath from 'hooks/path';
 import ChannelForBots from 'components/Bots/ChannelForBots';
 import { playNotificationSound } from 'utilities/playNotificationSound';
 import { scrollToBottom } from '@linen/utilities/scroll';
+import { SerializedTopic } from '@linen/types';
 
 const useLayoutEffect =
   typeof window !== 'undefined' ? useClientLayoutEffect : () => {};
@@ -31,6 +32,7 @@ export default function Channel(props: ChannelProps) {
   }
   const {
     threads: initialThreads,
+    topics: initialTopics,
     channels,
     communities,
     currentChannel: initialChannel,
@@ -47,6 +49,7 @@ export default function Channel(props: ChannelProps) {
   const [allUsers] = useUsersContext();
   const [currentChannel, setCurrentChannel] = useState(initialChannel);
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
+  const [topics, setTopics] = useState<SerializedTopic[]>(initialTopics);
   const { viewType } = currentChannel;
 
   useEffect(() => {
@@ -63,6 +66,10 @@ export default function Channel(props: ChannelProps) {
       setTimeout(() => scrollToBottom(node), 0);
     }
   }, [initialThreads, viewType]);
+
+  useLayoutEffect(() => {
+    setTopics(initialTopics);
+  }, [initialTopics]);
 
   return (
     <PageLayout
@@ -104,6 +111,7 @@ export default function Channel(props: ChannelProps) {
         pinnedThreads={props.pinnedThreads}
         settings={props.settings}
         threads={threads}
+        topics={topics}
         queryIntegration={router.query.integration}
         api={api}
         startSignUp={startSignUp}

@@ -25,6 +25,7 @@ import {
   SerializedChannel,
   SerializedReadStatus,
   SerializedThread,
+  SerializedTopic,
   Settings,
   StartSignUpProps,
   ThreadState,
@@ -65,6 +66,7 @@ interface Props {
   currentChannel: SerializedChannel;
   currentCommunity: SerializedAccount;
   threads: SerializedThread[];
+  topics: SerializedTopic[];
   pinnedThreads: SerializedThread[];
   isSubDomainRouting: boolean;
   nextCursor: {
@@ -149,6 +151,7 @@ enum ModalView {
 
 export default function Channel({
   threads,
+  topics,
   pinnedThreads,
   currentChannel,
   currentCommunity,

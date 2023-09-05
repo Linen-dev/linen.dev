@@ -117,6 +117,7 @@ export async function channelGetServerSideProps(
       currentChannel: channel,
       channelName: channel.channelName,
       threads: threads.map(serializeThread),
+      topics: [],
       pinnedThreads: pinnedThreads.map(serializeThread),
       isSubDomainRouting: isSubdomainbasedRouting,
       pathCursor: page || null,

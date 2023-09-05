@@ -1,7 +1,7 @@
 import { SerializedAccount, Settings } from './accounts';
 import { Permissions } from './Permissions';
 import { SerializedChannel } from './channels';
-import { SerializedThread } from './threads';
+import { SerializedThread, SerializedTopic } from './threads';
 
 export interface ChannelProps {
   settings: Settings;
@@ -12,6 +12,7 @@ export interface ChannelProps {
   currentChannel: SerializedChannel;
   currentCommunity: SerializedAccount;
   threads: SerializedThread[];
+  topics?: SerializedTopic[];
   pinnedThreads: SerializedThread[];
   isSubDomainRouting: boolean;
   nextCursor: {
