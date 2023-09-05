@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { makeEnum } from './utils/makeEnum';
 
 export * from './channels';
 export * from './threads';
@@ -26,18 +26,17 @@ export * from './vercel';
 export * from './logger';
 export * from './Permissions';
 export * from './SerializedSearchSettings';
+export * from './mentions';
+export * from './messageAttachments';
+export * from './messageReactions';
+export * from './slackAuthorizations';
+export * from './userThreadStatus';
 
 /*
   This package redefines enums from `schema.prisma`.
   Ideally this package should be considered as a source of truth
   and not have on other dependencies.
 */
-
-export enum AccountIntegration {
-  NONE = 'NONE',
-  SLACK = 'SLACK',
-  DISCORD = 'DISCORD',
-}
 
 export enum ReminderTypes {
   SOON = 'soon',
@@ -81,14 +80,12 @@ export type ChannelsIntegration = {
 
 export type onResolve = (threadId: string, messageId?: string) => void;
 
-export const UploadEnumConst = {
+export const UploadEnum = makeEnum({
   logos: 'logos',
   attachments: 'attachments',
   'slack-import': 'slack-import',
-} as const;
-
-const UploadEnum = z.nativeEnum(UploadEnumConst);
-export type UploadEnum = z.infer<typeof UploadEnum>;
+});
+export type UploadEnum = typeof UploadEnum[keyof typeof UploadEnum];
 
 export enum Period {
   Monthly = 'monthly',

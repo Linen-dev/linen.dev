@@ -1,20 +1,12 @@
-import type {
-  accounts,
-  channels,
-  mentions,
-  messageAttachments,
-  messageReactions,
-  messages,
-  slackAuthorizations,
-  threads,
-  users,
-} from '@linen/database';
-
-// See for reference:
-//https://www.prisma.io/docs/concepts/components/prisma-client/advanced-type-safety/operating-against-partial-structures-of-model-types
-// Benefits:
-// Cleaner approach as it leverages Prisma Client's generated types
-// Reduced maintenance burden and improved type safety when the schema changes
+import { mentions } from './mentions';
+import { users } from './users';
+import { accounts } from './accounts';
+import { channels } from './channels';
+import { messageAttachments } from './messageAttachments';
+import { messageReactions } from './messageReactions';
+import { messages } from './messages';
+import { slackAuthorizations } from './slackAuthorizations';
+import { threads } from './threads';
 
 export type ThreadsWithMessagesFull = threads & {
   messages: (messages & {

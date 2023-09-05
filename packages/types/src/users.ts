@@ -12,3 +12,19 @@ export interface SerializedUser {
   role?: Roles;
   search?: SerializedSearchSettings;
 }
+
+export type users = {
+  id: string;
+  externalUserId: string | null;
+  displayName: string | null;
+  profileImageUrl: string | null;
+  isBot: boolean;
+  isAdmin: boolean;
+  anonymousAlias: string | null;
+  searchSettings: string | null;
+  accountsId: string;
+  authsId: string | null;
+  role: Roles;
+  createdAt: Date;
+  updatedAt: Date | null;
+};

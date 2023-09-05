@@ -9,7 +9,7 @@ import {
 } from '@linen/utilities/files';
 import { cors, preflight } from 'utilities/cors';
 import { z } from 'zod';
-import { UploadEnumConst } from '@linen/types';
+import { UploadEnum } from '@linen/types';
 
 export const config = {
   api: {
@@ -35,7 +35,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method === 'POST') {
     const schema = z.object({
       communityId: z.string(),
-      type: z.nativeEnum(UploadEnumConst),
+      type: z.nativeEnum(UploadEnum),
     });
 
     const parsedReq = schema.parse(request.query);

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es5",
     "moduleResolution": "node",
     "allowJs": false,
     "noEmit": false,
@@ -11,5 +11,5 @@
     "outDir": "dist"
   },
   "include": ["src"],
-  "exclude": []
+  "exclude": ["**/*.test.*"]
 }

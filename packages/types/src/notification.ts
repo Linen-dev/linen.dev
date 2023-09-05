@@ -1,6 +1,14 @@
-import type { mentions, users } from '@linen/database';
+import { makeEnum } from './utils/makeEnum';
+import { users } from './users';
+import { mentions } from './mentions';
 
-type notificationType = 'MENTION' | 'THREAD' | 'CHANNEL';
+export const notificationType = makeEnum({
+  MENTION: 'MENTION',
+  THREAD: 'THREAD',
+  CHANNEL: 'CHANNEL',
+});
+export type notificationType =
+  typeof notificationType[keyof typeof notificationType];
 
 export type emailNotificationPayloadType = {
   authId: string;

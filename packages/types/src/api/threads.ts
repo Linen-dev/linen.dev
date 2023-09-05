@@ -6,14 +6,7 @@ export const findThreadSchema = z.object({
   channelId: z.string().uuid(),
   cursor: z.string().min(1).optional(),
   userId: z.string().optional(),
-  status: z
-    .enum([
-      ThreadStatus.UNREAD,
-      ThreadStatus.READ,
-      ThreadStatus.MUTED,
-      ThreadStatus.REMINDER,
-    ])
-    .optional(),
+  status: z.nativeEnum(ThreadStatus).optional(),
 });
 export type findThreadType = z.infer<typeof findThreadSchema>;
 
@@ -26,7 +19,7 @@ export type getThreadType = z.infer<typeof getThreadSchema>;
 export const putThreadSchema = z.object({
   accountId: z.string().uuid(),
   id: z.string().uuid(),
-  state: z.enum([ThreadState.OPEN, ThreadState.CLOSE]).optional(),
+  state: z.nativeEnum(ThreadState).optional(),
   title: z.string().optional(),
   pinned: z.boolean().optional(),
   resolutionId: z.string().uuid().optional().nullable(),

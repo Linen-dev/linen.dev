@@ -10,6 +10,6 @@ export type deleteUserType = z.infer<typeof deleteUserSchema>;
 export const putUserSchema = z.object({
   accountId: z.string().uuid(),
   userId: z.string().uuid(),
-  role: z.enum([Roles.ADMIN, Roles.MEMBER, Roles.OWNER]),
+  role: z.nativeEnum(Roles),
 });
 export type putUserType = z.infer<typeof putUserSchema>;

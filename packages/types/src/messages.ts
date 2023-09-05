@@ -1,12 +1,14 @@
 import { SerializedUser } from './users';
+import { makeEnum } from './utils/makeEnum';
 
-export type MessageFormat = 'DISCORD' | 'SLACK' | 'LINEN' | 'MATRIX';
-export const MessageFormat = {
-  DISCORD: 'DISCORD' as MessageFormat,
-  SLACK: 'SLACK' as MessageFormat,
-  LINEN: 'LINEN' as MessageFormat,
-  MATRIX: 'MATRIX' as MessageFormat,
-};
+export const MessageFormat = makeEnum({
+  DISCORD: 'DISCORD',
+  SLACK: 'SLACK',
+  LINEN: 'LINEN',
+  MATRIX: 'MATRIX',
+});
+
+export type MessageFormat = typeof MessageFormat[keyof typeof MessageFormat];
 
 export interface SerializedMessage {
   id: string;
@@ -39,4 +41,17 @@ export type SerializedSearchMessage = SerializedMessage & {
     incrementId?: number;
     slug?: string | null;
   };
+};
+
+export type messages = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date | null;
+  body: string;
+  sentAt: Date;
+  channelId: string;
+  externalMessageId: string | null;
+  threadId: string | null;
+  usersId: string | null;
+  messageFormat: MessageFormat | null;
 };

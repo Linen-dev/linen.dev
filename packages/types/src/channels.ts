@@ -49,3 +49,39 @@ export type channelNextPageType = {
     prev: string | null;
   };
 };
+
+export const NewChannelsConfig = makeEnum({
+  HIDDEN: 'HIDDEN',
+  NOT_HIDDEN: 'NOT_HIDDEN',
+});
+
+export type NewChannelsConfig =
+  typeof NewChannelsConfig[keyof typeof NewChannelsConfig];
+
+export const ChannelOrderBy = makeEnum({
+  THREAD_SENT_AT: 'THREAD_SENT_AT',
+  THREAD_LAST_REPLY_AT: 'THREAD_LAST_REPLY_AT',
+});
+export type ChannelOrderBy = typeof ChannelOrderBy[keyof typeof ChannelOrderBy];
+
+export type channels = {
+  id: string;
+  channelName: string;
+  externalChannelId: string | null;
+  accountId: string | null;
+  hidden: boolean;
+  default: boolean;
+  landing: boolean;
+  readonly: boolean;
+  externalPageCursor: string | null;
+  pages: number | null;
+  lastPageBuildAt: bigint | null;
+  createdByUserId: string | null;
+  type: ChannelType | null;
+  createdAt: Date;
+  updatedAt: Date | null;
+  archived: boolean;
+  displayOrder: number | null;
+  viewType: ChannelViewType;
+  orderBy: ChannelOrderBy;
+};

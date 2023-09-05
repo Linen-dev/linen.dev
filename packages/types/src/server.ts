@@ -1,9 +1,10 @@
-import type { accounts, users } from '@linen/database';
-import {
-  type Request as eRequest,
-  type Response as eResponse,
-  type NextFunction as eNextFunction,
+import type {
+  Request as eRequest,
+  Response as eResponse,
+  NextFunction as eNextFunction,
 } from 'express';
+import { accounts } from './accounts';
+import { users } from './users';
 
 export type Response = eResponse;
 export type Request = eRequest;

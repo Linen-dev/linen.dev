@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { patterns } from '../patterns';
 import { AccountType, ChatType, AnonymizeType } from '../accounts';
+import { NewChannelsConfig } from '../channels';
 
 export const createAccountSchema = z.object({
   name: z.string().regex(patterns.communityName).optional(),
@@ -23,12 +24,10 @@ export const updateAccountSchema = z.object({
   brandColor: z.string().optional(),
   googleAnalyticsId: z.string().optional(),
   anonymizeUsers: z.boolean().optional(),
-  anonymize: z
-    .enum([AnonymizeType.ALL, AnonymizeType.MEMBERS, AnonymizeType.NONE])
-    .optional(),
-  type: z.enum([AccountType.PRIVATE, AccountType.PUBLIC]).optional(),
-  chat: z.enum([ChatType.MANAGERS, ChatType.MEMBERS, ChatType.NONE]).optional(),
-  newChannelsConfig: z.enum(['HIDDEN', 'NOT_HIDDEN']).optional(),
+  anonymize: z.nativeEnum(AnonymizeType).optional(),
+  type: z.nativeEnum(AccountType).optional(),
+  chat: z.nativeEnum(ChatType).optional(),
+  newChannelsConfig: z.nativeEnum(NewChannelsConfig).optional(),
   tags: z.array(z.string()).optional(),
 });
 export type updateAccountType = z.infer<typeof updateAccountSchema>;

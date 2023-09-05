@@ -1,27 +1,32 @@
 import { SerializedSearchSettings } from './SerializedSearchSettings';
+import { makeEnum } from './utils/makeEnum';
 
-export enum AnonymizeType {
-  NONE = 'NONE',
-  MEMBERS = 'MEMBERS',
-  ALL = 'ALL',
-}
+export const AnonymizeType = makeEnum({
+  NONE: 'NONE',
+  MEMBERS: 'MEMBERS',
+  ALL: 'ALL',
+});
+export type AnonymizeType = typeof AnonymizeType[keyof typeof AnonymizeType];
 
-export enum ChatType {
-  NONE = 'NONE',
-  MANAGERS = 'MANAGERS',
-  MEMBERS = 'MEMBERS',
-}
+export const ChatType = makeEnum({
+  NONE: 'NONE',
+  MANAGERS: 'MANAGERS',
+  MEMBERS: 'MEMBERS',
+});
+export type ChatType = typeof ChatType[keyof typeof ChatType];
 
-export enum CommunityType {
-  'discord' = 'discord',
-  'slack' = 'slack',
-  'linen' = 'linen',
-}
+export const CommunityType = makeEnum({
+  discord: 'discord',
+  slack: 'slack',
+  linen: 'linen',
+});
+export type CommunityType = typeof CommunityType[keyof typeof CommunityType];
 
-export enum AccountType {
-  PUBLIC = 'PUBLIC',
-  PRIVATE = 'PRIVATE',
-}
+export const AccountType = makeEnum({
+  PUBLIC: 'PUBLIC',
+  PRIVATE: 'PRIVATE',
+});
+export type AccountType = typeof AccountType[keyof typeof AccountType];
 
 export type Settings = {
   communityId: string;
@@ -70,3 +75,45 @@ export interface SerializedAccount {
   redirectDomainPropagate?: boolean;
   search?: SerializedSearchSettings;
 }
+
+export const AccountIntegration = makeEnum({
+  NONE: 'NONE',
+  SLACK: 'SLACK',
+  DISCORD: 'DISCORD',
+});
+export type AccountIntegration =
+  typeof AccountIntegration[keyof typeof AccountIntegration];
+
+export type accounts = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date | null;
+  type: AccountType;
+  name: string | null;
+  description: string | null;
+  slackDomain: string | null;
+  discordDomain: string | null;
+  discordServerId: string | null;
+  slackTeamId: string | null;
+  communityInviteUrl: string | null;
+  redirectDomain: string | null;
+  communityUrl: string | null;
+  syncStatus: string;
+  brandColor: string | null;
+  homeUrl: string | null;
+  docsUrl: string | null;
+  logoUrl: string | null;
+  logoSquareUrl: string | null;
+  faviconUrl: string | null;
+  premium: boolean;
+  featurePreview: boolean;
+  googleAnalyticsId: string | null;
+  googleSiteVerification: string | null;
+  anonymizeUsers: boolean;
+  anonymize: AnonymizeType;
+  newChannelsConfig: string;
+  redirectDomainPropagate: boolean | null;
+  searchSettings: string | null;
+  chat: ChatType;
+  integration: AccountIntegration;
+};
