@@ -43,7 +43,7 @@ import Layouts from '@/Layouts';
 import { timestamp } from '@linen/utilities/date';
 import debounce from '@linen/utilities/debounce';
 import { getSelectedText } from '@linen/utilities/document';
-import ScrollToBottomIcon from './ScrollToBottomIcon';
+import ScrollToBottomIcon from '../ScrollToBottomIcon';
 import Row from '@/Row';
 import ChatLayout from '@/ChatLayout';
 import AddThreadModal from '@/AddThreadModal';
