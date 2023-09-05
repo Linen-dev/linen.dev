@@ -13,7 +13,7 @@ import Chat from '../Chat';
 import Grid from '@/GridContent';
 import Footer from '../Footer';
 import classNames from 'classnames';
-import PinnedThread from './PinnedThread';
+import PinnedThread from '../PinnedThread';
 import { sendThreadMessageWrapper } from './sendThreadMessageWrapper';
 import { sendMessageWrapper } from './sendMessageWrapper';
 import {
