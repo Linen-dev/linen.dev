@@ -4,10 +4,12 @@ import Droppable from './Droppable';
 import Avatars from '@/Avatars';
 import GridRow from '@/GridRow';
 import Votes from '@/Votes';
+import Symbol from '@/Symbol';
 import styles from './index.module.scss';
 import {
   Permissions,
   Settings,
+  SerializedAccount,
   SerializedThread,
   SerializedUser,
   ReminderTypes,
@@ -32,6 +34,7 @@ interface Props {
   isSubDomainRouting: boolean;
   settings: Settings;
   currentUser: SerializedUser | null;
+  currentCommunity?: SerializedAccount;
   mode?: Mode;
   showActions?: boolean;
   showVotes?: boolean;
@@ -82,6 +85,7 @@ export default function Row({
   isSubDomainRouting,
   settings,
   currentUser,
+  currentCommunity,
   mode,
   showActions,
   showVotes,
@@ -156,7 +160,15 @@ export default function Row({
         onUnread={onUnread}
         onImageClick={onImageClick}
         header={
-          thread.title && <div className={styles.header}>{thread.title}</div>
+          thread.title && (
+            <div className={styles.header}>
+              {thread?.channel?.viewType === 'CHAT' &&
+                currentCommunity?.featurePreview && (
+                  <Symbol text={thread.title} />
+                )}
+              {thread.title}
+            </div>
+          )
         }
         subheader={subheader}
         info={

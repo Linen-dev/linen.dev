@@ -171,6 +171,7 @@ export default function GridContent({
                 isSubDomainRouting={isSubDomainRouting}
                 settings={settings}
                 currentUser={currentUser}
+                currentCommunity={currentCommunity}
                 mode={mode}
                 onClick={() => onClick(id)}
                 onDelete={onDelete}

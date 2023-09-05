@@ -180,6 +180,7 @@
     "./StickyHeader": "./dist/StickyHeader/index.js",
     "./Suggestion": "./dist/Suggestion/index.js",
     "./Suggestions": "./dist/Suggestions/index.js",
+    "./Symbol": "./dist/Symbol/index.js",
     "./Tab": "./dist/Tab/index.js",
     "./Table": "./dist/Table/index.js",
     "./Tabs": "./dist/Tabs/index.js",
@@ -531,6 +532,9 @@
       ],
       "Suggestions": [
         "./dist/Suggestions/index.d.ts"
+      ],
+      "Symbol": [
+        "./dist/Symbol/index.d.ts"
       ],
       "Tab": [
         "./dist/Tab/index.d.ts"
