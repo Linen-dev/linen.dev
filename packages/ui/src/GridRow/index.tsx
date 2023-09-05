@@ -390,7 +390,7 @@ function Row({
           }}
         />
       )}
-      {top && (
+      {top && message.author && (
         <UserModal
           open={modal === ModalView.USER_PROFILE}
           close={() => setModal(ModalView.NONE)}
