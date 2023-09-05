@@ -4,6 +4,7 @@ import type {
   SerializedUser,
   MessageForSerialization,
   SerializedSearchMessage,
+  UploadedFile,
 } from '@linen/types';
 import { serializeUser } from './user';
 import { serializeReaction } from './reaction';
@@ -14,6 +15,9 @@ import type {
   messageAttachments,
   messageReactions,
 } from '@linen/database';
+import { v4 as uuid } from 'uuid';
+import { username } from './user';
+import { MessageFormat } from '@linen/types';
 
 function serializeAttachment(
   attachment: messageAttachments
@@ -75,6 +79,44 @@ export function serializeSearchedMessage(
     thread: {
       incrementId: message.threads?.incrementId,
       slug: message.threads?.slug,
+    },
+  };
+}
+
+export function createMessageImitation({
+  message,
+  files,
+  threadId,
+  author,
+  mentions,
+}: {
+  message: string;
+  files: UploadedFile[];
+  threadId: string;
+  author: SerializedUser;
+  mentions: SerializedUser[];
+}): SerializedMessage {
+  return {
+    id: uuid(),
+    body: message,
+    sentAt: new Date().toISOString(),
+    usersId: author.id,
+    mentions,
+    attachments: files.map((file) => {
+      return { name: file.id, url: file.url };
+    }),
+    reactions: [],
+    threadId,
+    messageFormat: MessageFormat.LINEN,
+    externalId: null,
+    author: {
+      id: author.id,
+      externalUserId: author.externalUserId,
+      username: username(author.displayName),
+      displayName: author.displayName,
+      profileImageUrl: author.profileImageUrl,
+      authsId: null,
+      role: author.role,
     },
   };
 }
