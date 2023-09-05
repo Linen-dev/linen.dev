@@ -1,0 +1,48 @@
+.container {
+  min-height: 100%;
+  height: 100%;
+}
+
+.pinned {
+  padding-bottom: 0;
+}
+
+@media screen and (max-width: 767px) {
+  .header {
+    display: none;
+  }
+}
+
+.full {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex-grow: 1;
+}
+
+.suggestions {
+  background-color: var(--color-background);
+  position: relative;
+}
+
+.is-collapsed {
+  visibility: hidden !important;
+  width: 0% !important;
+}
+
+.is-expanded {
+  border-left: none !important;
+  max-width: 52rem;
+  width: 100%;
+}
+
+.ulFull > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-y-reverse: 0;
+  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
+  border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
+}
+
+.ulFull {
+  width: 100%;
+}
