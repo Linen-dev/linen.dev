@@ -21,6 +21,7 @@ export default async function createLinenCommunity() {
       syncStatus: 'DONE',
       premium: true,
       description: 'Modern chat platform.',
+      featurePreview: true,
     },
   });
   const auth1 = await prisma.auths.create({
