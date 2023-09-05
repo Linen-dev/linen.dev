@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@linen/database';
+import { Prisma, prisma } from '@linen/database';
 import { serializeUser } from '@linen/serializers/user';
 import PermissionsService from 'services/permissions';
 import { cors, preflight } from 'utilities/cors';
@@ -40,13 +40,14 @@ export default async function handler(
 
 async function getMentions(term: string, accountId: string) {
   const condition = term
-    ? { displayName: { contains: term, mode: 'insensitive' } }
+    ? { displayName: { contains: term, mode: Prisma.QueryMode.insensitive } }
     : null;
   const users = await prisma.users.findMany({
     where: {
       account: { id: accountId },
+      authsId: { not: null },
       ...condition,
-    } as any,
+    },
     take: 5,
   });
   return users;
