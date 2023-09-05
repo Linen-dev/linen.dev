@@ -20,6 +20,8 @@ export async function channelNextPage({
   const { anonymize, anonymizeUsers } = await shouldThisChannelBeAnonymous(
     channelId
   );
+
+  // TODO findTopicsByCursor
   const threads = await findThreadsByCursor({
     channelIds: [channelId],
     sentAt,
@@ -30,11 +32,13 @@ export async function channelNextPage({
   }).then((t) => t.sort(sortBySentAtAsc));
 
   const nextCursor = await buildCursor({
-    threads,
     sort,
     sentAt,
     direction,
     loadMore: true,
+    total: threads.length,
+    prevDate: threads[0].sentAt,
+    nextDate: threads[threads.length - 1].sentAt,
   });
 
   return {

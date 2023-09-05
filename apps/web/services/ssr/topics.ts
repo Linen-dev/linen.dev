@@ -12,6 +12,8 @@ import {
 import { ssr, allowAccess } from 'services/ssr/common';
 import { findTopics } from 'services/threads/topics';
 import { findChannelOrGetLandingChannel } from 'utilities/findChannelOrGetLandingChannel';
+import { decodeCursor } from 'utilities/cursor';
+import { buildCursor } from 'utilities/buildCursor';
 
 export async function topicGetServerSideProps(
   context: GetServerSidePropsContext,
@@ -37,6 +39,7 @@ export async function topicGetServerSideProps(
 
   const communityName = context.params?.communityName as string;
   const channelName = context.params?.channelName as string;
+  const page = context.params?.page as string | undefined;
 
   const channel = findChannelOrGetLandingChannel(
     [...channels, ...dms, ...publicChannels],
@@ -87,9 +90,26 @@ export async function topicGetServerSideProps(
       })
     : [];
 
+  // const nextCursor = {
+  //   next: null,
+  //   prev: null,
+  // };
+  const { sort, direction, sentAt } = decodeCursor(undefined);
+
+  const nextCursor = await buildCursor({
+    sort,
+    direction,
+    sentAt,
+    pathCursor: page,
+    total: topics.length,
+    prevDate: topics[0].sentAt,
+    nextDate: topics[topics.length - 1].sentAt,
+  });
+
   return {
     props: {
       ...props,
+      nextCursor,
       topics,
       threads,
       currentChannel: channel,
