@@ -4,19 +4,13 @@ import MessageForm from '@/MessageForm';
 import MessagePreview from '@/MessagePreview';
 import TextInput from '@/TextInput';
 import Field from '@/Field';
-import {
-  MessageFormat,
-  SerializedAccount,
-  SerializedUser,
-  UploadedFile,
-} from '@linen/types';
+import { MessageFormat, SerializedUser, UploadedFile } from '@linen/types';
 import styles from './index.module.scss';
 import { postprocess } from '@linen/ast';
 
 interface Props {
   channelId: string;
   currentUser?: SerializedUser | null;
-  currentCommunity: SerializedAccount;
   onDrop({
     source,
     target,
@@ -50,7 +44,6 @@ interface Props {
 export default function Chat({
   channelId,
   currentUser,
-  currentCommunity,
   progress,
   uploading,
   uploads,
@@ -62,8 +55,8 @@ export default function Chat({
 }: Props) {
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
-  const [allUsers] = useUsersContext();
   const [focus, setFocus] = useState(false);
+  const [allUsers] = useUsersContext();
   const ref = createRef<HTMLDivElement>();
 
   function handleDragEnter() {
