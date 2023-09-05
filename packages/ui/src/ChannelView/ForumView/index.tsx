@@ -15,7 +15,7 @@ import Footer from '../Footer';
 import classNames from 'classnames';
 import PinnedThread from '../PinnedThread';
 import { sendThreadMessageWrapper } from '../utilities/sendThreadMessageWrapper';
-import { sendMessageWrapper } from './sendMessageWrapper';
+import { sendMessageWrapper } from '../utilities/sendMessageWrapper';
 import {
   onResolve,
   Permissions,
@@ -407,7 +407,9 @@ export default function Channel({
     currentChannel,
     setUploads,
     setThreads,
-    scrollableRootRef,
+    scroll() {
+      scrollToTop(scrollableRootRef.current as HTMLDivElement);
+    },
     currentCommunity,
     startSignUp,
     createThread: debouncedCreateThread,

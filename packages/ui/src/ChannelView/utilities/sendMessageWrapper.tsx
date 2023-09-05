@@ -6,7 +6,6 @@ import {
   UploadedFile,
   StartSignUpProps,
 } from '@linen/types';
-import { scrollToTop } from '@linen/utilities/scroll';
 import { createThreadImitation } from '@linen/serializers/thread';
 import { localStorage } from '@linen/utilities/storage';
 
@@ -16,20 +15,20 @@ export function sendMessageWrapper({
   currentChannel,
   setUploads,
   setThreads,
-  scrollableRootRef,
   currentCommunity,
   startSignUp,
   createThread,
+  scroll,
 }: {
   currentUser: SerializedUser | null;
   allUsers: SerializedUser[];
   currentChannel: SerializedChannel;
   setUploads: any;
   setThreads: any;
-  scrollableRootRef: any;
   currentCommunity: SerializedAccount;
   startSignUp: (props: StartSignUpProps) => Promise<void>;
   createThread: any;
+  scroll(): void;
 }) {
   return async ({
     message,
@@ -64,7 +63,7 @@ export function sendMessageWrapper({
     setThreads((threads: SerializedThread[]) => {
       return [...threads, imitation];
     });
-    setTimeout(() => scrollToTop(scrollableRootRef.current as HTMLElement), 0);
+    setTimeout(() => scroll(), 0);
     return createThread({
       body: message,
       title,
