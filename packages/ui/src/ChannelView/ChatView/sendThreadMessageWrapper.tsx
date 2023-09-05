@@ -7,7 +7,7 @@ import {
   SerializedMessage,
   StartSignUpProps,
 } from '@linen/types';
-import { createMessageImitation } from '../utilities/message';
+import { createMessageImitation } from '@linen/serializers/message';
 import { localStorage } from '@linen/utilities/storage';
 
 export function sendThreadMessageWrapper({
