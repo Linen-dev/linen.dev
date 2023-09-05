@@ -162,10 +162,9 @@ export default function Row({
         header={
           thread.title && (
             <div className={styles.header}>
-              {thread?.channel?.viewType === 'CHAT' &&
-                currentCommunity?.featurePreview && (
-                  <Symbol text={thread.title} />
-                )}
+              {thread?.channel?.viewType === 'TOPIC' && (
+                <Symbol text={thread.title} />
+              )}
               {thread.title}
             </div>
           )
