@@ -62,13 +62,13 @@ async function getProps(
   return {
     token: permissions.token,
     currentCommunity,
-    channels: [...joinedChannels, ...privateChannels]
-      .map(serializeChannel)
-      .sort((a, b) => a.displayOrder - b.displayOrder),
+    channels: [...joinedChannels, ...privateChannels].sort(
+      (a, b) => a.displayOrder - b.displayOrder
+    ),
     communities: communities.map(serializeAccount),
     permissions,
     settings,
-    dms: dmChannels.map(serializeChannel),
+    dms: dmChannels,
     isSubDomainRouting: false,
     isBot: false,
   };

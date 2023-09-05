@@ -3,7 +3,7 @@ import { NotFound } from 'utilities/response';
 import { findThreadsByCursor, findPinnedThreads } from 'services/threads';
 import { serializeThread } from '@linen/serializers/thread';
 import { decodeCursor } from 'utilities/cursor';
-import { AnonymizeType, SerializedChannel } from '@linen/types';
+import { AnonymizeType } from '@linen/types';
 import { isBot } from 'next/dist/server/web/spec-extension/user-agent';
 import { RedirectTo } from 'utilities/response';
 import {
@@ -17,6 +17,7 @@ import { sortBySentAtAsc } from '@linen/utilities/object';
 import { ssr, allowAccess, allowManagers } from 'services/ssr/common';
 import { ChannelType, prisma } from '@linen/database';
 import { serializeChannel } from '@linen/serializers/channel';
+import { findChannelOrGetLandingChannel } from 'utilities/findChannelOrGetLandingChannel';
 
 export async function channelGetServerSideProps(
   context: GetServerSidePropsContext,
@@ -171,24 +172,6 @@ async function getThreads({
     pathCursor: page,
   });
   return { nextCursor, threads };
-}
-
-function findChannelOrGetLandingChannel(
-  channels: SerializedChannel[],
-  channelName: string
-) {
-  if (channelName) {
-    return channels.find(
-      (c) => c.channelName === channelName || c.id === channelName
-    );
-  }
-  const landingChannel = channels.find((c) => c.landing);
-  if (landingChannel) return landingChannel;
-
-  const defaultChannel = channels.find((c) => c.default);
-  if (defaultChannel) return defaultChannel;
-
-  return channels[0];
 }
 
 function isPageNotValid(page: string, pages: number | null) {

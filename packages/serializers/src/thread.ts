@@ -10,6 +10,7 @@ import {
   SerializedUser,
   ThreadState,
   UploadedFile,
+  SerializedTopic,
 } from '@linen/types';
 import { username } from './user';
 
@@ -111,5 +112,17 @@ export function createThreadImitation({
     pinned: false,
     resolutionId: null,
     page: null,
+  };
+}
+
+export function serializeTopic(topic: {
+  id: string;
+  threadId: string | null;
+  sentAt: Date;
+}): SerializedTopic {
+  return {
+    messageId: topic.id,
+    threadId: topic.threadId!,
+    sentAt: new Date(topic.sentAt).toISOString(),
   };
 }

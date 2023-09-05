@@ -53,14 +53,14 @@ export async function ssr(
     props: {
       token: permissions.token,
       currentCommunity,
-      publicChannels: publicChannels.map(serializeChannel),
-      channels: [...joinedChannels, ...privateChannels]
-        .map(serializeChannel)
-        .sort((a, b) => a.displayOrder - b.displayOrder),
+      publicChannels,
+      channels: [...joinedChannels, ...privateChannels].sort(
+        (a, b) => a.displayOrder - b.displayOrder
+      ),
       communities: communities.map(serializeAccount),
       permissions,
       settings,
-      dms: dmChannels.map(serializeChannel),
+      dms: dmChannels,
     },
   };
 }
@@ -102,12 +102,12 @@ export async function fetchCommon(
 
   return {
     currentCommunity,
-    publicChannels,
-    joinedChannels,
-    privateChannels,
+    publicChannels: publicChannels.map(serializeChannel),
+    joinedChannels: joinedChannels.map(serializeChannel),
+    privateChannels: privateChannels.map(serializeChannel),
     communities,
     settings,
-    dmChannels,
+    dmChannels: dmChannels.map(serializeChannel),
   };
 }
 

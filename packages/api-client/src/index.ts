@@ -49,6 +49,8 @@ import type {
   matrixPutType,
   matrixDeleteType,
   integrationMatrixType,
+  findTopicsSchema,
+  SerializedTopic,
 } from '@linen/types';
 export { AxiosRequestConfig };
 
@@ -172,6 +174,12 @@ export default class ApiClient {
 
   getThreads = (props: findThreadType) =>
     this.get<channelNextPageType>(`/api/threads?${qs(props)}`);
+
+  findTopics = (props: findTopicsSchema) =>
+    this.get<{
+      topics: SerializedTopic[];
+      threads: SerializedThread[];
+    }>(`/api/threads/topics?${qs(props)}`);
 
   getThread = ({ id, ...props }: getThreadType) =>
     this.get<SerializedThread>(`/api/threads/${id}?${qs(props)}`);

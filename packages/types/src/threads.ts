@@ -74,3 +74,9 @@ export type threads = {
   createdAt: Date;
   updatedAt: Date | null;
 };
+
+export type SerializedTopic = {
+  messageId: string;
+  threadId: string;
+  sentAt: string;
+};

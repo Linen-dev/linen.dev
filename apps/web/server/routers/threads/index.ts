@@ -5,6 +5,7 @@ import validationMiddleware from 'server/middlewares/validation';
 import { ThreadsController } from './controller';
 import {
   findThreadSchema,
+  findTopicsSchema,
   getThreadSchema,
   postThreadSchema,
   putThreadSchema,
@@ -18,6 +19,12 @@ const threadsRouter = Router()
     tenantMiddleware(),
     validationMiddleware(findThreadSchema),
     ThreadsController.find
+  )
+  .get(
+    `${prefix}/topics`,
+    tenantMiddleware(),
+    validationMiddleware(findTopicsSchema),
+    ThreadsController.findTopics
   )
   .post(
     `${prefix}`,

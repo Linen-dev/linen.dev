@@ -4,9 +4,9 @@ import {
   AuthedRequestWithBody,
   Response,
   apiGetChannelProps,
+  AnonymizeType,
 } from '@linen/types';
 import { serializeThread } from '@linen/serializers/thread';
-import { serializeChannel } from '@linen/serializers/channel';
 import { sortBySentAtAsc } from '@linen/utilities/object';
 import validationMiddleware from 'server/middlewares/validation';
 import CommunityService from 'services/community';
@@ -14,9 +14,8 @@ import PermissionsService from 'services/permissions';
 import { findThreadsByCursor, findPinnedThreads } from 'services/threads';
 import { decodeCursor } from 'utilities/cursor';
 import { buildCursor } from 'utilities/buildCursor';
-import { channels } from '@linen/database';
 import { fetchCommon } from 'services/ssr/common';
-import { AnonymizeType } from '@linen/types';
+import { findChannelOrGetLandingChannel } from 'utilities/findChannelOrGetLandingChannel';
 
 const prefix = '/api/ssr/channels';
 const ssrRouter = Router();
@@ -61,24 +60,24 @@ ssrRouter.get(
       publicChannels,
     } = await fetchCommon(permissions, community);
 
-    const channel = findChannelOrGetLandingChannel(
+    const currentChannel = findChannelOrGetLandingChannel(
       [...joinedChannels, ...dmChannels, ...privateChannels, ...publicChannels],
       channelName
     );
-    if (!channel) {
+    if (!currentChannel) {
       res.status(404);
       return res.end();
     }
 
     const { nextCursor, threads } = await getThreads({
-      channelId: channel.id,
+      channelId: currentChannel.id,
       anonymize: currentCommunity.anonymize,
       anonymizeUsers: currentCommunity.anonymizeUsers || false,
       page,
     });
 
     const pinnedThreads = await findPinnedThreads({
-      channelIds: [channel.id],
+      channelIds: [currentChannel.id],
       anonymize: currentCommunity.anonymize,
       anonymizeUsers: currentCommunity.anonymizeUsers,
       limit: 10,
@@ -86,8 +85,8 @@ ssrRouter.get(
 
     const props: apiGetChannelProps = {
       nextCursor,
-      currentChannel: serializeChannel(channel),
-      channelName: channel.channelName,
+      currentChannel,
+      channelName: currentChannel.channelName,
       threads: threads.map(serializeThread),
       pinnedThreads: pinnedThreads.map(serializeThread),
       pathCursor: page || null,
@@ -148,24 +147,6 @@ async function getThreads({
     pathCursor: page,
   });
   return { nextCursor, threads };
-}
-
-function findChannelOrGetLandingChannel(
-  channels: channels[],
-  channelName?: string
-) {
-  if (channelName) {
-    return channels.find(
-      (c) => c.channelName === channelName || c.id === channelName
-    );
-  }
-  const landingChannel = channels.find((c) => c.landing);
-  if (landingChannel) return landingChannel;
-
-  const defaultChannel = channels.find((c) => c.default);
-  if (defaultChannel) return defaultChannel;
-
-  return channels[0];
 }
 
 function parsePage(page: string): number | undefined {

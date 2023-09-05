@@ -7,10 +7,12 @@ import {
   getThreadType,
   postThreadType,
   putThreadType,
+  type findTopicsSchema,
 } from '@linen/types';
 import { Forbidden, NotFound, NotImplemented } from 'server/exceptions';
 import { Roles } from 'server/middlewares/tenant';
 import ThreadsServices from 'services/threads';
+import { findTopics } from 'services/threads/topics';
 import { trackApiEvent, ApiEvent } from 'utilities/ssr-metrics';
 
 export class ThreadsController {
@@ -98,7 +100,23 @@ export class ThreadsController {
 
     res.json({ thread, imitationId: req.body.imitationId });
   }
-
+  static async findTopics(
+    req: AuthedRequestWithTenantAndBody<findTopicsSchema>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { threads, topics } = await findTopics({
+      channelId: req.body.channelId,
+      sentAt: req.body.sentAt ? new Date(req.body.sentAt) : undefined,
+      direction: req.body.direction,
+      anonymize: req.tenant?.anonymize!,
+      accountId: req.tenant?.id!,
+    });
+    if (!threads.length) {
+      return next(new NotFound());
+    }
+    res.json({ threads, topics });
+  }
   static async notImplemented(_: any, _2: any, next: NextFunction) {
     next(new NotImplemented());
   }

@@ -43,3 +43,11 @@ export const postThreadSchema = z.object({
     .optional(),
 });
 export type postThreadType = z.infer<typeof postThreadSchema>;
+
+export const findTopicsSchema = z.object({
+  accountId: z.string().uuid(),
+  channelId: z.string().uuid(),
+  sentAt: z.coerce.date().optional(),
+  direction: z.enum(['lt', 'gt']).optional(),
+});
+export type findTopicsSchema = z.infer<typeof findTopicsSchema>;

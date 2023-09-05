@@ -89,7 +89,7 @@ ssrRouter.get(
     }
     const props: apiGetThreadProps = {
       thread: serializeThread(thread),
-      currentChannel: serializeChannel(currentChannel),
+      currentChannel,
     };
     res.json(props);
     res.end();
