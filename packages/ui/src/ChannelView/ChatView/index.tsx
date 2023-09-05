@@ -10,7 +10,7 @@ import NProgress from 'nprogress';
 import Thread from '@/Thread';
 import Header from '../Header';
 import Empty from './Empty';
-import Chat from './Chat';
+import Chat from '../Chat';
 import Grid from '@/GridContent';
 import Footer from '../Footer';
 import classNames from 'classnames';
@@ -609,7 +609,6 @@ export default function Channel({
                       <Chat
                         channelId={currentChannel.id}
                         currentUser={currentUser}
-                        currentCommunity={currentCommunity}
                         onDrop={handleDrop}
                         sendMessage={sendMessage}
                         progress={progress}
