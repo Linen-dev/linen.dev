@@ -18,6 +18,7 @@ import { ssr, allowAccess, allowManagers } from 'services/ssr/common';
 import { ChannelType, prisma } from '@linen/database';
 import { serializeChannel } from '@linen/serializers/channel';
 import { findChannelOrGetLandingChannel } from 'utilities/findChannelOrGetLandingChannel';
+import { topicGetServerSideProps } from 'services/ssr/topics';
 
 export async function channelGetServerSideProps(
   context: GetServerSidePropsContext,
@@ -50,6 +51,10 @@ export async function channelGetServerSideProps(
     channelName
   );
   if (!channel) return NotFound();
+
+  if (channel.viewType === 'TOPIC') {
+    return topicGetServerSideProps(context, isSubdomainbasedRouting);
+  }
 
   if (
     shouldRedirectToDomain({
@@ -89,7 +94,6 @@ export async function channelGetServerSideProps(
       });
     }
   }
-
   const { nextCursor, threads } = await getThreads({
     channelId: channel.id,
     anonymize: currentCommunity.anonymize,
@@ -168,8 +172,10 @@ async function getThreads({
     sort,
     direction,
     sentAt,
-    threads,
     pathCursor: page,
+    total: threads.length,
+    prevDate: threads[0].sentAt,
+    nextDate: threads[threads.length - 1].sentAt,
   });
   return { nextCursor, threads };
 }
