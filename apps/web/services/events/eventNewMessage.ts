@@ -7,12 +7,7 @@ import { eventNewMentions } from 'services/events/eventNewMentions';
 import { notificationListener } from 'services/notifications';
 import ChannelsService from 'services/channels';
 import { matrixNewMessage } from 'services/matrix';
-
-type MentionNode = {
-  type: string;
-  id: string;
-  source: string;
-};
+import { MentionNode } from '@linen/types';
 
 export type NewMessageEvent = {
   channelId: any;

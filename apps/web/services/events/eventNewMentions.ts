@@ -1,11 +1,6 @@
 import { mentions, prisma } from '@linen/database';
+import { MentionNode } from '@linen/types';
 import { pushUserMention } from 'services/push';
-
-type MentionNode = {
-  type: string;
-  id: string;
-  source: string;
-};
 
 export async function eventNewMentions({
   mentions = [],

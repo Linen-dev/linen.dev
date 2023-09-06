@@ -55,3 +55,9 @@ export type messages = {
   usersId: string | null;
   messageFormat: MessageFormat | null;
 };
+
+export interface MentionNode {
+  type: string;
+  id: string;
+  source: string;
+}

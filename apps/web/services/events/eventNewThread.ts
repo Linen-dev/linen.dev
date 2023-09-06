@@ -5,12 +5,7 @@ import { eventNewMentions } from './eventNewMentions';
 import { notificationListener } from 'services/notifications';
 import ChannelsService from 'services/channels';
 import { matrixNewThread } from 'services/matrix';
-
-interface MentionNode {
-  type: string;
-  id: string;
-  source: string;
-}
+import { MentionNode } from '@linen/types';
 
 type NewThreadEvent = {
   channelId: any;

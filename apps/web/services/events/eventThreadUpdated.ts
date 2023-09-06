@@ -1,11 +1,6 @@
 import type { mentions, users } from '@linen/database';
+import { MentionNode } from '@linen/types';
 import { createTwoWaySyncJob } from 'queue/jobs';
-
-interface MentionNode {
-  type: string;
-  id: string;
-  source: string;
-}
 
 type ThreadUpdatedEvent = {
   channelId: any;
