@@ -49,7 +49,13 @@ export async function eventNewMessage({
   const channel = await ChannelsService.getChannelAndMembersWithAuth(channelId);
 
   const promises: Promise<any>[] = [
-    eventNewMentions({ mentions, mentionNodes, channelId, threadId }),
+    eventNewMentions({
+      mentions,
+      mentionNodes,
+      channelId,
+      threadId,
+      authorId: userId,
+    }),
     ...resolvePush({ channel, userId, event, communityId }),
   ];
 

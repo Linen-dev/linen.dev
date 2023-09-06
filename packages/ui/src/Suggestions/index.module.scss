@@ -36,6 +36,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-weight: bold;
 }
 
 .name {
@@ -47,7 +48,6 @@
 .suggestion:hover {
   cursor: pointer;
   color: var(--color-background);
-  font-weight: 500;
   background: var(--color-primary);
 }
 

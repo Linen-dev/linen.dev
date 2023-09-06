@@ -9,6 +9,7 @@ import {
   SerializedChannel,
   SerializedUser,
   UploadedFile,
+  Roles,
 } from '@linen/types';
 import styles from './index.module.scss';
 import { postprocess } from '@linen/ast';
@@ -171,7 +172,23 @@ export default function Chat({
           uploading={uploading}
           uploads={uploads}
           upload={uploadFiles}
-          fetchMentions={fetchMentions}
+          fetchMentions={(term) =>
+            fetchMentions(term).then((users) => [
+              ...users,
+              ...(!!term &&
+              'channel'.includes(term) &&
+              (currentUser?.role === Roles.ADMIN ||
+                currentUser?.role === Roles.OWNER)
+                ? [
+                    {
+                      id: 'channel',
+                      username: 'channel',
+                      displayName: 'channel',
+                    } as SerializedUser,
+                  ]
+                : []),
+            ])
+          }
           useUsersContext={useUsersContext}
           preview={false}
           onFocus={() => setFocus(true)}

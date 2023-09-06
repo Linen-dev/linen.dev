@@ -8,12 +8,15 @@ import {
   postThreadType,
   putThreadType,
   type findTopicsSchema,
+  MentionNode,
 } from '@linen/types';
 import { Forbidden, NotFound, NotImplemented } from 'server/exceptions';
 import { Roles } from 'server/middlewares/tenant';
 import ThreadsServices from 'services/threads';
 import { findTopics } from 'services/threads/topics';
 import { trackApiEvent, ApiEvent } from 'utilities/ssr-metrics';
+import { parse, find } from '@linen/ast';
+import { isMember, isNotManager } from 'utilities/roles';
 
 export class ThreadsController {
   static async get(
@@ -47,22 +50,20 @@ export class ThreadsController {
     next: NextFunction
   ) {
     // if pinned, must be admin/owner
-    if (typeof req.body.pinned === 'boolean') {
-      if (
-        req.tenant_user?.role !== Roles.OWNER &&
-        req.tenant_user?.role !== Roles.ADMIN
-      ) {
-        return next(new Forbidden('User not allow to pin messages'));
-      }
+    if (
+      typeof req.body.pinned === 'boolean' &&
+      isNotManager(req.tenant_user?.role)
+    ) {
+      return next(new Forbidden('User not allow to pin messages'));
     }
 
     // if member, must be the creator
-    if (req.tenant_user?.role === Roles.MEMBER) {
+    if (isMember(req.tenant_user?.role)) {
       const thread = await ThreadsServices.get({
         id: req.body.id,
         accountId: req.tenant?.id!,
       });
-      if (req.tenant_user.id !== thread?.messages?.shift()?.author?.id) {
+      if (req.tenant_user?.id !== thread?.messages?.shift()?.author?.id) {
         return next(new Forbidden('User not allow to update this message'));
       }
     }
@@ -82,17 +83,30 @@ export class ThreadsController {
       return next(new Forbidden('Community has chat disabled'));
     }
 
-    if (req.tenant?.chat === ChatType.MANAGERS) {
-      if (
-        req.tenant_user?.role !== Roles.OWNER &&
-        req.tenant_user?.role !== Roles.ADMIN
-      ) {
-        return next(new Forbidden('User is not allow to chat'));
-      }
+    if (
+      req.tenant?.chat === ChatType.MANAGERS &&
+      isNotManager(req.tenant_user?.role)
+    ) {
+      return next(new Forbidden('User is not allow to chat'));
+    }
+
+    const tree = parse.linen(req.body.body);
+    const mentionNodes: MentionNode[] = find.mentions(tree);
+
+    if (
+      mentionNodes.find((m) => m.id === 'channel') &&
+      isNotManager(req.tenant_user?.role)
+    ) {
+      return next(new Forbidden('User is not allow to mention a channel'));
     }
 
     const thread = await ThreadsServices.create({
-      ...req.body,
+      accountId: req.tenant?.id!,
+      body: req.body.body,
+      channelId: req.body.channelId,
+      files: req.body.files,
+      imitationId: req.body.imitationId,
+      title: req.body.title,
       authorId: req.tenant_user?.id!,
     });
 

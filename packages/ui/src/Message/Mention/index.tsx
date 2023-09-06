@@ -5,10 +5,11 @@ function getDisplayName(userId: string, mentions?: SerializedUser[]) {
   if (!mentions) {
     return 'User';
   }
-  const user = mentions.find(
-    (user) => user.id === userId || user.externalUserId === userId
-  );
-  return user?.displayName || 'User';
+  return userId === 'channel'
+    ? userId
+    : mentions.find(
+        (user) => user.id === userId || user.externalUserId === userId
+      )?.displayName || 'User';
 }
 
 interface Props {

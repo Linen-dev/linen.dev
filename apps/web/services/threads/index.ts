@@ -209,7 +209,7 @@ class ThreadsServices {
     const mentionNodes = mentions || find.mentions(tree);
     const userIds = unique<string>(
       mentionNodes.map(({ id }: { id: string }) => id)
-    );
+    ).filter((id) => id !== 'channel');
 
     const thread = await prisma.threads.create({
       data: {
