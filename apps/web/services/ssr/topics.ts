@@ -115,7 +115,9 @@ export async function topicGetServerSideProps(
       currentChannel: channel,
       channelName: channel.channelName,
       pinnedThreads: pinnedThreads.map(serializeThread),
+      pathCursor: page || null,
       isSubDomainRouting: isSubdomainbasedRouting,
+      isBot: isCrawler,
     },
   };
 }
