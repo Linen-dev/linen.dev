@@ -11,6 +11,7 @@ import {
   Settings,
   SerializedAccount,
   SerializedThread,
+  SerializedTopic,
   SerializedUser,
   ReminderTypes,
   onResolve,
@@ -29,6 +30,7 @@ import { FiAlertCircle } from '@react-icons/all-files/fi/FiAlertCircle';
 interface Props {
   className?: string;
   thread: SerializedThread;
+  topic?: SerializedTopic;
   permissions?: Permissions;
   isBot?: boolean;
   isSubDomainRouting: boolean;
@@ -80,6 +82,7 @@ interface Props {
 export default function Row({
   className,
   thread,
+  topic,
   permissions,
   isBot = false,
   isSubDomainRouting,
@@ -108,7 +111,10 @@ export default function Row({
   onImageClick,
 }: Props) {
   const { messages } = thread;
-  const message = messages[0];
+  const message = topic
+    ? messages.find(({ id }) => id === topic.messageId)!
+    : messages[0];
+  console.log(topic);
   let users = messages.map((m) => m.author).filter(Boolean) as SerializedUser[];
   const authors = uniqueUsers(users);
   const avatars = authors
@@ -162,10 +168,22 @@ export default function Row({
         header={
           thread.title && (
             <div className={styles.header}>
-              {thread?.channel?.viewType === 'TOPIC' && (
-                <Symbol text={thread.title} />
+              {thread.channel?.viewType === 'TOPIC' ? (
+                <>
+                  <Symbol text={thread.title} />
+                  <span>
+                    {message.id !== messages[0].id && (
+                      <>
+                        <a>@{message.author?.displayName || 'User'}</a> replied
+                        to:{' '}
+                      </>
+                    )}
+                    {thread.title}
+                  </span>
+                </>
+              ) : (
+                <>{thread.title}</>
               )}
-              {thread.title}
             </div>
           )
         }
