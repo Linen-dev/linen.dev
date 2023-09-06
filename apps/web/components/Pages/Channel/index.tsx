@@ -49,7 +49,7 @@ export default function Channel(props: ChannelProps) {
   const [allUsers] = useUsersContext();
   const [currentChannel, setCurrentChannel] = useState(initialChannel);
   const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
-  const [topics, setTopics] = useState<SerializedTopic[]>(initialTopics);
+  const [topics, setTopics] = useState<SerializedTopic[]>(initialTopics || []);
   const { viewType } = currentChannel;
 
   useEffect(() => {
@@ -68,7 +68,7 @@ export default function Channel(props: ChannelProps) {
   }, [initialThreads, viewType]);
 
   useLayoutEffect(() => {
-    setTopics(initialTopics);
+    setTopics(initialTopics || []);
   }, [initialTopics]);
 
   return (

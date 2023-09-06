@@ -11,7 +11,7 @@ import Thread from '@/Thread';
 import Header from '../Header';
 import Empty from '../Empty';
 import Chat from '../Chat';
-import Grid from '@/GridContent';
+import Grid from './Grid';
 import Footer from '../Footer';
 import classNames from 'classnames';
 import PinnedThread from '../PinnedThread';
@@ -570,6 +570,7 @@ export default function Channel({
                           currentChannel={currentChannel}
                           currentCommunity={currentCommunity}
                           threads={threads}
+                          topics={topics}
                           permissions={permissions}
                           readStatus={readStatus}
                           isSubDomainRouting={isSubDomainRouting}

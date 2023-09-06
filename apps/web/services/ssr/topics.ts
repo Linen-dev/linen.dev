@@ -102,8 +102,8 @@ export async function topicGetServerSideProps(
     sentAt,
     pathCursor: page,
     total: topics.length,
-    prevDate: topics[0].sentAt,
-    nextDate: topics[topics.length - 1].sentAt,
+    prevDate: topics[0]?.sentAt,
+    nextDate: topics[topics.length - 1]?.sentAt,
   });
 
   return {

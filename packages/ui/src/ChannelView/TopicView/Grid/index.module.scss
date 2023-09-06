@@ -1,0 +1,43 @@
+.li {
+  background: var(--color-background);
+  border: 1px solid var(--color-background);
+  color: var(--color-text);
+  display: flex;
+}
+.li.active {
+  border-top: 1px solid var(--color-gray-100);
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
+.mouse {
+  .li:hover {
+    background: var(--color-gray-50);
+    cursor: pointer;
+
+    @media (prefers-color-scheme: dark) {
+      background: var(--color-gray-100);
+    }
+  }
+}
+
+.forum {
+  .li {
+    border: none;
+    border-bottom: 1px solid var(--color-gray-200);
+  }
+
+  .li:first-child {
+    margin-top: 1rem;
+  }
+
+  .li:last-child {
+    border-bottom: none;
+  }
+}
+
+.line {
+  margin-top: -0.75rem;
+  position: absolute;
+  width: 100%;
+  z-index: 2;
+}
