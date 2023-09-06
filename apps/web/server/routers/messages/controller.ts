@@ -16,6 +16,7 @@ import {
 } from 'server/exceptions';
 import { Roles } from 'server/middlewares/tenant';
 import MessagesService from 'services/messages';
+import { isNotManager } from 'utilities/roles';
 import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
 
 export class MessagesController {
@@ -40,10 +41,7 @@ export class MessagesController {
     next: NextFunction
   ) {
     // if is not manager, must be the author
-    if (
-      req.tenant_user?.role !== Roles.OWNER &&
-      req.tenant_user?.role !== Roles.ADMIN
-    ) {
+    if (isNotManager(req.tenant_user?.role)) {
       const message = await MessagesService.get({
         id: req.body.id,
         accountId: req.tenant?.id!,
@@ -76,13 +74,11 @@ export class MessagesController {
       return next(new Forbidden('Community has chat disabled'));
     }
 
-    if (req.tenant?.chat === ChatType.MANAGERS) {
-      if (
-        req.tenant_user?.role !== Roles.OWNER &&
-        req.tenant_user?.role !== Roles.ADMIN
-      ) {
-        return next(new Forbidden('User is not allow to chat'));
-      }
+    if (
+      req.tenant?.chat === ChatType.MANAGERS &&
+      isNotManager(req.tenant_user?.role)
+    ) {
+      return next(new Forbidden('User is not allow to chat'));
     }
 
     const message = await MessagesService.create({
