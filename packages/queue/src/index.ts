@@ -1,7 +1,9 @@
 import { downloadCert, getDatabaseUrl } from '@linen/database';
 import { run, parseCronItems, JobHelpers } from 'graphile-worker';
-import { emailNotificationTask } from './tasks/email-notification-sender';
-import { processNewEventTask } from './tasks/email-notification-event';
+import {
+  notificationEvent,
+  notificationEmailTask,
+} from './tasks/email-notification';
 import { reminderMeLaterTask } from './tasks/remind-me-later';
 import { markAllAsReadTask } from './tasks/mark-all-as-read';
 import { twoWaySync } from './tasks/two-way-sync';
@@ -35,8 +37,6 @@ export type TaskInterface = (
   helpers: JobHelpers
 ) => Promise<void>;
 
-const QUEUE_1_NEW_EVENT = 'notification-new-event';
-const QUEUE_2_SEND_EMAIL = 'notification-send-email';
 const QUEUE_REMIND_ME_LATER = 'remind-me-later-queue';
 const QUEUE_MARK_ALL_AS_READ = 'mark-all-as-read-queue';
 const QUEUE_CLEANUP_USER_THREAD_STATUS = 'cleanup-user-thread-status-queue';
@@ -56,8 +56,8 @@ async function runWorker() {
     noHandleSignals: false,
     pollInterval: 1000,
     taskList: {
-      [QUEUE_1_NEW_EVENT]: processNewEventTask as any,
-      [QUEUE_2_SEND_EMAIL]: emailNotificationTask as any,
+      notificationEvent,
+      notificationEmailTask,
       [QUEUE_REMIND_ME_LATER]: reminderMeLaterTask as any,
       [QUEUE_MARK_ALL_AS_READ]: markAllAsReadTask as any,
       [QUEUE_CLEANUP_USER_THREAD_STATUS]: cleanupUserThreadStatusTask as any,

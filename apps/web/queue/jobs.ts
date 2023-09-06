@@ -42,20 +42,6 @@ export async function createSyncJob(payload: SyncJobType) {
   });
 }
 
-export async function createMailingJob(
-  jobKey: string,
-  runAt: Date,
-  payload: emailNotificationPayloadType
-) {
-  const worker = await WorkerSingleton.getInstance();
-  return await worker.addJob('notification-send-email', payload, {
-    jobKey: `notification-send-email:${jobKey}`,
-    maxAttempts: 1,
-    runAt,
-    jobKeyMode: 'preserve_run_at',
-  });
-}
-
 export async function createRemindMeJob(
   jobKey: string,
   runAt: Date,
@@ -82,13 +68,13 @@ export async function createMarkAllAsReadJob(
   });
 }
 
-export async function createNewEventJob(
+export async function createNotificationJob(
   jobKey: string,
   payload: notificationListenerType
 ) {
   const worker = await WorkerSingleton.getInstance();
-  return await worker.addJob('notification-new-event', payload, {
-    jobKey: `notification-new-event:${jobKey}`,
+  return await worker.addJob('notificationEvent', payload, {
+    jobKey: `notificationEvent:${jobKey}`,
     maxAttempts: 1,
   });
 }

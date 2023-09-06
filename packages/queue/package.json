@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "dotenv -e ../../.env tsx watch src/index.ts",
     "build": "node build.mjs",
+    "test": "jest",
     "postbuild": "tsc",
     "start:prod": "pm2-runtime start ecosystem.config.js --only \"queue\"",
     "start:prod:non-queue": "pm2-runtime start ecosystem.config.js --only \"pagination,bot1,bot2\""
@@ -22,15 +23,20 @@
     "@linen/pagination": "*",
     "@linen/sitemap": "*",
     "@linen/types": "*",
-    "@linen/utilities": "*",
-    "@linen/web": "*",
     "@linen/typesense": "*",
+    "@linen/utilities": "*",
+    "@linen/factory": "*",
+    "@linen/web": "*",
     "axios": "^0.27.2",
     "graphile-worker": "^0.13.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "tsx": "^3.12.7",
+    "@types/jest": "^29.5.1",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.0.5",
     "typescript": "^5.1.3"
   }
 }

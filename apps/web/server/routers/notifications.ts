@@ -14,17 +14,6 @@ import { onError } from 'server/middlewares/error';
 const prefix = '/api/notifications';
 const notificationsRouter = Router();
 
-notificationsRouter.get(
-  `${prefix}`,
-  jwtMiddleware(),
-  async (req: AuthedRequest, res: Response) => {
-    const authId = req.session_user?.id!;
-    const data = await notificationService.get({ authId });
-    res.json(data);
-    res.end();
-  }
-);
-
 notificationsRouter.put(
   `${prefix}/mark`,
   jwtMiddleware(),

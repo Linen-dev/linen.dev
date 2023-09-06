@@ -5,7 +5,6 @@ import { v4 } from 'uuid';
 import { create } from '@linen/factory';
 import { login, attachHeaders } from '__tests__/helpers';
 import { testApiHandler } from 'next-test-api-route-handler';
-import * as notificationService from 'services/notifications';
 import {
   notificationType,
   notifications,
@@ -13,6 +12,7 @@ import {
   channels,
   auths,
   threads,
+  prisma,
 } from '@linen/database';
 const handler = require('pages/api/notifications/[[...slug]]');
 
@@ -49,40 +49,14 @@ describe('user.notification', function () {
       lastReplyAt: new Date().getTime(),
     });
 
-    notification = await notificationService.create({
-      authId: mockAuth.id,
-      authorId: mockAuth.id,
-      channelId: mockChannel.id,
-      communityId: mockAccount.id,
-      threadId: mockThread1.id,
-      notificationType: notificationType.CHANNEL,
-    });
-    await notificationService.create({
-      authId: mockAuth.id,
-      authorId: mockAuth.id,
-      channelId: mockChannel.id,
-      communityId: mockAccount.id,
-      notificationType: notificationType.CHANNEL,
-    });
-  });
-
-  test('get notifications for user', async () => {
-    await testApiHandler({
-      handler,
-      url: '/api/notifications',
-      test: async ({ fetch }: any) => {
-        const response = await fetch({
-          method: 'GET',
-          ...attachHeaders({ token }),
-        });
-        const notifications = await response.json();
-        expect(notifications).toHaveLength(1);
-        expect(notifications[0]).toMatchObject({
-          id: notification.id,
-          notificationType: notification.notificationType,
-          threadId: notification.threadId,
-          url: `http:///s/${mockAccount.slackDomain}/t/${mockThread1.incrementId}`,
-        });
+    notification = await prisma.notifications.create({
+      data: {
+        authId: mockAuth.id,
+        authorId: mockAuth.id,
+        channelId: mockChannel.id,
+        communityId: mockAccount.id,
+        threadId: mockThread1.id,
+        notificationType: notificationType.CHANNEL,
       },
     });
   });

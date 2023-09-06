@@ -1,3 +1,13 @@
+jest.mock('graphile-worker', () => ({}));
+jest.mock('@linen/web/mailers/NotificationMailer', () => ({
+  send: jest.fn(),
+  sendMention: jest.fn(),
+  sendThread: jest.fn(),
+}));
+jest.mock('./createNotificationEmailTask', () => ({
+  createNotificationEmailTask: jest.fn(),
+}));
+
 import {
   accounts,
   auths,
@@ -8,21 +18,22 @@ import {
   users,
   prisma,
 } from '@linen/database';
-import { v4 } from 'uuid';
 import { create } from '@linen/factory';
-import * as service from './notifications';
-import * as queue from 'queue/jobs';
 import { serializeThread } from '@linen/serializers/thread';
 import { serializeMessage } from '@linen/serializers/message';
+import { createNotification } from './createNotification';
+import { handleNotificationEmailTask } from './handleNotificationEmailTask';
+import { handleNotificationEvent } from './handleNotificationEvent';
+import * as createNotificationEmailTask from './createNotificationEmailTask';
+import { randomUUID } from 'crypto';
 
-jest.mock('queue/jobs');
-
+const random = () => randomUUID();
 const mockTimestamp = 0;
 const minutes15 = 1000 * 60 * 15;
 const minutes30 = 1000 * 60 * 30;
 
 describe('notification service', () => {
-  const email = v4();
+  const email = random();
   let mockAuth: auths,
     mockAuth2: auths,
     mockAuth3: auths,
@@ -35,7 +46,7 @@ describe('notification service', () => {
   beforeAll(async () => {
     mockCommunity = await create('account', {
       premium: true,
-      redirectDomain: v4(),
+      redirectDomain: random(),
     });
     mockChannel = await create('channel', {
       accountId: mockCommunity.id,
@@ -48,7 +59,7 @@ describe('notification service', () => {
     });
 
     mockAuth2 = await create('auth', {
-      email: v4(),
+      email: random(),
       notificationsByEmail: true,
     });
     mockUser2 = await create('user', {
@@ -57,7 +68,7 @@ describe('notification service', () => {
     });
 
     mockAuth3 = await create('auth', {
-      email: v4(),
+      email: random(),
       notificationsByEmail: true,
     });
     mockUser3 = await create('user', {
@@ -90,7 +101,7 @@ describe('notification service', () => {
       channelId: mockChannel.id,
       usersId: mockUser.id,
     });
-    await service.create({
+    await createNotification({
       authId: mockAuth.id,
       authorId: mockAuth.id,
       channelId: mockChannel.id,
@@ -99,7 +110,7 @@ describe('notification service', () => {
       messageId: mockMessage1.id,
       notificationType: notificationType.MENTION,
     });
-    await service.create({
+    await createNotification({
       authId: mockAuth.id,
       authorId: mockAuth.id,
       channelId: mockChannel.id,
@@ -109,7 +120,7 @@ describe('notification service', () => {
       notificationType: notificationType.MENTION,
     });
 
-    const result = await service.sendEmailNotificationTask({
+    const result = await handleNotificationEmailTask({
       authId: mockAuth.id,
       notificationType: notificationType.MENTION,
     });
@@ -135,7 +146,10 @@ describe('notification service', () => {
       usersId: mockUser.id,
     });
 
-    const mockCreateMailingJob = jest.spyOn(queue, 'createMailingJob');
+    const mockCreateMailingJob = jest.spyOn(
+      createNotificationEmailTask,
+      'createNotificationEmailTask'
+    );
 
     const thread = await prisma.threads.findUnique({
       where: { id: mockThread1.id },
@@ -157,16 +171,19 @@ describe('notification service', () => {
       },
     });
 
-    await service.handleNewEvent({
-      channelId: mockChannel.id,
-      communityId: mockCommunity.id,
-      isReply: false,
-      isThread: true,
-      mentions: [],
-      messageId: mockMessage1.id,
-      threadId: mockMessage1.threadId,
-      thread: JSON.stringify({ ...serializeThread(thread) }),
-    });
+    await handleNotificationEvent(
+      {
+        channelId: mockChannel.id,
+        communityId: mockCommunity.id,
+        isReply: false,
+        isThread: true,
+        mentions: [],
+        messageId: mockMessage1.id,
+        threadId: mockMessage1.threadId,
+        thread: JSON.stringify({ ...serializeThread(thread) }),
+      },
+      jest.fn() as any
+    );
 
     expect(mockCreateMailingJob).toBeCalledTimes(0);
   });
@@ -207,26 +224,33 @@ describe('notification service', () => {
       },
     });
 
-    const mockCreateMailingJob = jest.spyOn(queue, 'createMailingJob');
+    const mockCreateMailingJob = jest.spyOn(
+      createNotificationEmailTask,
+      'createNotificationEmailTask'
+    );
 
-    await service.handleNewEvent({
-      channelId: mockChannel.id,
-      communityId: mockCommunity.id,
-      isReply: false,
-      isThread: true,
-      mentions: thread?.messages[0].mentions!,
-      messageId: mockMessage1.id,
-      threadId: mockMessage1.threadId,
-      thread: JSON.stringify({ ...serializeThread(thread) }),
-    });
-    expect(mockCreateMailingJob).toHaveBeenCalledWith(
-      `mention-${mockUser2.authsId}`,
-      new Date(mockTimestamp + minutes15),
+    await handleNotificationEvent(
       {
+        channelId: mockChannel.id,
+        communityId: mockCommunity.id,
+        isReply: false,
+        isThread: true,
+        mentions: thread?.messages[0].mentions!,
+        messageId: mockMessage1.id,
+        threadId: mockMessage1.threadId,
+        thread: JSON.stringify({ ...serializeThread(thread) }),
+      },
+      jest.fn() as any
+    );
+    expect(mockCreateMailingJob).toHaveBeenCalledWith({
+      helpers: expect.any(Function),
+      jobKey: `mention-${mockUser2.authsId}`,
+      payload: {
         authId: `${mockUser2.authsId}`,
         notificationType: 'MENTION',
-      }
-    );
+      },
+      runAt: new Date(mockTimestamp + minutes15),
+    });
     expect(mockCreateMailingJob).toBeCalledTimes(1);
   });
 
@@ -246,43 +270,48 @@ describe('notification service', () => {
       usersId: mockUser2.id,
     });
 
-    const mockCreateMailingJob = jest.spyOn(queue, 'createMailingJob');
+    const mockCreateMailingJob = jest.spyOn(
+      createNotificationEmailTask,
+      'createNotificationEmailTask'
+    );
 
     const message = await prisma.messages.findFirst({
       where: { id: mockMessage2.id },
       include: {
         author: true,
+        reactions: true,
+        attachments: true,
         mentions: {
           include: {
-            users: {
-              include: {
-                auth: true,
-              },
-            },
+            users: true,
           },
         },
       },
+      rejectOnNotFound: true,
     });
 
-    await service.handleNewEvent({
-      channelId: mockChannel.id,
-      communityId: mockCommunity.id,
-      isReply: true,
-      isThread: false,
-      mentions: [],
-      messageId: mockMessage2.id,
-      threadId: mockMessage2.threadId,
-      message: JSON.stringify({ ...serializeMessage(message) }),
-    });
-
-    expect(mockCreateMailingJob).toHaveBeenCalledWith(
-      `thread-${mockUser.authsId}`,
-      new Date(mockTimestamp + minutes30),
+    await handleNotificationEvent(
       {
+        channelId: mockChannel.id,
+        communityId: mockCommunity.id,
+        isReply: true,
+        isThread: false,
+        mentions: [],
+        messageId: mockMessage2.id,
+        threadId: mockMessage2.threadId,
+        message: JSON.stringify({ ...serializeMessage(message) }),
+      },
+      jest.fn() as any
+    );
+    expect(mockCreateMailingJob).toHaveBeenCalledWith({
+      helpers: expect.any(Function),
+      jobKey: `thread-${mockUser.authsId}`,
+      payload: {
         authId: `${mockUser.authsId}`,
         notificationType: 'THREAD',
-      }
-    );
+      },
+      runAt: new Date(mockTimestamp + minutes30),
+    });
     expect(mockCreateMailingJob).toBeCalledTimes(1);
   });
 
@@ -307,52 +336,57 @@ describe('notification service', () => {
       usersId: mockUser3.id,
     });
 
-    const mockCreateMailingJob = jest.spyOn(queue, 'createMailingJob');
+    const mockCreateMailingJob = jest.spyOn(
+      createNotificationEmailTask,
+      'createNotificationEmailTask'
+    );
 
     const message = await prisma.messages.findFirst({
       where: { id: mockMessage3.id },
       include: {
         author: true,
+        reactions: true,
+        attachments: true,
         mentions: {
           include: {
-            users: {
-              include: {
-                auth: true,
-              },
-            },
+            users: true,
           },
         },
       },
+      rejectOnNotFound: true,
     });
 
-    await service.handleNewEvent({
-      channelId: mockChannel.id,
-      communityId: mockCommunity.id,
-      isReply: true,
-      isThread: false,
-      mentions: [],
-      messageId: mockMessage3.id,
-      threadId: mockMessage3.threadId,
-      message: JSON.stringify({ ...serializeMessage(message) }),
-    });
-
-    expect(mockCreateMailingJob).toHaveBeenCalledWith(
-      `thread-${mockUser.authsId}`,
-      new Date(mockTimestamp + minutes30),
+    await handleNotificationEvent(
       {
+        channelId: mockChannel.id,
+        communityId: mockCommunity.id,
+        isReply: true,
+        isThread: false,
+        mentions: [],
+        messageId: mockMessage3.id,
+        threadId: mockMessage3.threadId,
+        message: JSON.stringify({ ...serializeMessage(message) }),
+      },
+      jest.fn() as any
+    );
+    expect(mockCreateMailingJob).toHaveBeenCalledWith({
+      helpers: expect.any(Function),
+      jobKey: `thread-${mockUser.authsId}`,
+      payload: {
         authId: `${mockUser.authsId}`,
         notificationType: 'THREAD',
-      }
-    );
-    expect(mockCreateMailingJob).toHaveBeenCalledWith(
-      `thread-${mockUser2.authsId}`,
-      new Date(mockTimestamp + minutes30),
-      {
+      },
+      runAt: new Date(mockTimestamp + minutes30),
+    });
+    expect(mockCreateMailingJob).toHaveBeenCalledWith({
+      helpers: expect.any(Function),
+      jobKey: `thread-${mockUser2.authsId}`,
+      payload: {
         authId: `${mockUser2.authsId}`,
         notificationType: 'THREAD',
-      }
-    );
-
+      },
+      runAt: new Date(mockTimestamp + minutes30),
+    });
     expect(mockCreateMailingJob).toBeCalledTimes(2);
   });
 
@@ -377,50 +411,57 @@ describe('notification service', () => {
       usersId: mockUser3.id,
     });
 
-    const mockCreateMailingJob = jest.spyOn(queue, 'createMailingJob');
+    const mockCreateMailingJob = jest.spyOn(
+      createNotificationEmailTask,
+      'createNotificationEmailTask'
+    );
 
     const message = await prisma.messages.findFirst({
       where: { id: mockMessage2.id },
       include: {
         author: true,
+        reactions: true,
+        attachments: true,
         mentions: {
           include: {
-            users: {
-              include: {
-                auth: true,
-              },
-            },
+            users: true,
           },
         },
       },
+      rejectOnNotFound: true,
     });
 
-    await service.handleNewEvent({
-      channelId: mockChannel.id,
-      communityId: mockCommunity.id,
-      isReply: true,
-      isThread: false,
-      mentions: [],
-      messageId: mockMessage2.id,
-      threadId: mockMessage2.threadId,
-      thread: JSON.stringify({ ...serializeMessage(message) }),
-    });
-    expect(mockCreateMailingJob).toHaveBeenCalledWith(
-      `thread-${mockUser.authsId}`,
-      new Date(mockTimestamp + minutes30),
+    await handleNotificationEvent(
       {
+        channelId: mockChannel.id,
+        communityId: mockCommunity.id,
+        isReply: true,
+        isThread: false,
+        mentions: [],
+        messageId: mockMessage2.id,
+        threadId: mockMessage2.threadId,
+        thread: JSON.stringify({ ...serializeMessage(message) }),
+      },
+      jest.fn() as any
+    );
+    expect(mockCreateMailingJob).toHaveBeenCalledWith({
+      helpers: expect.any(Function),
+      jobKey: `thread-${mockUser.authsId}`,
+      payload: {
         authId: `${mockUser.authsId}`,
         notificationType: 'THREAD',
-      }
-    );
-    expect(mockCreateMailingJob).toHaveBeenCalledWith(
-      `thread-${mockUser2.authsId}`,
-      new Date(mockTimestamp + minutes30),
-      {
+      },
+      runAt: new Date(mockTimestamp + minutes30),
+    });
+    expect(mockCreateMailingJob).toHaveBeenCalledWith({
+      helpers: expect.any(Function),
+      jobKey: `thread-${mockUser2.authsId}`,
+      payload: {
         authId: `${mockUser2.authsId}`,
         notificationType: 'THREAD',
-      }
-    );
+      },
+      runAt: new Date(mockTimestamp + minutes30),
+    });
     expect(mockCreateMailingJob).toBeCalledTimes(2);
   });
 });

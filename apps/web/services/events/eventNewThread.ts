@@ -1,8 +1,7 @@
 import { ChannelType, mentions, users } from '@linen/database';
-import { createTwoWaySyncJob } from 'queue/jobs';
+import { createNotificationJob, createTwoWaySyncJob } from 'queue/jobs';
 import { resolvePush } from 'services/push';
 import { eventNewMentions } from './eventNewMentions';
-import { notificationListener } from 'services/notifications';
 import ChannelsService from 'services/channels';
 import { matrixNewThread } from 'services/matrix';
 import { MentionNode } from '@linen/types';
@@ -60,7 +59,11 @@ export async function eventNewThread({
   if (isLinenMessage) {
     promises.push(
       ...[
-        notificationListener({ ...event, communityId, mentions }),
+        createNotificationJob(messageId, {
+          ...event,
+          communityId,
+          mentions,
+        }),
         createTwoWaySyncJob({ ...event, event: 'newThread', id: messageId }),
         matrixNewThread(event),
       ]
