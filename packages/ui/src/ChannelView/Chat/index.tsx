@@ -4,12 +4,17 @@ import MessageForm from '@/MessageForm';
 import MessagePreview from '@/MessagePreview';
 import TextInput from '@/TextInput';
 import Field from '@/Field';
-import { MessageFormat, SerializedUser, UploadedFile } from '@linen/types';
+import {
+  MessageFormat,
+  SerializedChannel,
+  SerializedUser,
+  UploadedFile,
+} from '@linen/types';
 import styles from './index.module.scss';
 import { postprocess } from '@linen/ast';
 
 interface Props {
-  channelId: string;
+  channel: SerializedChannel;
   currentUser?: SerializedUser | null;
   onDrop({
     source,
@@ -42,7 +47,7 @@ interface Props {
 }
 
 export default function Chat({
-  channelId,
+  channel,
   currentUser,
   progress,
   uploading,
@@ -68,6 +73,8 @@ export default function Chat({
     const node = ref.current as HTMLElement;
     node.classList.remove(styles.hover);
   }
+
+  const channelId = channel.id;
 
   return (
     <div
@@ -106,6 +113,7 @@ export default function Chat({
         <MessagePreview
           currentUser={currentUser}
           title={title}
+          viewType={channel.viewType}
           message={{
             body: postprocess(message, allUsers),
             sentAt: new Date().toISOString(),

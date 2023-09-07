@@ -114,7 +114,6 @@ export default function Row({
   const message = topic
     ? messages.find(({ id }) => id === topic.messageId)!
     : messages[0];
-  console.log(topic);
   let users = messages.map((m) => m.author).filter(Boolean) as SerializedUser[];
   const authors = uniqueUsers(users);
   const avatars = authors

@@ -609,7 +609,7 @@ export default function Channel({
                   <>
                     {!currentChannel.readonly && (
                       <Chat
-                        channelId={currentChannel.id}
+                        channel={currentChannel}
                         currentUser={currentUser}
                         onDrop={handleDrop}
                         sendMessage={sendMessage}
