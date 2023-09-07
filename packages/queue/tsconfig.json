@@ -15,7 +15,8 @@
       "queue/*": ["../../apps/web/queue/*"],
       "config": ["../../apps/web/config"],
       "config/*": ["../../apps/web/config/*"],
-      "mailers/*": ["../../apps/web/mailers/*"]
+      "mailers/*": ["../../apps/web/mailers/*"],
+      "@linen/types": ["../types/src"]
     }
   }
 }

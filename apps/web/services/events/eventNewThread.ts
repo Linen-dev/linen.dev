@@ -63,6 +63,7 @@ export async function eventNewThread({
           ...event,
           communityId,
           mentions,
+          mentionNodes,
         }),
         createTwoWaySyncJob({ ...event, event: 'newThread', id: messageId }),
         matrixNewThread(event),

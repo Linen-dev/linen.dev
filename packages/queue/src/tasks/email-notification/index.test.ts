@@ -29,7 +29,7 @@ import { randomUUID } from 'crypto';
 
 const random = () => randomUUID();
 const mockTimestamp = 0;
-const minutes15 = 1000 * 60 * 15;
+const minutes5 = 1000 * 60 * 5;
 const minutes30 = 1000 * 60 * 30;
 
 describe('notification service', () => {
@@ -181,6 +181,7 @@ describe('notification service', () => {
         messageId: mockMessage1.id,
         threadId: mockMessage1.threadId,
         thread: JSON.stringify({ ...serializeThread(thread) }),
+        mentionNodes: [],
       },
       jest.fn() as any
     );
@@ -239,6 +240,7 @@ describe('notification service', () => {
         messageId: mockMessage1.id,
         threadId: mockMessage1.threadId,
         thread: JSON.stringify({ ...serializeThread(thread) }),
+        mentionNodes: [],
       },
       jest.fn() as any
     );
@@ -249,7 +251,7 @@ describe('notification service', () => {
         authId: `${mockUser2.authsId}`,
         notificationType: 'MENTION',
       },
-      runAt: new Date(mockTimestamp + minutes15),
+      runAt: new Date(mockTimestamp + minutes5),
     });
     expect(mockCreateMailingJob).toBeCalledTimes(1);
   });
@@ -300,6 +302,7 @@ describe('notification service', () => {
         messageId: mockMessage2.id,
         threadId: mockMessage2.threadId,
         message: JSON.stringify({ ...serializeMessage(message) }),
+        mentionNodes: [],
       },
       jest.fn() as any
     );
@@ -366,6 +369,7 @@ describe('notification service', () => {
         messageId: mockMessage3.id,
         threadId: mockMessage3.threadId,
         message: JSON.stringify({ ...serializeMessage(message) }),
+        mentionNodes: [],
       },
       jest.fn() as any
     );
@@ -441,6 +445,7 @@ describe('notification service', () => {
         messageId: mockMessage2.id,
         threadId: mockMessage2.threadId,
         thread: JSON.stringify({ ...serializeMessage(message) }),
+        mentionNodes: [],
       },
       jest.fn() as any
     );

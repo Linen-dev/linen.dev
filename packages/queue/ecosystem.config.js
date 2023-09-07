@@ -2,28 +2,28 @@ module.exports = {
   apps: [
     {
       name: 'queue',
-      script: 'yarn tsx ./src/index.ts',
+      script: 'node dist/index.js',
       env: {
         NODE_ENV: 'production',
       },
     },
     {
       name: 'bot1',
-      script: 'yarn tsx ./src/discord-bot.ts bot=1',
+      script: 'node dist/discord-bot.js bot=1',
       env: {
         NODE_ENV: 'production',
       },
     },
     {
       name: 'bot2',
-      script: 'yarn tsx ./src/discord-bot.ts bot=2',
+      script: 'node dist/discord-bot.js bot=2',
       env: {
         NODE_ENV: 'production',
       },
     },
     {
       name: 'pagination',
-      script: 'yarn tsx ./src/pagination.ts',
+      script: 'node dist/pagination.js',
       env: {
         NODE_ENV: 'production',
       },

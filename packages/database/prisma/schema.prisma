@@ -489,6 +489,8 @@ enum notificationType {
   MENTION
   THREAD
   CHANNEL
+  AT_CHANNEL
+  BANG_CHANNEL
 }
 
 model notifications {

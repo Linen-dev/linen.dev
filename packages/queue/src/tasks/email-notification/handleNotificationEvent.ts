@@ -29,10 +29,10 @@ export async function handleNotificationEvent(
     return 'missing authorId';
   }
 
-  await processMentions(data, authorId, helpers);
+  await processMentions({ ...data, authorId, helpers });
 
   if (data.isReply) {
-    await processSubscribers(data, authorId, helpers);
+    await processSubscribers({ ...data, authorId, helpers });
     // TODO: check for users subscribed to the channel
   }
 

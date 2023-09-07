@@ -21,6 +21,12 @@ export async function handleNotificationEmailTask(
   if (payload.notificationType === 'THREAD') {
     return await sendEmailNotification(payload, NotificationMailer.sendThread);
   }
+  if (payload.notificationType === 'BANG_CHANNEL') {
+    return await sendEmailNotification(payload, NotificationMailer.sendThread);
+  }
+  if (payload.notificationType === 'AT_CHANNEL') {
+    return await sendEmailNotification(payload, NotificationMailer.sendMention);
+  }
 }
 
 async function sendEmailNotification(

@@ -1,15 +1,25 @@
-import { notificationListenerType, notificationType } from '@linen/types';
+import { notificationType } from '@linen/types';
 import { JobHelpers } from 'graphile-worker';
 import { prisma } from '@linen/database';
 import { createNotificationEmailTask } from './createNotificationEmailTask';
 import { scheduleDate } from './scheduleDate';
 import { createNotification } from './createNotification';
 
-export async function processSubscribers(
-  data: notificationListenerType,
-  authorId: string,
-  helpers: JobHelpers
-) {
+export async function processSubscribers({
+  threadId,
+  channelId,
+  communityId,
+  messageId,
+  authorId,
+  helpers,
+}: {
+  threadId: string;
+  channelId: string;
+  communityId: string;
+  messageId: string;
+  authorId: string;
+  helpers: JobHelpers;
+}) {
   const thread = await prisma.threads.findUnique({
     select: {
       channel: { select: { accountId: true } },
@@ -24,7 +34,7 @@ export async function processSubscribers(
         },
       },
     },
-    where: { id: data.threadId },
+    where: { id: threadId },
   });
 
   // unique users from mentions, replies and the author
@@ -61,10 +71,10 @@ export async function processSubscribers(
       await createNotification({
         authId,
         authorId,
-        channelId: data.channelId,
-        communityId: data.communityId,
-        threadId: data.threadId,
-        messageId: data.messageId,
+        channelId,
+        communityId,
+        threadId,
+        messageId,
         notificationType: type,
       });
       const runAt = scheduleDate(type); // add 30 min

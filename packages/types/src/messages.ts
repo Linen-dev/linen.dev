@@ -56,8 +56,15 @@ export type messages = {
   messageFormat: MessageFormat | null;
 };
 
+export const MentionType = makeEnum({
+  signal: 'signal',
+  user: 'user',
+});
+
+export type MentionType = typeof MentionType[keyof typeof MentionType];
+
 export interface MentionNode {
-  type: string;
+  type: MentionType;
   id: string;
   source: string;
 }
