@@ -156,6 +156,14 @@ export default function Grid({
             </li>
           );
         } else if (item.type === RowType.Topic) {
+          let previousThread = null;
+          let nextThread = null;
+          if (index > 0) {
+            previousThread = sorted[index - 1].content as SerializedThread;
+          }
+          if (index < sorted.length - 1) {
+            nextThread = sorted[index + 1].content as SerializedThread;
+          }
           const thread = item.content as SerializedThread;
           const { incrementId, slug, id } = thread;
           return (
@@ -191,6 +199,8 @@ export default function Grid({
                 onUnread={onUnread}
                 onLoad={onLoad}
                 onImageClick={onImageClick}
+                previousThread={previousThread}
+                nextThread={nextThread}
               />
             </li>
           );

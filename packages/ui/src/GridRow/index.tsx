@@ -66,6 +66,7 @@ interface Props {
   isUserActive?: boolean;
   isBot?: boolean;
   isPreviousMessageFromSameUser?: boolean;
+  isPreviousMessageFromSameThread?: boolean;
   isSubDomainRouting: boolean;
   settings: Settings;
   permissions?: Permissions;
@@ -160,6 +161,7 @@ function Row({
   isUserActive,
   isBot = false,
   isPreviousMessageFromSameUser,
+  isPreviousMessageFromSameThread,
   isSubDomainRouting,
   currentUser,
   settings,
@@ -190,6 +192,7 @@ function Row({
   const [ref, hover] = useHover<HTMLDivElement>();
   const { ref: inViewRef, inView } = useInView();
   const top = !isPreviousMessageFromSameUser;
+  const bottom = !isPreviousMessageFromSameThread;
   const resolution = thread.resolutionId === message.id;
 
   function onLinkClick(event: React.MouseEvent<HTMLAnchorElement>) {
@@ -237,7 +240,7 @@ function Row({
         [styles.top]: top,
       })}
     >
-      {header}
+      {!isPreviousMessageFromSameThread && header}
       <div
         ref={inViewRef}
         className={classNames(styles.row, {

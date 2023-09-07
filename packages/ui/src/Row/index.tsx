@@ -16,6 +16,7 @@ import {
   ReminderTypes,
   onResolve,
   ThreadState,
+  SerializedMessage,
 } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 import { FiMessageCircle } from '@react-icons/all-files/fi/FiMessageCircle';
@@ -77,6 +78,9 @@ interface Props {
   onRemind?(threadId: string, reminder: ReminderTypes): void;
   onUnread?(threadId: string): void;
   onImageClick?(src: string): void;
+  previousMessage?: SerializedMessage;
+  previousThread?: SerializedThread;
+  nextThread?: SerializedThread;
 }
 
 export default function Row({
@@ -109,6 +113,9 @@ export default function Row({
   onRemind,
   onUnread,
   onImageClick,
+  previousMessage,
+  previousThread,
+  nextThread,
 }: Props) {
   const { messages } = thread;
   const message = topic
@@ -130,6 +137,11 @@ export default function Row({
   const signalMentionCount = userMentions.filter(
     (mention) => mention === 'signal'
   ).length;
+  const isPreviousMessageFromSameUser =
+    previousMessage && previousMessage.usersId === message.usersId;
+  const isPreviousMessageFromSameThread =
+    previousThread && previousThread.id === thread.id;
+  const isNextMessageFromSameThread = nextThread && nextThread.id === thread.id;
 
   return (
     <Droppable
@@ -143,6 +155,8 @@ export default function Row({
         thread={thread}
         message={message}
         isSubDomainRouting={isSubDomainRouting}
+        isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}
+        isPreviousMessageFromSameThread={isPreviousMessageFromSameThread}
         isBot={isBot}
         settings={settings}
         permissions={permissions}
@@ -197,7 +211,8 @@ export default function Row({
             (showVotes && onReaction) ||
             (thread?.channel?.viewType === 'FORUM' && onReaction);
           const renderMessages = messages.length > 1;
-          const showFooter = renderVotes || renderMessages;
+          const showFooter =
+            !isNextMessageFromSameThread && (renderVotes || renderMessages);
           return (
             showFooter && (
               <div className={styles.footer}>
