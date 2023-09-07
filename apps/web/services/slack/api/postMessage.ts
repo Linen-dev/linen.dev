@@ -265,7 +265,7 @@ async function newThread({
     return { slackResponse: response.error };
   }
   logger.error({ response });
-  throw 'something went wrong';
+  throw response.error || 'something went wrong';
 }
 
 function isAllowToSendMessages(s: slackAuthorizations): boolean {
