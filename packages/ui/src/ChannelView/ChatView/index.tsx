@@ -15,8 +15,8 @@ import Grid from '@/GridContent';
 import Footer from '../Footer';
 import classNames from 'classnames';
 import PinnedThread from '../PinnedThread';
-import { sendThreadMessageWrapper } from '../utilities/sendThreadMessageWrapper';
-import { sendMessageWrapper } from '../utilities/sendMessageWrapper';
+import { createMessageWrapper } from '../utilities/createMessageWrapper';
+import { createThreadWrapper } from '../utilities/createThreadWrapper';
 import {
   onResolve,
   Permissions,
@@ -411,7 +411,7 @@ export default function Channel({
     []
   );
 
-  const sendMessage = sendMessageWrapper({
+  const sendMessage = createThreadWrapper({
     currentUser: permissions.is_member ? currentUser : null,
     allUsers,
     currentChannel,
@@ -430,7 +430,7 @@ export default function Channel({
     []
   );
 
-  const sendThreadMessage = sendThreadMessageWrapper({
+  const sendThreadMessage = createMessageWrapper({
     currentUser: permissions.is_member ? currentUser : null,
     allUsers,
     setUploads,

@@ -10,7 +10,7 @@ import {
 import { createMessageImitation } from '@linen/serializers/message';
 import { localStorage } from '@linen/utilities/storage';
 
-export function sendThreadMessageWrapper({
+export function createMessageWrapper({
   currentUser,
   allUsers,
   setUploads,
