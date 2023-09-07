@@ -945,6 +945,7 @@ export default function ChannelView({
           permissions={permissions}
           currentThreadId={currentThreadId}
           setThreads={setThreads}
+          setTopics={setTopics}
           deleteMessage={deleteMessage}
           editMessage={editMessage}
           muteThread={muteThread}

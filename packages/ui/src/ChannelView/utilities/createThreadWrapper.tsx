@@ -5,6 +5,7 @@ import {
   SerializedAccount,
   UploadedFile,
   StartSignUpProps,
+  SerializedTopic,
 } from '@linen/types';
 import { createThreadImitation } from '@linen/serializers/thread';
 import { localStorage } from '@linen/utilities/storage';
@@ -15,6 +16,7 @@ export function createThreadWrapper({
   currentChannel,
   setUploads,
   setThreads,
+  setTopics,
   currentCommunity,
   startSignUp,
   createThread,
@@ -25,6 +27,7 @@ export function createThreadWrapper({
   currentChannel: SerializedChannel;
   setUploads: any;
   setThreads: any;
+  setTopics?: any;
   currentCommunity: SerializedAccount;
   startSignUp: (props: StartSignUpProps) => Promise<void>;
   createThread: any;
@@ -63,6 +66,18 @@ export function createThreadWrapper({
     setThreads((threads: SerializedThread[]) => {
       return [...threads, imitation];
     });
+    if (setTopics) {
+      setTopics((topics: SerializedTopic[]) => {
+        return [
+          ...topics,
+          {
+            threadId: imitation.id,
+            messageId: imitation.messages[0].id,
+            sentAt: imitation.sentAt,
+          },
+        ];
+      });
+    }
     setTimeout(() => scroll(), 0);
     return createThread({
       body: message,
@@ -91,6 +106,20 @@ export function createThreadWrapper({
             thread,
           ];
         });
+        if (setTopics) {
+          setTopics((topics: SerializedTopic[]) => {
+            return topics.map((topic) => {
+              if (topic.threadId === imitationId) {
+                return {
+                  threadId: thread.id,
+                  messageId: thread.messages[0].id,
+                  sentAt: thread.sentAt,
+                };
+              }
+              return topic;
+            });
+          });
+        }
       }
     );
   };
