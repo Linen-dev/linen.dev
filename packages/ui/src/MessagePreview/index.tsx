@@ -2,20 +2,37 @@ import React from 'react';
 import Avatar from '@/Avatar';
 import Badge from '@/Badge';
 import Message from '@/Message';
-import { SerializedMessage, SerializedUser } from '@linen/types';
+import Symbol from '@/Symbol';
+import {
+  SerializedMessage,
+  SerializedUser,
+  ChannelViewType,
+} from '@linen/types';
 import styles from './index.module.scss';
 
 interface Props {
   title?: string;
   message: SerializedMessage;
+  viewType?: ChannelViewType;
   currentUser?: SerializedUser | null;
   badge?: boolean;
 }
 
-function Row({ title, badge, message, currentUser }: Props) {
+function MessagePreview({
+  title,
+  badge,
+  message,
+  viewType,
+  currentUser,
+}: Props) {
   return (
     <div className={styles.container}>
-      {title && <div className={styles.title}>{title}</div>}
+      {title && (
+        <div className={styles.title}>
+          {viewType === ChannelViewType.TOPIC && <Symbol text={title} />}
+          <span>{title}</span>
+        </div>
+      )}
       {badge && <Badge className={styles.badge}>Preview</Badge>}
       <div className={styles.row}>
         <div className={styles.left}>
@@ -46,4 +63,4 @@ function Row({ title, badge, message, currentUser }: Props) {
   );
 }
 
-export default Row;
+export default MessagePreview;
