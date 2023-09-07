@@ -301,6 +301,19 @@ export default function ChannelView({
           ...threads.filter(({ id }) => id !== imitationId && id !== threadId),
           thread,
         ]);
+
+        if (currentChannel.viewType === 'TOPIC') {
+          setTopics((topics) => {
+            return [
+              ...topics,
+              {
+                threadId: threadId,
+                messageId: thread.messages[0].id,
+                sentAt: thread.sentAt,
+              },
+            ];
+          });
+        }
       }
     } catch (e) {
       if (process.env.NODE_ENV === 'development') {
