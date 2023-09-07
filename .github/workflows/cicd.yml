@@ -48,7 +48,7 @@ jobs:
           node-version: 18
           cache: 'yarn'
       - run: yarn install --frozen-lockfile
-      - run: yarn migrate:db
+      - run: yarn migrate:test:db
       - run: yarn test:all
         env: 
           DATABASE_URL: "postgresql://linentest:linentest@localhost:5432/linentest"
