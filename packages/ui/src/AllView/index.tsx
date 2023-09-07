@@ -21,6 +21,7 @@ import { addMessageToThread } from './state';
 import debounce from '@linen/utilities/debounce';
 import type { ApiClient } from '@linen/api-client';
 import { addReactionToThread } from '@linen/utilities/reaction';
+import usePresenceWebsockets from '@linen/hooks/websockets-presence';
 
 const { Header, Grid } = Pages.All;
 const { SidebarLayout } = Layouts.Shared;
@@ -460,6 +461,26 @@ export default function AllView({
     [data, thread]
   );
 
+  const [activeUsers, setActiveUsers] = useState<string[]>([]);
+
+  token &&
+    usePresenceWebsockets({
+      communityId,
+      permissions,
+      token,
+      onPresenceState(state: any) {
+        const users = Object.keys(state);
+        setActiveUsers(users);
+      },
+      onPresenceDiff(state: any) {
+        setActiveUsers((users) => {
+          const joins = Object.keys(state.joins);
+          const leaves = Object.keys(state.leaves);
+          return [...joins, ...users.filter((id) => !leaves.includes(id))];
+        });
+      },
+    });
+
   const { threads } = data;
 
   return (
@@ -490,6 +511,8 @@ export default function AllView({
                 onSelect={(thread: SerializedThread) => {
                   setThread(thread);
                 }}
+                currentUser={currentUser}
+                activeUsers={activeUsers}
               />
             ) : (
               <Empty loading={loading} />
@@ -525,6 +548,7 @@ export default function AllView({
                 onThreadMessage(threadId, message, messageId, imitationId);
               }}
               useUsersContext={useUsersContext}
+              activeUsers={activeUsers}
             />
           )
         }

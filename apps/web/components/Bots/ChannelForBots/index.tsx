@@ -60,6 +60,7 @@ export default function ChannelForBots({
           onReaction={() => {}}
           onDrop={() => {}}
           Row={RowForBots({ Row })}
+          activeUsers={[]}
         />
         <PaginationNumbers
           currentChannel={currentChannel}

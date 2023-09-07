@@ -9,6 +9,7 @@ import { Permissions } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 import styles from './index.module.scss';
 import { getImageUrls } from './utilities/thread';
+import { isAuthorActive } from '@linen/utilities/isAuthorActive';
 
 interface Props {
   thread: SerializedThread;
@@ -34,23 +35,6 @@ interface Props {
     type: string;
     active: boolean;
   }): void;
-}
-
-function isAuthorActive(
-  author: SerializedUser | null,
-  currentUser: SerializedUser | null,
-  activeUsers?: string[]
-) {
-  if (!author) {
-    return false;
-  }
-  if (author.id === currentUser?.id) {
-    return true;
-  }
-  if (author.authsId && activeUsers?.includes(author.authsId)) {
-    return true;
-  }
-  return false;
 }
 
 function Messages({

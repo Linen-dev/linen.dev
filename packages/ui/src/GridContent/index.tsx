@@ -57,6 +57,7 @@ export default function GridContent({
   onRemind,
   onUnread,
   Row = DefaultRow,
+  activeUsers,
 }: {
   className?: string;
   currentChannel: SerializedChannel;
@@ -103,7 +104,8 @@ export default function GridContent({
   onRemind?(threaId: string, reminder: ReminderTypes): void;
   onUnread?(threadId: string): void;
   onLoad?(): void;
-  Row?(...args: any): JSX.Element;
+  Row?: typeof DefaultRow;
+  activeUsers: string[];
 }) {
   const [preview, setPreview] = useState<string | null>(null);
   const images = getImageUrls(threads);
@@ -163,8 +165,8 @@ export default function GridContent({
               })}
             >
               <Row
-                incrementId={incrementId}
-                slug={slug}
+                // incrementId={incrementId}
+                // slug={slug}
                 className={styles.row}
                 thread={thread}
                 permissions={permissions}
@@ -187,6 +189,7 @@ export default function GridContent({
                 onUnread={onUnread}
                 onLoad={onLoad}
                 onImageClick={onImageClick}
+                activeUsers={activeUsers}
               />
             </li>
           );

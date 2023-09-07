@@ -58,6 +58,7 @@ export function Hits({
                 settings={settings}
                 thread={thread}
                 truncate
+                activeUsers={[]}
               />
             </a>
           );
@@ -91,6 +92,7 @@ export function Hits({
                 settings={settings}
               />
             }
+            activeUsers={[]}
           />
         )}
       </div>

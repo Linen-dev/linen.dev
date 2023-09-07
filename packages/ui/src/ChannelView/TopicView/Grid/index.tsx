@@ -60,6 +60,7 @@ export default function Grid({
   onRemind,
   onUnread,
   Row = DefaultRow,
+  activeUsers,
 }: {
   className?: string;
   currentChannel: SerializedChannel;
@@ -107,7 +108,8 @@ export default function Grid({
   onRemind?(threaId: string, reminder: ReminderTypes): void;
   onUnread?(threadId: string): void;
   onLoad?(): void;
-  Row?(...args: any): JSX.Element;
+  Row?: typeof DefaultRow;
+  activeUsers: string[];
 }) {
   const [preview, setPreview] = useState<string | null>(null);
   const images = getImageUrls(threads);
@@ -156,8 +158,8 @@ export default function Grid({
             </li>
           );
         } else if (item.type === RowType.Topic) {
-          let previousThread = null;
-          let nextThread = null;
+          let previousThread = undefined;
+          let nextThread = undefined;
           if (index > 0) {
             previousThread = sorted[index - 1].content as SerializedThread;
           }
@@ -168,14 +170,14 @@ export default function Grid({
           const { incrementId, slug, id } = thread;
           return (
             <li
-              key={`channel-grid-item-${id}`}
+              key={`channel-grid-item-${item.topic.messageId}`}
               className={classNames(styles.li, {
                 [styles.active]: thread.id === currentThreadId,
               })}
             >
               <Row
-                incrementId={incrementId}
-                slug={slug}
+                // incrementId={incrementId}
+                // slug={slug}
                 className={styles.row}
                 thread={thread}
                 topic={item.topic}
@@ -201,6 +203,7 @@ export default function Grid({
                 onImageClick={onImageClick}
                 previousThread={previousThread}
                 nextThread={nextThread}
+                activeUsers={activeUsers}
               />
             </li>
           );

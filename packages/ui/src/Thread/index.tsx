@@ -79,6 +79,7 @@ interface Props {
   sidebar?: boolean;
   chat?: boolean;
   classContainer?: string;
+  activeUsers: string[];
 }
 
 enum ModalView {
@@ -115,6 +116,7 @@ function Thread({
   breadcrumb,
   chat,
   sidebar,
+  activeUsers,
   ...props
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
@@ -124,7 +126,6 @@ function Thread({
   const { id, state, viewCount, incrementId } = thread;
   const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const [editedMessage, setEditedMessage] = useState<SerializedMessage>();
-  const [activeUsers, setActiveUsers] = useState<string[]>([]);
 
   const currentChannel = thread.channel!;
 
@@ -166,17 +167,6 @@ function Thread({
       if (currentUser?.id) {
         api.notificationsMark({ threadId: thread.id });
       }
-    },
-    onPresenceState(state: any) {
-      const users = Object.keys(state);
-      setActiveUsers(users);
-    },
-    onPresenceDiff(state: any) {
-      setActiveUsers((users) => {
-        const joins = Object.keys(state.joins);
-        const leaves = Object.keys(state.leaves);
-        return [...joins, ...users.filter((id) => !leaves.includes(id))];
-      });
     },
   });
 

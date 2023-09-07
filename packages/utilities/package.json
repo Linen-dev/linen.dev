@@ -37,6 +37,7 @@
     "./files": "./dist/files.js",
     "./getDisplayName": "./dist/getDisplayName.js",
     "./home": "./dist/home.js",
+    "./isAuthorActive": "./dist/isAuthorActive.js",
     "./memoize": "./dist/memoize.js",
     "./number": "./dist/number.js",
     "./object": "./dist/object.js",
@@ -93,6 +94,9 @@
       ],
       "home": [
         "./dist/home.d.ts"
+      ],
+      "isAuthorActive": [
+        "./dist/isAuthorActive.d.ts"
       ],
       "memoize": [
         "./dist/memoize.d.ts"

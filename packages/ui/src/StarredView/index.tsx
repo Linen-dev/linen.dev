@@ -22,6 +22,7 @@ import Empty from './Empty';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
 import { addMessageToThread } from './state';
 import { addReactionToThread } from '@linen/utilities/reaction';
+import usePresenceWebsockets from '@linen/hooks/websockets-presence';
 
 const { Header, Grid } = Pages.Starred;
 const { SidebarLayout } = Layouts.Shared;
@@ -460,6 +461,26 @@ export default function Content({
     [data, thread]
   );
 
+  const [activeUsers, setActiveUsers] = useState<string[]>([]);
+
+  token &&
+    usePresenceWebsockets({
+      communityId,
+      permissions,
+      token,
+      onPresenceState(state: any) {
+        const users = Object.keys(state);
+        setActiveUsers(users);
+      },
+      onPresenceDiff(state: any) {
+        setActiveUsers((users) => {
+          const joins = Object.keys(state.joins);
+          const leaves = Object.keys(state.leaves);
+          return [...joins, ...users.filter((id) => !leaves.includes(id))];
+        });
+      },
+    });
+
   const { threads } = data;
 
   return (
@@ -490,6 +511,8 @@ export default function Content({
                 onSelect={(thread: SerializedThread) => {
                   setThread(thread);
                 }}
+                activeUsers={activeUsers}
+                currentUser={currentUser}
               />
             ) : (
               <Empty loading={loading} />
@@ -525,6 +548,7 @@ export default function Content({
               onMessage={(threadId, message, messageId, imitationId) => {
                 onThreadMessage(threadId, message, messageId, imitationId);
               }}
+              activeUsers={activeUsers}
             />
           )
         }

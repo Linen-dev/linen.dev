@@ -9,7 +9,7 @@ interface Props {
   permissions: Permissions;
   onPresenceState?(payload: any): void;
   onPresenceDiff?(payload: any): void;
-  onNewMessage(payload: any): void;
+  onNewMessage?(payload: any): void;
 }
 
 function useWebsockets({
@@ -44,7 +44,9 @@ function useWebsockets({
         .receive('error', () => {
           setConnected(false);
         });
-      channel.on('new_msg', onNewMessage);
+      if (onNewMessage) {
+        channel.on('new_msg', onNewMessage);
+      }
       if (onPresenceState) {
         channel.on('presence_state', onPresenceState);
       }
@@ -70,8 +72,10 @@ function useWebsockets({
       channel?.off('presence_diff');
       channel?.on('presence_diff', onPresenceDiff);
     }
-    channel?.off('new_msg');
-    channel?.on('new_msg', onNewMessage);
+    if (onNewMessage) {
+      channel?.off('new_msg');
+      channel?.on('new_msg', onNewMessage);
+    }
   }, [room, onNewMessage, onPresenceState, onPresenceDiff]);
 
   return { connected, channel };

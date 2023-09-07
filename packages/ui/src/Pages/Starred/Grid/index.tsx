@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReminderTypes, SerializedThread } from '@linen/types';
+import { ReminderTypes, SerializedThread, SerializedUser } from '@linen/types';
 import Row from '../Row';
 
 interface Props {
@@ -11,6 +11,8 @@ interface Props {
   onMute?(threadId: string): void;
   onUnstar?(threadId: string): void;
   onRemind?(threadId: string, reminderType: ReminderTypes): void;
+  currentUser: SerializedUser | null;
+  activeUsers: string[];
 }
 
 export default function Grid({
@@ -22,6 +24,8 @@ export default function Grid({
   onMute,
   onRemind,
   onUnstar,
+  currentUser,
+  activeUsers,
 }: Props) {
   if (!threads || threads.length === 0 || loading) {
     return null;
@@ -39,6 +43,8 @@ export default function Grid({
             onMute={onMute}
             onRemind={onRemind}
             onUnstar={onUnstar}
+            currentUser={currentUser}
+            activeUsers={activeUsers}
           />
         );
       })}

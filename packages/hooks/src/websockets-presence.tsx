@@ -5,16 +5,14 @@ interface Props {
   communityId: string;
   token: string | null;
   permissions: Permissions;
-  onNewMessage(payload: any): void;
   onPresenceState?(state: any): void;
   onPresenceDiff?(state: any): void;
 }
 
-function useInboxWebsockets({
+function usePresenceWebsockets({
   communityId,
   token,
   permissions,
-  onNewMessage,
   onPresenceDiff,
   onPresenceState,
 }: Props) {
@@ -22,10 +20,9 @@ function useInboxWebsockets({
     room: communityId && `room:${communityId}`,
     token,
     permissions,
-    onNewMessage,
     onPresenceDiff,
     onPresenceState,
   });
 }
 
-export default useInboxWebsockets;
+export default usePresenceWebsockets;
