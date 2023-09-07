@@ -240,7 +240,7 @@ async function newThread({
 }) {
   const thread = await prisma.threads.findUnique({ where: { id: threadId } });
   if (!thread) {
-    throw 'thread not found';
+    return 'thread not found';
   }
   // new thread
   const response = await postMessage({
@@ -260,6 +260,9 @@ async function newThread({
       data: { externalMessageId: response.message.ts },
     });
     return 'thread created';
+  }
+  if (!response.ok && response.error === 'channel_not_found') {
+    return { slackResponse: response.error };
   }
   logger.error({ response });
   throw 'something went wrong';
