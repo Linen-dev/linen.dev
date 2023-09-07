@@ -79,6 +79,7 @@ interface Props {
   currentThreadId: string | undefined;
   token: string | null;
   setThreads: React.Dispatch<React.SetStateAction<SerializedThread[]>>;
+  setTopics: React.Dispatch<React.SetStateAction<SerializedTopic[]>>;
   deleteMessage(messageId: string): void;
   muteThread(threadId: string): void;
   unmuteThread(threadId: string): void;
@@ -164,6 +165,7 @@ export default function Channel({
   currentThreadId,
   pathCursor,
   setThreads,
+  setTopics,
   deleteMessage,
   editThread,
   muteThread,
@@ -420,6 +422,7 @@ export default function Channel({
     currentChannel,
     setUploads,
     setThreads,
+    setTopics,
     scroll() {
       scrollToBottom(scrollableRootRef.current as HTMLDivElement);
     },
