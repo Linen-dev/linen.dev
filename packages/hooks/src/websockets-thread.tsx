@@ -10,24 +10,13 @@ interface Props {
     messageId: string,
     imitationId: string
   ): void;
-  onPresenceState?(state: any): void;
-  onPresenceDiff?(state: any): void;
 }
 
-function useThreadWebsockets({
-  id,
-  token,
-  permissions,
-  onMessage,
-  onPresenceState,
-  onPresenceDiff,
-}: Props) {
+function useThreadWebsockets({ id, token, permissions, onMessage }: Props) {
   return useWebsockets({
     room: id && `room:topic:${id}`,
     token,
     permissions,
-    onPresenceState,
-    onPresenceDiff,
     onNewMessage(payload) {
       const currentThreadId = id;
       try {

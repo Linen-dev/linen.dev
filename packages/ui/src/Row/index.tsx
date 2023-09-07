@@ -27,6 +27,7 @@ import { uniqueUsers } from './utilities/uniqueUsers';
 import { getUserMentions } from './utilities/mentions';
 import { FiAtSign } from '@react-icons/all-files/fi/FiAtSign';
 import { FiAlertCircle } from '@react-icons/all-files/fi/FiAlertCircle';
+import { isAuthorActive } from '@linen/utilities/isAuthorActive';
 
 interface Props {
   className?: string;
@@ -81,6 +82,7 @@ interface Props {
   previousMessage?: SerializedMessage;
   previousThread?: SerializedThread;
   nextThread?: SerializedThread;
+  activeUsers: string[];
 }
 
 export default function Row({
@@ -116,6 +118,7 @@ export default function Row({
   previousMessage,
   previousThread,
   nextThread,
+  activeUsers,
 }: Props) {
   const { messages } = thread;
   const message = topic
@@ -260,6 +263,7 @@ export default function Row({
             )
           );
         }}
+        isUserActive={isAuthorActive(message?.author, currentUser, activeUsers)}
       />
     </Droppable>
   );

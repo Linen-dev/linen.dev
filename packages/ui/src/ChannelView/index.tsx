@@ -26,6 +26,7 @@ import { copyToClipboard } from '@linen/utilities/clipboard';
 import ChatView from './ChatView';
 import ForumView from './ForumView';
 import TopicView from './TopicView';
+import usePresenceWebsockets from '@linen/hooks/websockets-presence';
 
 const SHORTCUTS_ENABLED = false;
 
@@ -245,6 +246,26 @@ export default function ChannelView({
     token,
     onNewMessage: updateUserThreadStatusesOnWebsocketEvents,
   });
+
+  const [activeUsers, setActiveUsers] = useState<string[]>([]);
+
+  token &&
+    usePresenceWebsockets({
+      communityId: currentCommunity.id,
+      permissions,
+      token,
+      onPresenceState(state: any) {
+        const users = Object.keys(state);
+        setActiveUsers(users);
+      },
+      onPresenceDiff(state: any) {
+        setActiveUsers((users) => {
+          const joins = Object.keys(state.joins);
+          const leaves = Object.keys(state.leaves);
+          return [...joins, ...users.filter((id) => !leaves.includes(id))];
+        });
+      },
+    });
 
   useEffect(() => {
     if (currentUser && window.Notification) {
@@ -947,10 +968,13 @@ export default function ChannelView({
           token={token}
           pathCursor={pathCursor}
           startSignUp={startSignUp}
+          activeUsers={activeUsers}
         />
       )}
       {currentChannel.viewType === 'TOPIC' && (
         <TopicView
+          topics={topics}
+          setTopics={setTopics}
           queryIntegration={queryIntegration}
           playNotificationSound={playNotificationSound}
           useUsersContext={useUsersContext}
@@ -959,7 +983,6 @@ export default function ChannelView({
           api={api}
           key={currentChannel.channelName}
           threads={threads}
-          topics={topics}
           pinnedThreads={pinnedThreads}
           currentChannel={currentChannel}
           currentCommunity={currentCommunity}
@@ -971,7 +994,6 @@ export default function ChannelView({
           permissions={permissions}
           currentThreadId={currentThreadId}
           setThreads={setThreads}
-          setTopics={setTopics}
           deleteMessage={deleteMessage}
           editMessage={editMessage}
           muteThread={muteThread}
@@ -993,6 +1015,7 @@ export default function ChannelView({
           token={token}
           pathCursor={pathCursor}
           startSignUp={startSignUp}
+          activeUsers={activeUsers}
         />
       )}
       {currentChannel.viewType === 'CHAT' && (
@@ -1037,6 +1060,7 @@ export default function ChannelView({
           token={token}
           pathCursor={pathCursor}
           startSignUp={startSignUp}
+          activeUsers={activeUsers}
         />
       )}
     </ChannelContext.Provider>

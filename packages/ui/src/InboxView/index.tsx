@@ -318,11 +318,24 @@ export default function InboxView({
     );
   };
 
+  const [activeUsers, setActiveUsers] = useState<string[]>([]);
+
   useInboxWebsockets({
     communityId,
     onNewMessage,
     permissions,
     token,
+    onPresenceState(state: any) {
+      const users = Object.keys(state);
+      setActiveUsers(users);
+    },
+    onPresenceDiff(state: any) {
+      setActiveUsers((users) => {
+        const joins = Object.keys(state.joins);
+        const leaves = Object.keys(state.leaves);
+        return [...joins, ...users.filter((id) => !leaves.includes(id))];
+      });
+    },
   });
 
   const [polling] = usePolling(
@@ -762,6 +775,8 @@ export default function InboxView({
                 onSelect={(thread: SerializedThread) => {
                   setThread(thread);
                 }}
+                currentUser={currentUser}
+                activeUsers={activeUsers}
               />
             ) : (
               <Empty loading={loading} />
@@ -797,6 +812,7 @@ export default function InboxView({
               onMessage={(threadId, message, messageId, imitationId) => {
                 onThreadMessage(threadId, message, messageId, imitationId);
               }}
+              activeUsers={activeUsers}
             />
           )
         }

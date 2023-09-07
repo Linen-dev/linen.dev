@@ -140,6 +140,7 @@ interface Props {
   routerPush(path: string): void;
   api: ApiClient;
   startSignUp: (props: StartSignUpProps) => Promise<void>;
+  activeUsers: string[];
 }
 
 const UPDATE_READ_STATUS_INTERVAL_IN_MS = 30000;
@@ -192,6 +193,7 @@ export default function Channel({
   routerPush,
   api,
   startSignUp,
+  activeUsers,
 }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   const [isInfiniteScrollLoading, setInfiniteScrollLoading] = useState(false);
@@ -547,6 +549,7 @@ export default function Channel({
                           onDelete={deleteMessage}
                           onPin={pinThread}
                           onReaction={sendReaction}
+                          activeUsers={activeUsers}
                         />
                       </PinnedThread>
                     )}
@@ -595,6 +598,7 @@ export default function Channel({
                           onUnread={unreadThread}
                           onDrop={handleDrop}
                           onLoad={handleLeftScroll}
+                          activeUsers={activeUsers}
                         />
                       </ul>
                     </div>
@@ -686,6 +690,7 @@ export default function Channel({
                   handleScroll();
                 }
               }}
+              activeUsers={activeUsers}
             />
           )
         }

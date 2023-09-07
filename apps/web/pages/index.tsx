@@ -262,6 +262,7 @@ export default function Feed({
                       onReaction={() => {
                         window.location.href = url;
                       }}
+                      activeUsers={[]}
                     />
                   </div>
                 </div>

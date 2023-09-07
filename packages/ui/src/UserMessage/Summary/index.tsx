@@ -13,6 +13,7 @@ interface Props {
   active?: boolean;
   children?: React.ReactNode;
   onClick(): void;
+  isAuthorActive: boolean;
 }
 
 export default function Row({
@@ -22,6 +23,7 @@ export default function Row({
   active,
   children,
   onClick,
+  isAuthorActive,
 }: Props) {
   const message = thread.messages[thread.messages.length - 1];
   return (
@@ -35,6 +37,7 @@ export default function Row({
         <Avatar
           src={message.author?.profileImageUrl}
           text={message.author?.displayName}
+          active={isAuthorActive}
         />
         <div className={styles.line}>
           <Title thread={thread} />

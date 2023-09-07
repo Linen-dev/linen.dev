@@ -37,6 +37,7 @@
     "./useViewport": "./dist/useViewport.js",
     "./utils": "./dist/utils.js",
     "./websockets-inbox": "./dist/websockets-inbox.js",
+    "./websockets-presence": "./dist/websockets-presence.js",
     "./websockets-thread": "./dist/websockets-thread.js",
     "./websockets": "./dist/websockets.js"
   },
@@ -83,6 +84,9 @@
       ],
       "websockets-inbox": [
         "./dist/websockets-inbox.d.ts"
+      ],
+      "websockets-presence": [
+        "./dist/websockets-presence.d.ts"
       ],
       "websockets-thread": [
         "./dist/websockets-thread.d.ts"

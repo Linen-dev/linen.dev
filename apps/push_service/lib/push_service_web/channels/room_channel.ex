@@ -42,6 +42,7 @@ defmodule PushServiceWeb.RoomChannel do
            "community_id" => community_id
          }) do
       {:ok} ->
+        send(self(), :after_join)
         {:ok, assign(socket, :community_id, community_id)}
 
       {_} ->
