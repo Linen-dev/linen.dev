@@ -37,8 +37,8 @@ export async function channelNextPage({
     direction,
     loadMore: true,
     total: threads.length,
-    prevDate: threads[0].sentAt,
-    nextDate: threads[threads.length - 1].sentAt,
+    prevDate: threads[0]?.sentAt,
+    nextDate: threads[threads.length - 1]?.sentAt,
   });
 
   return {

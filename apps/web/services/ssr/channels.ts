@@ -175,8 +175,8 @@ async function getThreads({
     sentAt,
     pathCursor: page,
     total: threads.length,
-    prevDate: threads[0].sentAt,
-    nextDate: threads[threads.length - 1].sentAt,
+    prevDate: threads[0]?.sentAt,
+    nextDate: threads[threads.length - 1]?.sentAt,
   });
   return { nextCursor, threads };
 }
