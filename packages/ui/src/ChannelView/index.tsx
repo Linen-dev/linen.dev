@@ -286,6 +286,19 @@ export default function ChannelView({
           return newThreads;
         });
 
+        if (currentChannel.viewType === 'TOPIC') {
+          setTopics((topics) => {
+            return [
+              ...topics,
+              {
+                threadId: threadId,
+                messageId: messageId,
+                sentAt: message.sentAt,
+              },
+            ];
+          });
+        }
+
         updateUserThreadStatusesOnWebsocketEvents(payload);
       }
 
