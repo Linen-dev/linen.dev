@@ -1,13 +1,10 @@
 import React from 'react';
-import {
-  SerializedMessage,
-  SerializedThread,
-  SerializedUser,
-} from '@linen/types';
+import { SerializedMessage, SerializedThread } from '@linen/types';
 import { parse, walk } from '@linen/ast';
 import { truncate } from '@linen/utilities/string';
 import { MessageFormat } from '@linen/types';
 import styles from './index.module.scss';
+import { getDisplayName } from '@linen/utilities/getDisplayName';
 
 interface Props {
   thread: SerializedThread;
@@ -19,16 +16,6 @@ const parsers = {
   [MessageFormat.DISCORD]: parse.discord,
   [MessageFormat.MATRIX]: parse.linen,
 };
-
-function getDisplayName(userId: string, mentions?: SerializedUser[]) {
-  if (!mentions) {
-    return 'User';
-  }
-  const user = mentions.find(
-    (user) => user.id === userId || user.externalUserId === userId
-  );
-  return user?.displayName || 'User';
-}
 
 function getTitle(message: SerializedMessage): string {
   const parse = parsers[message.messageFormat];

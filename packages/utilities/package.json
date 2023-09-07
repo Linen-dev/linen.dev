@@ -35,6 +35,7 @@
     "./email": "./dist/email.js",
     "./event": "./dist/event.js",
     "./files": "./dist/files.js",
+    "./getDisplayName": "./dist/getDisplayName.js",
     "./home": "./dist/home.js",
     "./memoize": "./dist/memoize.js",
     "./number": "./dist/number.js",
@@ -86,6 +87,9 @@
       ],
       "files": [
         "./dist/files.d.ts"
+      ],
+      "getDisplayName": [
+        "./dist/getDisplayName.d.ts"
       ],
       "home": [
         "./dist/home.d.ts"
