@@ -443,6 +443,7 @@ export default function Channel({
     allUsers,
     setUploads,
     setThreads,
+    setTopics,
     currentThreadId,
     currentCommunity,
     startSignUp,

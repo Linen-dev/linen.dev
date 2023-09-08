@@ -6,6 +6,7 @@ import {
   UploadedFile,
   SerializedMessage,
   StartSignUpProps,
+  SerializedTopic,
 } from '@linen/types';
 import { createMessageImitation } from '@linen/serializers/message';
 import { localStorage } from '@linen/utilities/storage';
@@ -15,6 +16,7 @@ export function createMessageWrapper({
   allUsers,
   setUploads,
   setThreads,
+  setTopics,
   currentThreadId,
   currentCommunity,
   startSignUp,
@@ -24,6 +26,7 @@ export function createMessageWrapper({
   allUsers: SerializedUser[];
   setUploads: any;
   setThreads: React.Dispatch<React.SetStateAction<SerializedThread[]>>;
+  setTopics?: React.Dispatch<React.SetStateAction<SerializedTopic[]>>;
   currentThreadId: string | undefined;
   currentCommunity: SerializedAccount;
   startSignUp: (props: StartSignUpProps) => Promise<void>;
@@ -71,6 +74,18 @@ export function createMessageWrapper({
         return thread;
       });
     });
+    if (setTopics) {
+      setTopics((topics) => {
+        return [
+          ...topics,
+          {
+            messageId: imitation.id,
+            threadId,
+            sentAt: imitation.sentAt,
+          },
+        ];
+      });
+    }
 
     return createMessage({
       body: message,
@@ -110,6 +125,20 @@ export function createMessageWrapper({
             return thread;
           });
         });
+        if (setTopics) {
+          setTopics((topics) => {
+            return topics.map((topic) => {
+              if (topic.messageId === imitationId) {
+                return {
+                  messageId: message.id,
+                  threadId: topic.threadId,
+                  sentAt: topic.sentAt,
+                };
+              }
+              return topic;
+            });
+          });
+        }
       }
     );
   };
