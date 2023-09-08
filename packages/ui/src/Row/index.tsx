@@ -79,9 +79,9 @@ interface Props {
   onRemind?(threadId: string, reminder: ReminderTypes): void;
   onUnread?(threadId: string): void;
   onImageClick?(src: string): void;
-  previousMessage?: SerializedMessage;
-  previousThread?: SerializedThread;
-  nextThread?: SerializedThread;
+  previousMessage?: SerializedMessage | null;
+  previousThread?: SerializedThread | null;
+  nextThread?: SerializedThread | null;
   activeUsers: string[];
 }
 

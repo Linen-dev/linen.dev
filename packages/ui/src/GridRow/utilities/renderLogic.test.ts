@@ -1,4 +1,4 @@
-import { showAvatar, showTop } from './renderLogic';
+import { showTop } from './renderLogic';
 
 // same thread different user -> true
 // same thread same user -> false

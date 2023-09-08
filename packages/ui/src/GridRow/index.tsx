@@ -66,8 +66,8 @@ interface Props {
   message: SerializedMessage;
   isUserActive?: boolean;
   isBot?: boolean;
-  isPreviousMessageFromSameUser?: boolean;
-  isPreviousMessageFromSameThread?: boolean;
+  isPreviousMessageFromSameUser?: boolean | null;
+  isPreviousMessageFromSameThread?: boolean | null;
   isSubDomainRouting: boolean;
   settings: Settings;
   permissions?: Permissions;

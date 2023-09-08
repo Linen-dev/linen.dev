@@ -1,6 +1,6 @@
 export function showTop(
-  isPreviousMessageFromSameUser?: boolean,
-  isPreviousMessageFromSameThread?: boolean
+  isPreviousMessageFromSameUser?: boolean | null,
+  isPreviousMessageFromSameThread?: boolean | null
 ) {
   if (isPreviousMessageFromSameThread === undefined)
     return !isPreviousMessageFromSameUser;
