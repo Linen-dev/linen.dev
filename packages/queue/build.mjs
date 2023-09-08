@@ -9,7 +9,7 @@ await esbuild.build({
   outdir: 'dist',
   platform: 'node',
   target: 'node18',
-  external: ['graphile-worker', '@linen/database'],
+  external: ['graphile-worker', '@linen/database', 'discord.js'],
   logLevel: 'info',
   minify: true,
 });
