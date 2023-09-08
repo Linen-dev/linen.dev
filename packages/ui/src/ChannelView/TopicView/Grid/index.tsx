@@ -130,7 +130,8 @@ export default function Grid({
           topic,
           timestamp: new Date(topic.sentAt),
         };
-      }),
+      })
+      .filter((topic) => !!topic.content),
   ].filter(Boolean) as RowItem[];
 
   const sorted = rows.sort((a, b) => {
