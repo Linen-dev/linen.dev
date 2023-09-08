@@ -395,6 +395,12 @@ export default function ChannelView({
         .filter(Boolean) as SerializedThread[];
     });
 
+    if (currentChannel.viewType === 'TOPIC') {
+      setTopics((topics) => {
+        return topics.filter((topic) => topic.messageId !== messageId);
+      });
+    }
+
     return api
       .deleteMessage({ id: messageId, accountId: currentCommunity.id })
       .then((response) => {
