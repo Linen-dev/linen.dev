@@ -81,6 +81,7 @@ interface Props {
   onImageClick?(src: string): void;
   previousMessage?: SerializedMessage | null;
   previousThread?: SerializedThread | null;
+  nextMessage?: SerializedMessage | null;
   nextThread?: SerializedThread | null;
   activeUsers: string[];
 }
@@ -117,6 +118,7 @@ export default function Row({
   onImageClick,
   previousMessage,
   previousThread,
+  nextMessage,
   nextThread,
   activeUsers,
 }: Props) {
@@ -148,6 +150,8 @@ export default function Row({
     previousMessage && previousMessage.usersId === message.usersId;
   const isPreviousMessageFromSameThread =
     previousThread && previousThread.id === thread.id;
+  const isNextMessageFromSameUser =
+    nextMessage && nextMessage.usersId === message.usersId;
   const isNextMessageFromSameThread = nextThread && nextThread.id === thread.id;
 
   return (
@@ -164,6 +168,8 @@ export default function Row({
         isSubDomainRouting={isSubDomainRouting}
         isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}
         isPreviousMessageFromSameThread={isPreviousMessageFromSameThread}
+        isNextMessageFromSameUser={isNextMessageFromSameUser}
+        isNextMessageFromSameThread={isNextMessageFromSameThread}
         isBot={isBot}
         settings={settings}
         permissions={permissions}

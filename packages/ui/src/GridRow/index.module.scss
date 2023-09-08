@@ -1,5 +1,5 @@
 .container {
-  padding: 0.25rem 1rem 0 1rem;
+  padding: 0 1rem;
   width: 100%;
   transition: background 0.2s ease;
 
@@ -10,8 +10,12 @@
   }
 }
 
-.differentThread {
+.single {
   padding: 1rem;
+}
+
+.topic {
+  padding-bottom: 0;
 }
 
 .resolution {

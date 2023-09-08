@@ -68,6 +68,8 @@ interface Props {
   isBot?: boolean;
   isPreviousMessageFromSameUser?: boolean | null;
   isPreviousMessageFromSameThread?: boolean | null;
+  isNextMessageFromSameUser?: boolean | null;
+  isNextMessageFromSameThread?: boolean | null;
   isSubDomainRouting: boolean;
   settings: Settings;
   permissions?: Permissions;
@@ -163,6 +165,8 @@ function Row({
   isBot = false,
   isPreviousMessageFromSameUser,
   isPreviousMessageFromSameThread,
+  isNextMessageFromSameUser,
+  isNextMessageFromSameThread,
   isSubDomainRouting,
   currentUser,
   settings,
@@ -241,9 +245,10 @@ function Row({
     <div
       ref={ref}
       className={classNames(className, styles.container, {
-        [styles.differentThread]: top,
+        [styles.single]: top,
+        [styles.topic]:
+          isNextMessageFromSameUser && isNextMessageFromSameThread,
         [styles.resolution]: resolution,
-        [styles.top]: top,
       })}
     >
       {!isPreviousMessageFromSameThread && header}

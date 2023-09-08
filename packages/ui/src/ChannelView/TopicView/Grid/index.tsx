@@ -162,6 +162,7 @@ export default function Grid({
           // Maybe put this in the backend on topic and propagate it to the frontend??
           let previousThread = null;
           let previousMessage = null;
+          let nextMessage;
           let nextThread = null;
 
           if (index > 0) {
@@ -173,7 +174,12 @@ export default function Grid({
             );
           }
           if (index < sorted.length - 1) {
-            nextThread = sorted[index + 1].content as SerializedThread;
+            const nextItem = sorted[index + 1];
+            const nextMessageId = nextItem.topic.messageId;
+            nextThread = nextItem.content as SerializedThread;
+            nextMessage = nextThread.messages.find(
+              ({ id }) => id === nextMessageId
+            );
           }
           const thread = item.content as SerializedThread;
           const { incrementId, slug, id } = thread;
@@ -212,6 +218,7 @@ export default function Grid({
                 onImageClick={onImageClick}
                 previousMessage={previousMessage}
                 previousThread={previousThread}
+                nextMessage={nextMessage}
                 nextThread={nextThread}
                 activeUsers={activeUsers}
               />
