@@ -109,6 +109,7 @@ interface Props {
 
 function Left({
   top,
+  isReply,
   message,
   isBot,
   hover,
@@ -117,6 +118,7 @@ function Left({
   onAvatarClick,
 }: {
   top: boolean;
+  isReply: boolean;
   message: SerializedMessage;
   isBot: boolean;
   hover?: boolean;
@@ -128,15 +130,17 @@ function Left({
 }) {
   if (top) {
     return (
-      <Avatar
-        className={styles.left}
-        src={message.author?.profileImageUrl}
-        text={message.author?.displayName}
-        placeholder={!inView || isBot}
-        active={isUserActive}
-        isBot={isBot}
-        onClick={onAvatarClick}
-      />
+      <div className={classNames({ [styles.reply]: isReply })}>
+        <Avatar
+          className={classNames(styles.left)}
+          src={message.author?.profileImageUrl}
+          text={message.author?.displayName}
+          placeholder={!inView || isBot}
+          active={isUserActive}
+          isBot={isBot}
+          onClick={onAvatarClick}
+        />
+      </div>
     );
   }
 
@@ -202,6 +206,7 @@ function Row({
     isPreviousMessageFromSameThread
   );
 
+  const isReply = isPreviousMessageFromSameThread || false;
   const resolution = thread.resolutionId === message.id;
 
   function onLinkClick(event: React.MouseEvent<HTMLAnchorElement>) {
@@ -245,6 +250,7 @@ function Row({
     <div
       ref={ref}
       className={classNames(className, styles.container, {
+        [styles.reply]: isReply,
         [styles.single]: top,
         [styles.topic]:
           isNextMessageFromSameUser && isNextMessageFromSameThread,
@@ -260,6 +266,7 @@ function Row({
       >
         <Left
           message={message}
+          isReply={isReply}
           top={top}
           isBot={isBot}
           hover={hover}
