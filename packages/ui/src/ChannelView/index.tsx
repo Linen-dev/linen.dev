@@ -310,7 +310,7 @@ export default function ChannelView({
         if (currentChannel.viewType === 'TOPIC') {
           setTopics((topics) => {
             return [
-              ...topics,
+              ...topics.filter((topic) => topic.messageId !== imitationId),
               {
                 threadId: threadId,
                 messageId: messageId,
@@ -339,7 +339,7 @@ export default function ChannelView({
         if (currentChannel.viewType === 'TOPIC') {
           setTopics((topics) => {
             return [
-              ...topics,
+              ...topics.filter((topic) => topic.threadId !== imitationId),
               {
                 threadId: threadId,
                 messageId: thread.messages[0].id,
