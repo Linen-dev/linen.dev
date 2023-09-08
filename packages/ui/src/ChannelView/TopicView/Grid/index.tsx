@@ -158,10 +158,18 @@ export default function Grid({
             </li>
           );
         } else if (item.type === RowType.Topic) {
-          let previousThread = undefined;
-          let nextThread = undefined;
+          // Maybe put this in the backend on topic and propagate it to the frontend??
+          let previousThread = null;
+          let previousMessage = null;
+          let nextThread = null;
+
           if (index > 0) {
-            previousThread = sorted[index - 1].content as SerializedThread;
+            const previousItem = sorted[index - 1];
+            const previousMessageId = previousItem.topic.messageId;
+            previousThread = previousItem.content as SerializedThread;
+            previousMessage = previousThread.messages.find(
+              ({ id }) => id === previousMessageId
+            );
           }
           if (index < sorted.length - 1) {
             nextThread = sorted[index + 1].content as SerializedThread;
@@ -201,6 +209,7 @@ export default function Grid({
                 onUnread={onUnread}
                 onLoad={onLoad}
                 onImageClick={onImageClick}
+                previousMessage={previousMessage}
                 previousThread={previousThread}
                 nextThread={nextThread}
                 activeUsers={activeUsers}

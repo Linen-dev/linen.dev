@@ -29,6 +29,7 @@ import { getThreadUrl } from '@linen/utilities/url';
 import UserModal from '@/UserModal';
 import Button from '@/Button';
 import EventEmitter from '@linen/utilities/event';
+import { showTop } from './utilities/renderLogic';
 
 function onWriteMessage(user: SerializedUser) {
   EventEmitter.emit('write:message:clicked', user);
@@ -191,8 +192,12 @@ function Row({
   const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const [ref, hover] = useHover<HTMLDivElement>();
   const { ref: inViewRef, inView } = useInView();
-  const top = !isPreviousMessageFromSameUser;
-  const bottom = !isPreviousMessageFromSameThread;
+
+  const top = showTop(
+    isPreviousMessageFromSameUser,
+    isPreviousMessageFromSameThread
+  );
+
   const resolution = thread.resolutionId === message.id;
 
   function onLinkClick(event: React.MouseEvent<HTMLAnchorElement>) {
@@ -236,6 +241,7 @@ function Row({
     <div
       ref={ref}
       className={classNames(className, styles.container, {
+        [styles.differentThread]: top,
         [styles.resolution]: resolution,
         [styles.top]: top,
       })}
