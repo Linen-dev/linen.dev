@@ -47,6 +47,8 @@ interface Props {
   onFocus?(): void;
   onBlur?(): void;
   mentions?: SerializedUser[];
+  onKeyDown?(): void;
+  onKeyUp?(): void;
 }
 
 function isUndefined(character: string | undefined) {
@@ -166,6 +168,8 @@ function MessageForm({
   upload,
   useUsersContext,
   mentions = [],
+  onKeyDown,
+  onKeyUp,
 }: Props) {
   const STORAGE_KEY = currentUser
     ? `message.draft.${id}.user.${currentUser.id}`
@@ -368,6 +372,7 @@ function MessageForm({
           onFocus={onFocus}
           onBlur={onBlur}
           onKeyDown={(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+            onKeyDown?.();
             if (mode === Mode.Mention && isMentionKey(event.key)) {
               return event.preventDefault();
             }
@@ -397,6 +402,9 @@ function MessageForm({
               const node = ref.current as HTMLTextAreaElement;
               node.blur();
             }
+          }}
+          onKeyUp={() => {
+            onKeyUp?.();
           }}
         />
         {upload && (

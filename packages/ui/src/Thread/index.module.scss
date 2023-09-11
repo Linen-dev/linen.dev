@@ -70,7 +70,7 @@
   background: var(--color-background);
   border-top: 1px solid var(--color-border);
   bottom: 0;
-  padding: 1rem;
+  padding: 1rem 1rem 1.5rem 1rem;
   position: sticky;
   width: 100%;
 }
@@ -103,7 +103,6 @@
       border-left: none;
       border-right: none;
       border-radius: 0;
-
 
       @media (prefers-color-scheme: dark) {
         background: var(--color-gray-100);

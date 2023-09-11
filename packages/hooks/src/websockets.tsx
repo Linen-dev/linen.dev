@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Channel, Socket } from 'phoenix';
 import { Permissions } from '@linen/types';
 import { getPushUrl } from './utils/getPushUrl';
+import { StateType, DiffType } from './utils/StateType';
+import { filterTypingUsers } from './utils/filterTypingUsers';
 
 interface Props {
   room?: string | null;
@@ -22,6 +24,8 @@ function useWebsockets({
 }: Props) {
   const [channel, setChannel] = useState<Channel>();
   const [connected, setConnected] = useState<boolean>(false);
+  const [usersTyping, setUsersTyping] = useState<string[]>([]);
+
   useEffect(() => {
     if (permissions.chat && token && room) {
       //Set url instead of hard coding
@@ -47,12 +51,14 @@ function useWebsockets({
       if (onNewMessage) {
         channel.on('new_msg', onNewMessage);
       }
-      if (onPresenceState) {
-        channel.on('presence_state', onPresenceState);
-      }
-      if (onPresenceDiff) {
-        channel.on('presence_diff', onPresenceDiff);
-      }
+      channel.on('presence_state', (state: StateType) => {
+        onPresenceState?.(state);
+        setUsersTyping(filterTypingUsers(state));
+      });
+      channel.on('presence_diff', (diff: DiffType) => {
+        onPresenceDiff?.(diff);
+        setUsersTyping(filterTypingUsers(diff.joins));
+      });
 
       return () => {
         setConnected(false);
@@ -64,21 +70,36 @@ function useWebsockets({
   }, []);
 
   useEffect(() => {
-    if (onPresenceState) {
-      channel?.off('presence_state');
-      channel?.on('presence_state', onPresenceState);
-    }
-    if (onPresenceDiff) {
-      channel?.off('presence_diff');
-      channel?.on('presence_diff', onPresenceDiff);
-    }
+    channel?.off('presence_state');
+    channel?.on('presence_state', (state: StateType) => {
+      onPresenceState?.(state);
+      setUsersTyping(filterTypingUsers(state));
+    });
+    channel?.off('presence_diff');
+    channel?.on('presence_diff', (diff: DiffType) => {
+      onPresenceDiff?.(diff);
+      setUsersTyping(filterTypingUsers(diff.joins));
+    });
+
     if (onNewMessage) {
       channel?.off('new_msg');
       channel?.on('new_msg', onNewMessage);
     }
   }, [room, onNewMessage, onPresenceState, onPresenceDiff]);
 
-  return { connected, channel };
+  const userTyping = ({
+    typing,
+    username,
+  }: {
+    typing: boolean;
+    username: string;
+  }) => {
+    if (connected) {
+      channel?.push('user:typing', { typing, username });
+    }
+  };
+
+  return { connected, channel, userTyping, usersTyping };
 }
 
 export default useWebsockets;

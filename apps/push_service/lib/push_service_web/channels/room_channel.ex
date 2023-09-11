@@ -75,6 +75,33 @@ defmodule PushServiceWeb.RoomChannel do
     {:noreply, socket}
   end
 
+  def handle_in(
+        "user:typing",
+        %{"typing" => typing, "username" => username},
+        socket
+      ) do
+    case Presence.update(socket, socket.assigns[:current_user], %{
+           typing: typing,
+           username: username
+         }) do
+      {:ok, _} ->
+        "ok"
+
+      {:error, :nopresence} ->
+        Presence.track(socket, socket.assigns[:current_user], %{
+          online_at: inspect(System.system_time(:second)),
+          typing: typing,
+          username: username
+        })
+
+      _ ->
+        "failed"
+    end
+
+    push(socket, "presence_state", Presence.list(socket))
+    {:noreply, socket}
+  end
+
   def handle_info(:after_join, socket) do
     {:ok, _} =
       Presence.track(socket, socket.assigns[:current_user], %{

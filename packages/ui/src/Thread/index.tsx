@@ -22,6 +22,7 @@ import { getFormData } from '@linen/utilities/files';
 import PoweredByLinen from '@/PoweredByLinen';
 import EditMessageModal from '@/EditMessageModal';
 import type { ApiClient } from '@linen/api-client';
+import { TypingFunctions, UsersTyping } from './UsersTyping';
 
 interface Props {
   thread: SerializedThread;
@@ -126,6 +127,7 @@ function Thread({
   const { id, state, viewCount, incrementId } = thread;
   const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const [editedMessage, setEditedMessage] = useState<SerializedMessage>();
+  const [isUserTyping, setUserTyping] = useState(false);
 
   const currentChannel = thread.channel!;
 
@@ -153,7 +155,7 @@ function Thread({
     setModal(ModalView.EDIT_MESSAGE_MODAL);
   }
 
-  useThreadWebsockets({
+  const { userTyping, usersTyping } = useThreadWebsockets({
     id: thread.id,
     token,
     permissions,
@@ -168,6 +170,13 @@ function Thread({
         api.notificationsMark({ threadId: thread.id });
       }
     },
+  });
+
+  const { onKeyDown, onKeyUp } = TypingFunctions({
+    currentUser,
+    isUserTyping,
+    setUserTyping,
+    userTyping,
   });
 
   function isThreadCreator(
@@ -311,7 +320,10 @@ function Thread({
               upload={uploadFiles}
               useUsersContext={useUsersContext}
               fetchMentions={fetchMentions}
+              onKeyDown={onKeyDown}
+              onKeyUp={onKeyUp}
             />
+            <UsersTyping usersTyping={usersTyping} currentUser={currentUser} />
           </div>
         )}
         {expanded && !currentUser && (

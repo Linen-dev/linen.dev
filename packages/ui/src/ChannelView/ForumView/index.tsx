@@ -47,6 +47,7 @@ import type { ApiClient } from '@linen/api-client';
 import PaginationNumbers from '@/PaginationNumbers';
 import { useViewport } from '@linen/hooks/useViewport';
 import { getThreadUrl } from '@linen/utilities/url';
+import { TypingFunctions } from '@/Thread/UsersTyping';
 
 const useLayoutEffect =
   typeof window !== 'undefined' ? useClientLayoutEffect : () => {};
@@ -255,7 +256,7 @@ export default function Channel({
     []
   );
 
-  useWebsockets({
+  const { userTyping, usersTyping } = useWebsockets({
     room: `room:lobby:${currentChannel.id}`,
     token,
     permissions,
@@ -264,6 +265,15 @@ export default function Channel({
       onThreadMessage(payload);
       // scroll by msg height
     },
+  });
+
+  const [isUserTyping, setUserTyping] = useState(false);
+
+  const { onKeyDown, onKeyUp } = TypingFunctions({
+    currentUser,
+    isUserTyping,
+    setUserTyping,
+    userTyping,
   });
 
   useEffect(() => {
@@ -540,6 +550,9 @@ export default function Channel({
                         if (!term) return Promise.resolve([]);
                         return api.fetchMentions(term, currentCommunity.id);
                       }}
+                      onKeyDown={onKeyDown}
+                      onKeyUp={onKeyUp}
+                      usersTyping={usersTyping}
                     />
                   )}
                   {pinnedThread && (

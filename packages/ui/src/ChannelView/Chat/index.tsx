@@ -13,6 +13,7 @@ import {
 } from '@linen/types';
 import styles from './index.module.scss';
 import { postprocess } from '@linen/ast';
+import { UsersTyping } from '@/Thread/UsersTyping';
 
 interface Props {
   channel: SerializedChannel;
@@ -45,6 +46,9 @@ interface Props {
   uploads: UploadedFile[];
   fetchMentions(term?: string): Promise<SerializedUser[]>;
   useUsersContext(): any;
+  onKeyDown?(): void;
+  onKeyUp?(): void;
+  usersTyping?: string[];
 }
 
 export default function Chat({
@@ -58,9 +62,12 @@ export default function Chat({
   uploadFiles,
   fetchMentions,
   useUsersContext,
+  onKeyDown,
+  onKeyUp,
+  usersTyping = [],
 }: Props) {
   const [title, setTitle] = useState('');
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState<string>();
   const [focus, setFocus] = useState(false);
   const [allUsers] = useUsersContext();
   const ref = createRef<HTMLDivElement>();
@@ -193,8 +200,15 @@ export default function Chat({
           preview={false}
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
+          onKeyDown={onKeyDown}
+          onKeyUp={onKeyUp}
         />
       </Field>
+      <UsersTyping
+        key={usersTyping?.join()}
+        usersTyping={usersTyping}
+        currentUser={currentUser}
+      />
     </div>
   );
 }
