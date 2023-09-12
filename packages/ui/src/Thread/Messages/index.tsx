@@ -57,16 +57,10 @@ function Messages({
   const { messages } = thread;
 
   const elements = messages.map((message, index) => {
-    const previousMessage = messages[index - 1];
-    const isPreviousMessageFromSameUser =
-      previousMessage && previousMessage.usersId === message.usersId;
-
     return (
       <div id={message.id} key={`${message.id}`} className={styles.container}>
         <GridRow
-          className={classNames(styles.row, {
-            [styles.top]: !isPreviousMessageFromSameUser,
-          })}
+          className={styles.row}
           thread={thread}
           message={message}
           isUserActive={isAuthorActive(
@@ -75,7 +69,6 @@ function Messages({
             activeUsers
           )}
           isBot={isBot}
-          isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}
           permissions={permissions}
           currentUser={currentUser}
           settings={settings}

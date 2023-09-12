@@ -41,6 +41,8 @@ interface Props {
   currentCommunity?: SerializedAccount;
   mode?: Mode;
   showActions?: boolean;
+  showAvatar?: boolean;
+  showTitle?: boolean;
   showVotes?: boolean;
   subheader?: React.ReactNode;
   truncate?: boolean;
@@ -79,14 +81,10 @@ interface Props {
   onRemind?(threadId: string, reminder: ReminderTypes): void;
   onUnread?(threadId: string): void;
   onImageClick?(src: string): void;
-  previousMessage?: SerializedMessage | null;
-  previousThread?: SerializedThread | null;
-  nextMessage?: SerializedMessage | null;
-  nextThread?: SerializedThread | null;
   activeUsers: string[];
 }
 
-export default function Row({
+function Row({
   className,
   thread,
   topic,
@@ -98,6 +96,8 @@ export default function Row({
   currentCommunity,
   mode,
   showActions,
+  showAvatar,
+  showTitle,
   showVotes,
   subheader,
   truncate,
@@ -116,10 +116,6 @@ export default function Row({
   onRemind,
   onUnread,
   onImageClick,
-  previousMessage,
-  previousThread,
-  nextMessage,
-  nextThread,
   activeUsers,
 }: Props) {
   const { messages } = thread;
@@ -146,13 +142,6 @@ export default function Row({
   const signalMentionCount = userMentions.filter(
     (mention) => mention === 'signal'
   ).length;
-  const isPreviousMessageFromSameUser =
-    previousMessage && previousMessage.usersId === message.usersId;
-  const isPreviousMessageFromSameThread =
-    previousThread && previousThread.id === thread.id;
-  const isNextMessageFromSameUser =
-    nextMessage && nextMessage.usersId === message.usersId;
-  const isNextMessageFromSameThread = nextThread && nextThread.id === thread.id;
 
   return (
     <Droppable
@@ -166,10 +155,6 @@ export default function Row({
         thread={thread}
         message={message}
         isSubDomainRouting={isSubDomainRouting}
-        isPreviousMessageFromSameUser={isPreviousMessageFromSameUser}
-        isPreviousMessageFromSameThread={isPreviousMessageFromSameThread}
-        isNextMessageFromSameUser={isNextMessageFromSameUser}
-        isNextMessageFromSameThread={isNextMessageFromSameThread}
         isBot={isBot}
         settings={settings}
         permissions={permissions}
@@ -178,6 +163,7 @@ export default function Row({
         drag="thread"
         truncate={truncate}
         showActions={showActions}
+        showAvatar={showAvatar}
         onDelete={onDelete}
         onEdit={onEdit}
         onLoad={onLoad}
@@ -192,26 +178,8 @@ export default function Row({
         onUnread={onUnread}
         onImageClick={onImageClick}
         header={
-          thread.title && (
-            <div className={styles.header}>
-              {thread.channel?.viewType === 'TOPIC' ? (
-                <>
-                  <Symbol text={thread.title} />
-                  <span>
-                    {message.id !== messages[0].id && (
-                      <>
-                        <a>@{message.author?.displayName || 'User'}</a> replied
-                        to:{' '}
-                      </>
-                    )}
-                    {thread.title}
-                  </span>
-                </>
-              ) : (
-                <>{thread.title}</>
-              )}
-            </div>
-          )
+          showTitle &&
+          thread.title && <div className={styles.header}>{thread.title}</div>
         }
         subheader={subheader}
         info={
@@ -224,8 +192,7 @@ export default function Row({
             (showVotes && onReaction) ||
             (thread?.channel?.viewType === 'FORUM' && onReaction);
           const renderMessages = messages.length > 1;
-          const showFooter =
-            !isNextMessageFromSameThread && (renderVotes || renderMessages);
+          const showFooter = renderVotes || renderMessages;
           return (
             showFooter && (
               <div className={styles.footer}>
@@ -278,3 +245,9 @@ export default function Row({
     </Droppable>
   );
 }
+
+Row.defaultProps = {
+  showTitle: true,
+};
+
+export default Row;
