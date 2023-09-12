@@ -29,7 +29,6 @@ import { getThreadUrl } from '@linen/utilities/url';
 import UserModal from '@/UserModal';
 import Button from '@/Button';
 import EventEmitter from '@linen/utilities/event';
-import { showTop } from './utilities/renderLogic';
 
 function onWriteMessage(user: SerializedUser) {
   EventEmitter.emit('write:message:clicked', user);
@@ -66,10 +65,6 @@ interface Props {
   message: SerializedMessage;
   isUserActive?: boolean;
   isBot?: boolean;
-  isPreviousMessageFromSameUser?: boolean | null;
-  isPreviousMessageFromSameThread?: boolean | null;
-  isNextMessageFromSameUser?: boolean | null;
-  isNextMessageFromSameThread?: boolean | null;
   isSubDomainRouting: boolean;
   settings: Settings;
   permissions?: Permissions;
@@ -80,6 +75,7 @@ interface Props {
   subheader?: React.ReactNode;
   info?: React.ReactNode;
   showActions?: boolean;
+  showAvatar?: boolean;
   truncate?: boolean;
   footer?({ inView }: { inView: boolean }): React.ReactNode;
   onDelete?(messageId: string): void;
@@ -108,8 +104,7 @@ interface Props {
 }
 
 function Left({
-  top,
-  isReply,
+  showAvatar,
   message,
   isBot,
   hover,
@@ -117,8 +112,7 @@ function Left({
   isUserActive,
   onAvatarClick,
 }: {
-  top: boolean;
-  isReply: boolean;
+  showAvatar?: boolean;
   message: SerializedMessage;
   isBot: boolean;
   hover?: boolean;
@@ -128,19 +122,17 @@ function Left({
     event: React.MouseEvent<HTMLDivElement | HTMLPictureElement>
   ): void;
 }) {
-  if (top) {
+  if (showAvatar) {
     return (
-      <div className={classNames({ [styles.reply]: isReply })}>
-        <Avatar
-          className={classNames(styles.left)}
-          src={message.author?.profileImageUrl}
-          text={message.author?.displayName}
-          placeholder={!inView || isBot}
-          active={isUserActive}
-          isBot={isBot}
-          onClick={onAvatarClick}
-        />
-      </div>
+      <Avatar
+        className={classNames(styles.left)}
+        src={message.author?.profileImageUrl}
+        text={message.author?.displayName}
+        placeholder={!inView || isBot}
+        active={isUserActive}
+        isBot={isBot}
+        onClick={onAvatarClick}
+      />
     );
   }
 
@@ -167,10 +159,6 @@ function Row({
   message,
   isUserActive,
   isBot = false,
-  isPreviousMessageFromSameUser,
-  isPreviousMessageFromSameThread,
-  isNextMessageFromSameUser,
-  isNextMessageFromSameThread,
   isSubDomainRouting,
   currentUser,
   settings,
@@ -181,6 +169,7 @@ function Row({
   subheader,
   info,
   showActions,
+  showAvatar,
   truncate,
   footer,
   onDelete,
@@ -201,12 +190,6 @@ function Row({
   const [ref, hover] = useHover<HTMLDivElement>();
   const { ref: inViewRef, inView } = useInView();
 
-  const top = showTop(
-    isPreviousMessageFromSameUser,
-    isPreviousMessageFromSameThread
-  );
-
-  const isReply = isPreviousMessageFromSameThread || false;
   const resolution = thread.resolutionId === message.id;
 
   function onLinkClick(event: React.MouseEvent<HTMLAnchorElement>) {
@@ -250,14 +233,10 @@ function Row({
     <div
       ref={ref}
       className={classNames(className, styles.container, {
-        [styles.reply]: isReply,
-        [styles.single]: top,
-        [styles.topic]:
-          isNextMessageFromSameUser && isNextMessageFromSameThread,
         [styles.resolution]: resolution,
       })}
     >
-      {!isPreviousMessageFromSameThread && header}
+      {header}
       <div
         ref={inViewRef}
         className={classNames(styles.row, {
@@ -266,8 +245,7 @@ function Row({
       >
         <Left
           message={message}
-          isReply={isReply}
-          top={top}
+          showAvatar={showAvatar}
           isBot={isBot}
           hover={hover}
           inView={inView}
@@ -279,7 +257,7 @@ function Row({
           }}
         />
         <div className={styles.content}>
-          {top && (
+          {showAvatar && (
             <div className={styles.header}>
               <p className={styles.username}>
                 {message.author?.displayName || 'user'}
@@ -295,12 +273,7 @@ function Row({
               {info}
             </div>
           )}
-          <div
-            className={classNames(styles.message, {
-              [styles.top]: top,
-              [styles.basic]: !top,
-            })}
-          >
+          <div>
             <Message
               text={message.body}
               format={message.messageFormat}
@@ -411,7 +384,7 @@ function Row({
           }}
         />
       )}
-      {top && message.author && (
+      {showAvatar && message.author && (
         <UserModal
           open={modal === ModalView.USER_PROFILE}
           close={() => setModal(ModalView.NONE)}
@@ -439,6 +412,7 @@ function Row({
 
 Row.defaultProps = {
   showActions: true,
+  showAvatar: true,
 };
 
 export default Row;

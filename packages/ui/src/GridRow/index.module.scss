@@ -10,18 +10,6 @@
   }
 }
 
-.reply {
-  padding-left: 1rem;
-}
-
-.single {
-  padding: 1rem 1rem 0.25rem 1rem;
-}
-
-.topic {
-  padding-bottom: 0;
-}
-
 .resolution {
   background-color: var(--color-green-50);
   border-radius: 4px;
@@ -93,14 +81,6 @@
   position: relative;
 }
 
-.message.top {
-  padding: 0;
-}
-
-.message.basic {
-  padding: 0.25rem 0;
-}
-
 .actions {
   display: flex;
   background: var(--color-background);
@@ -112,10 +92,6 @@
   top: -1.625rem;
   right: 1.5rem;
   padding: 0;
-}
-
-.top .actions {
-  top: 0.25rem;
 }
 
 .drag {

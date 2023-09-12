@@ -19,6 +19,7 @@ import styles from './index.module.scss';
 import DefaultRow from '@/Row';
 import ImagePreview from '@/ImagePreview';
 import { getImageUrls } from './utilities/threads';
+import { groupByThread, toRows, TopicRow } from './utilities/topics';
 
 enum RowType {
   Topic,
@@ -30,6 +31,9 @@ interface RowItem {
   content: SerializedThread | SerializedReadStatus;
   topic: SerializedTopic;
   timestamp: number;
+  first?: boolean;
+  last?: boolean;
+  padded?: boolean;
 }
 
 export default function Grid({
@@ -113,6 +117,13 @@ export default function Grid({
 }) {
   const [preview, setPreview] = useState<string | null>(null);
   const images = getImageUrls(threads);
+  const topicRows = toRows(
+    groupByThread(
+      topics.sort((a, b) => {
+        return new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime();
+      })
+    )
+  );
   const rows = [
     readStatus &&
       !readStatus.read && {
@@ -120,7 +131,7 @@ export default function Grid({
         content: readStatus,
         timestamp: Number(readStatus.lastReadAt),
       },
-    ...topics
+    ...topicRows
       // .filter((thread) => thread.messages.length > 0)
       .map((topic) => {
         const thread = threads.find(({ id }) => id === topic.threadId);
@@ -129,6 +140,9 @@ export default function Grid({
           content: thread,
           topic,
           timestamp: new Date(topic.sentAt),
+          first: topic.first,
+          last: topic.last,
+          padded: topic.padded,
         };
       })
       .filter((topic) => !!topic.content),
@@ -147,40 +161,17 @@ export default function Grid({
     <div
       className={classNames(className, {
         [styles.mouse]: priority === Priority.MOUSE,
-        [styles.forum]: currentChannel.viewType === 'FORUM',
       })}
     >
       {sorted.map((item, index) => {
         const last = index === sorted.length - 1;
         if (item.type === RowType.ReadStatus && !last) {
           return (
-            <li key={`inbox-line`}>
+            <li key={`inbox-line-${index}`}>
               <Line className={styles.line}>New</Line>
             </li>
           );
         } else if (item.type === RowType.Topic) {
-          // Maybe put this in the backend on topic and propagate it to the frontend??
-          let previousThread = null;
-          let previousMessage = null;
-          let nextMessage;
-          let nextThread = null;
-
-          if (index > 0) {
-            const previousItem = sorted[index - 1];
-            const previousMessageId = previousItem.topic.messageId;
-            previousThread = previousItem.content as SerializedThread;
-            previousMessage = previousThread.messages.find(
-              ({ id }) => id === previousMessageId
-            );
-          }
-          if (index < sorted.length - 1) {
-            const nextItem = sorted[index + 1];
-            const nextMessageId = nextItem.topic.messageId;
-            nextThread = nextItem.content as SerializedThread;
-            nextMessage = nextThread.messages.find(
-              ({ id }) => id === nextMessageId
-            );
-          }
           const thread = item.content as SerializedThread;
           const { incrementId, slug, id } = thread;
           return (
@@ -193,7 +184,11 @@ export default function Grid({
               <Row
                 // incrementId={incrementId}
                 // slug={slug}
-                className={styles.row}
+                className={classNames({
+                  [styles.first]: item.first,
+                  [styles.last]: item.last,
+                })}
+                showTitle={item.first}
                 thread={thread}
                 topic={item.topic}
                 permissions={permissions}
@@ -216,10 +211,6 @@ export default function Grid({
                 onUnread={onUnread}
                 onLoad={onLoad}
                 onImageClick={onImageClick}
-                previousMessage={previousMessage}
-                previousThread={previousThread}
-                nextMessage={nextMessage}
-                nextThread={nextThread}
                 activeUsers={activeUsers}
               />
             </li>
