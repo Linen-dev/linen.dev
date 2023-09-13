@@ -9,8 +9,11 @@ export const slugify = async (_: any, helpers: JobHelpers) => {
   const logger = new Logger(helpers.logger);
 
   keepAlive.start();
-  await slugifyTask(logger);
-  keepAlive.end();
+  try {
+    await slugifyTask(logger);
+  } finally {
+    keepAlive.end();
+  }
 };
 
 async function slugifyTask(logger: Logger) {

@@ -8,11 +8,12 @@ const batchSize = 1000;
 export const updateMessagesCount = async (_: any, helpers: JobHelpers) => {
   const keepAlive = new KeepAlive(helpers);
   keepAlive.start();
-
   const logger = new Logger(helpers.logger);
-  await task({ logger });
-
-  keepAlive.end();
+  try {
+    await task({ logger });
+  } finally {
+    keepAlive.end();
+  }
 };
 
 async function task({ logger }: { logger: Logger }) {

@@ -28,10 +28,11 @@ export const typesenseSetup = async (payload: any, helpers: JobHelpers) => {
 
   const keepAlive = new KeepAlive(helpers);
   keepAlive.start();
-
-  await setup({ accountId, logger });
-
-  keepAlive.end();
+  try {
+    await setup({ accountId, logger });
+  } finally {
+    keepAlive.end();
+  }
 };
 
 export const typesenseSync = async (payload: any, helpers: JobHelpers) => {
@@ -47,9 +48,11 @@ export const typesenseSync = async (payload: any, helpers: JobHelpers) => {
   const keepAlive = new KeepAlive(helpers);
   keepAlive.start();
 
-  await sync({ accountId, logger });
-
-  keepAlive.end();
+  try {
+    await sync({ accountId, logger });
+  } finally {
+    keepAlive.end();
+  }
 };
 
 export const typesenseSyncAll = async (_: any, helpers: JobHelpers) => {
@@ -58,9 +61,11 @@ export const typesenseSyncAll = async (_: any, helpers: JobHelpers) => {
   const keepAlive = new KeepAlive(helpers);
   keepAlive.start();
 
-  await syncAll({ logger });
-
-  keepAlive.end();
+  try {
+    await syncAll({ logger });
+  } finally {
+    keepAlive.end();
+  }
 };
 
 export const typesenseDeletion = async (payload: any, helpers: JobHelpers) => {
@@ -77,22 +82,26 @@ export const typesenseDeletion = async (payload: any, helpers: JobHelpers) => {
   const keepAlive = new KeepAlive(helpers);
   keepAlive.start();
 
-  await deletion({
-    accountId,
-    threadId,
-    logger,
-  });
-
-  keepAlive.end();
+  try {
+    await deletion({
+      accountId,
+      threadId,
+      logger,
+    });
+  } finally {
+    keepAlive.end();
+  }
 };
 
 export const typesenseRefreshApiKeys = async (_: any, helpers: JobHelpers) => {
   const keepAlive = new KeepAlive(helpers);
   keepAlive.start();
 
-  await refreshApiKeys();
-
-  keepAlive.end();
+  try {
+    await refreshApiKeys();
+  } finally {
+    keepAlive.end();
+  }
 };
 
 export const typesenseOnChannelNameUpdate = async (
@@ -110,9 +119,11 @@ export const typesenseOnChannelNameUpdate = async (
   const keepAlive = new KeepAlive(helpers);
   keepAlive.start();
 
-  await handleChannelNameUpdate({ channelId, logger });
-
-  keepAlive.end();
+  try {
+    await handleChannelNameUpdate({ channelId, logger });
+  } finally {
+    keepAlive.end();
+  }
 };
 
 export const typesenseOnChannelTypeUpdate = async (
@@ -128,9 +139,11 @@ export const typesenseOnChannelTypeUpdate = async (
   const keepAlive = new KeepAlive(helpers);
   keepAlive.start();
 
-  await handleChannelTypeUpdate({ channelId });
-
-  keepAlive.end();
+  try {
+    await handleChannelTypeUpdate({ channelId });
+  } finally {
+    keepAlive.end();
+  }
 };
 
 export const typesenseOnChannelDeletion = async (
@@ -148,9 +161,11 @@ export const typesenseOnChannelDeletion = async (
   const keepAlive = new KeepAlive(helpers);
   keepAlive.start();
 
-  await handleChannelDeletion({ channelId, accountId, channelName });
-
-  keepAlive.end();
+  try {
+    await handleChannelDeletion({ channelId, accountId, channelName });
+  } finally {
+    keepAlive.end();
+  }
 };
 
 export const typesenseOnCommunityTypeUpdate = async (
@@ -168,9 +183,11 @@ export const typesenseOnCommunityTypeUpdate = async (
   const keepAlive = new KeepAlive(helpers);
   keepAlive.start();
 
-  await handleCommunityUpdate({ accountId, logger });
-
-  keepAlive.end();
+  try {
+    await handleCommunityUpdate({ accountId, logger });
+  } finally {
+    keepAlive.end();
+  }
 };
 
 export const typesenseOnCommunityDeletion = async (
@@ -185,10 +202,11 @@ export const typesenseOnCommunityDeletion = async (
 
   const keepAlive = new KeepAlive(helpers);
   keepAlive.start();
-
-  await handleCommunityDeletion({ accountId });
-
-  keepAlive.end();
+  try {
+    await handleCommunityDeletion({ accountId });
+  } finally {
+    keepAlive.end();
+  }
 };
 
 export const typesenseOnUserNameUpdate = async (
@@ -213,7 +231,7 @@ export const typesenseOnUserNameUpdate = async (
     if (error.message !== 'account missing searchSettings') {
       throw error;
     }
+  } finally {
+    keepAlive.end();
   }
-
-  keepAlive.end();
 };

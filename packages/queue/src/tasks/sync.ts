@@ -11,7 +11,10 @@ export const sync = async (payload: any, helpers: JobHelpers) => {
   keepAlive.start();
 
   const fullSync = helpers.job.attempts === 1;
-  await syncJob({ ...payload, fullSync, logger });
 
-  keepAlive.end();
+  try {
+    await syncJob({ ...payload, fullSync, logger });
+  } finally {
+    keepAlive.end();
+  }
 };

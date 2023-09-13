@@ -11,8 +11,10 @@ export const sitemap = async (_: any, helpers: JobHelpers) => {
   const logger = new Logger(helpers.logger);
 
   logger.info({ sitemap: process.env.S3_UPLOAD_BUCKET });
-  await task(uploadFile, logger);
-  logger.info({ sitemap: 'finished' });
-
-  keepAlive.end();
+  try {
+    await task(uploadFile, logger);
+    logger.info({ sitemap: 'finished' });
+  } finally {
+    keepAlive.end();
+  }
 };
