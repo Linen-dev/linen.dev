@@ -79,4 +79,5 @@ export type SerializedTopic = {
   messageId: string;
   threadId: string;
   sentAt: string;
+  usersId?: string | null;
 };

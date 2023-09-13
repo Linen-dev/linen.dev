@@ -119,10 +119,12 @@ export function serializeTopic(topic: {
   id: string;
   threadId: string | null;
   sentAt: Date;
+  usersId?: string;
 }): SerializedTopic {
   return {
     messageId: topic.id,
     threadId: topic.threadId!,
     sentAt: new Date(topic.sentAt).toISOString(),
+    usersId: topic.usersId,
   };
 }
