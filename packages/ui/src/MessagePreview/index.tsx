@@ -2,7 +2,6 @@ import React from 'react';
 import Avatar from '@/Avatar';
 import Badge from '@/Badge';
 import Message from '@/Message';
-import Symbol from '@/Symbol';
 import {
   SerializedMessage,
   SerializedUser,
@@ -29,7 +28,6 @@ function MessagePreview({
     <div className={styles.container}>
       {title && (
         <div className={styles.title}>
-          {viewType === ChannelViewType.TOPIC && <Symbol text={title} />}
           <span>{title}</span>
         </div>
       )}

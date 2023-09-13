@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import Header from '@linen/ui/Header';
 import ErrorFallback from './ErrorFallback';
@@ -83,9 +83,11 @@ function PageLayout({
   const { startSignUp } = useJoinContext();
   const { status } = useSession();
 
-  async function onWriteMessage(user: SerializedUser) {
+  const onWriteMessage = useCallback(async function onWriteMessage(
+    user: SerializedUser
+  ) {
     const result = await api.createDm({
-      accountId: permissions.accountId!,
+      accountId: currentCommunity.id,
       userId: user.id,
     });
     setDms((dms) => {
@@ -95,7 +97,8 @@ function PageLayout({
     CustomRouterPush({
       path: `/c/${result.id}`,
     });
-  }
+  },
+  []);
 
   useEffect(() => {
     setChannels(initialChannels.filter((c: SerializedChannel) => !c.hidden));
