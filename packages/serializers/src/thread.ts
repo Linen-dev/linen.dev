@@ -119,7 +119,7 @@ export function serializeTopic(topic: {
   id: string;
   threadId: string | null;
   sentAt: Date;
-  usersId?: string;
+  usersId?: string | null;
 }): SerializedTopic {
   return {
     messageId: topic.id,
