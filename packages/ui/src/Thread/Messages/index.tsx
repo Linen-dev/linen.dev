@@ -57,10 +57,17 @@ function Messages({
   const { messages } = thread;
 
   const elements = messages.map((message, index) => {
+    const previous = messages[index - 1];
+    const showAvatar =
+      index === 0 ||
+      !message.usersId ||
+      (previous && previous.usersId !== message.usersId);
     return (
       <div id={message.id} key={`${message.id}`} className={styles.container}>
         <GridRow
-          className={styles.row}
+          className={classNames({
+            [styles['padding-top']]: showAvatar,
+          })}
           thread={thread}
           message={message}
           isUserActive={isAuthorActive(
@@ -68,6 +75,7 @@ function Messages({
             currentUser,
             activeUsers
           )}
+          showAvatar={showAvatar}
           isBot={isBot}
           permissions={permissions}
           currentUser={currentUser}

@@ -545,6 +545,7 @@ export default function Channel({
                         onClick={() => selectThread(pinnedThread.id)}
                       >
                         <Row
+                          className={styles.row}
                           thread={pinnedThread}
                           permissions={permissions}
                           isSubDomainRouting={isSubDomainRouting}
