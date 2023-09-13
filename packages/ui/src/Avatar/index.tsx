@@ -42,6 +42,7 @@ const TextAvatar = function TextAvatar({
   return (
     <div
       className={classNames(
+        styles.avatar,
         className,
         styles.placeholder,
         size && styles[size],
@@ -73,7 +74,7 @@ const ImageAvatar = function ImageAvatar({
   }
   return (
     <picture
-      className={classNames({
+      className={classNames(styles.avatar, {
         [styles.active]: active,
         [styles.sm]: size === 'sm',
       })}
