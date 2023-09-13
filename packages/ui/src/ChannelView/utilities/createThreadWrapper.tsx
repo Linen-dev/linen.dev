@@ -74,6 +74,7 @@ export function createThreadWrapper({
             threadId: imitation.id,
             messageId: imitation.messages[0].id,
             sentAt: imitation.sentAt,
+            usersId: currentUser.id,
           },
         ];
       });
@@ -114,6 +115,7 @@ export function createThreadWrapper({
                   threadId: thread.id,
                   messageId: thread.messages[0].id,
                   sentAt: thread.sentAt,
+                  usersId: currentUser.id,
                 };
               }
               return topic;

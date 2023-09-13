@@ -44,6 +44,8 @@ interface Props {
   showAvatar?: boolean;
   showTitle?: boolean;
   showVotes?: boolean;
+  showMessages?: boolean;
+  avatarSize?: 'sm' | 'md' | 'xl';
   subheader?: React.ReactNode;
   truncate?: boolean;
   onClick?(): void;
@@ -99,6 +101,8 @@ function Row({
   showAvatar,
   showTitle,
   showVotes,
+  showMessages,
+  avatarSize,
   subheader,
   truncate,
   onClick,
@@ -164,6 +168,7 @@ function Row({
         truncate={truncate}
         showActions={showActions}
         showAvatar={showAvatar}
+        avatarSize={avatarSize}
         onDelete={onDelete}
         onEdit={onEdit}
         onLoad={onLoad}
@@ -179,7 +184,11 @@ function Row({
         onImageClick={onImageClick}
         header={
           showTitle &&
-          thread.title && <div className={styles.header}>{thread.title}</div>
+          (thread.title || thread.channel?.viewType === 'TOPIC') && (
+            <div className={styles.header}>
+              {thread.title || thread.messages[0].body.substring(0, 40) + '...'}
+            </div>
+          )
         }
         subheader={subheader}
         info={
@@ -191,7 +200,7 @@ function Row({
           const renderVotes =
             (showVotes && onReaction) ||
             (thread?.channel?.viewType === 'FORUM' && onReaction);
-          const renderMessages = messages.length > 1;
+          const renderMessages = showMessages && messages.length > 1;
           const showFooter = renderVotes || renderMessages;
           return (
             showFooter && (

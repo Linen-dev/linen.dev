@@ -82,6 +82,7 @@ export function createMessageWrapper({
             messageId: imitation.id,
             threadId,
             sentAt: imitation.sentAt,
+            usersId: currentUser.id,
           },
         ];
       });
@@ -133,6 +134,7 @@ export function createMessageWrapper({
                   messageId: message.id,
                   threadId: topic.threadId,
                   sentAt: topic.sentAt,
+                  usersId: currentUser.id,
                 };
               }
               return topic;

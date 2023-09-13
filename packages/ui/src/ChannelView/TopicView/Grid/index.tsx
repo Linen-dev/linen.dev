@@ -34,6 +34,7 @@ interface RowItem {
   first?: boolean;
   last?: boolean;
   padded?: boolean;
+  avatar?: boolean;
 }
 
 export default function Grid({
@@ -143,6 +144,7 @@ export default function Grid({
           first: topic.first,
           last: topic.last,
           padded: topic.padded,
+          avatar: topic.avatar,
         };
       })
       .filter((topic) => !!topic.content),
@@ -185,11 +187,15 @@ export default function Grid({
                 // incrementId={incrementId}
                 // slug={slug}
                 className={classNames({
-                  [styles.first]: item.first,
-                  [styles.last]: item.last,
-                  [styles.padded]: item.padded,
+                  [styles['padding-top']]: item.first || item.avatar,
+                  [styles['padding-bottom']]: item.last,
+                  [styles['padding-left']]: item.padded,
                 })}
                 showTitle={item.first}
+                showAvatar={item.avatar}
+                avatarSize={item.padded ? 'sm' : 'md'}
+                showVotes={false}
+                showMessages={false}
                 thread={thread}
                 topic={item.topic}
                 permissions={permissions}

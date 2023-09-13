@@ -44,6 +44,11 @@
   justify-content: center;
 }
 
+.left.sm {
+  min-width: 26px;
+  width: 26px;
+}
+
 .left .date {
   align-self: center;
   display: flex;
