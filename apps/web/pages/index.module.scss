@@ -188,14 +188,18 @@
   right: 0;
 }
 
-.wrapper .row {
+.wrapper .item {
   position: relative;
   pointer-events: none;
   z-index: 1;
 }
 
-.wrapper .row a {
+.wrapper .item a {
   pointer-events: all;
+}
+
+.row {
+  padding: 0.5rem 1rem;
 }
 
 .subheader {

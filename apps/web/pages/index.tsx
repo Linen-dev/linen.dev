@@ -237,8 +237,9 @@ export default function Feed({
                     target="_blank"
                     rel="noreferrer"
                   ></a>
-                  <div className={styles.row}>
+                  <div className={styles.item}>
                     <Row
+                      className={styles.row}
                       thread={thread}
                       currentUser={null}
                       isSubDomainRouting={false}

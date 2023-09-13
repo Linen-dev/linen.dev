@@ -881,6 +881,48 @@ export default async function createLinenCommunity() {
     })),
   });
 
+  const channel9 = await prisma.channels.create({
+    data: {
+      accountId: community.id,
+      channelName: 'topic',
+      pages: 100,
+      viewType: 'TOPIC',
+      displayOrder: 6,
+    },
+  });
+
+  await prisma.memberships.createMany({
+    data: users.map((user) => ({
+      channelsId: channel9.id,
+      usersId: user.id,
+    })),
+  });
+
+  [...(Array(999).keys() as any)].map(async (index) => {
+    const number = 999 - index;
+    const sentAt = `2022-12-17T08:02:00.${pad(number.toString(), 3)}Z`;
+    await prisma.threads.create({
+      data: {
+        title: `Topic title ${index}`,
+        channelId: channel9.id,
+        sentAt: new Date(sentAt).getTime(),
+        lastReplyAt: new Date(sentAt).getTime(),
+        messages: {
+          create: [
+            {
+              channelId: channel9.id,
+              body: `Topic thread ${index}`,
+              usersId: user1.id,
+              sentAt,
+              messageFormat: MessageFormat.LINEN,
+            },
+          ],
+        },
+        page: Math.ceil(number / 10),
+      },
+    });
+  });
+
   await prisma.channels.createMany({
     data: [...(Array(20).keys() as any)].map((index) => ({
       accountId: community.id,

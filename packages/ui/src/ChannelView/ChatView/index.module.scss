@@ -7,6 +7,10 @@
   padding-bottom: 0;
 }
 
+.row {
+  padding: 0.5rem 1rem;
+}
+
 @media screen and (max-width: 767px) {
   .header {
     display: none;
