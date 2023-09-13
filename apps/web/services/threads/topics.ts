@@ -23,7 +23,12 @@ export async function findTopics({
 }> {
   const messages = await prisma.messages.findMany({
     take: limit,
-    select: { id: true, threadId: true, sentAt: true },
+    select: {
+      id: true,
+      threadId: true,
+      sentAt: true,
+      usersId: true,
+    },
     where: {
       channel: { hidden: false, id: channelId, accountId },
       threads: { hidden: false },
