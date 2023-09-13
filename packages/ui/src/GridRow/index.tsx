@@ -128,7 +128,9 @@ function Left({
   if (showAvatar) {
     return (
       <Avatar
-        className={classNames(styles.left)}
+        className={classNames(styles.left, {
+          [styles.sm]: avatarSize === 'sm',
+        })}
         src={message.author?.profileImageUrl}
         text={message.author?.displayName}
         placeholder={!inView || isBot}

@@ -52,7 +52,7 @@ export type messages = {
   channelId: string;
   externalMessageId: string | null;
   threadId: string | null;
-  usersId?: string | null;
+  usersId: string | null;
   messageFormat: MessageFormat | null;
 };
 

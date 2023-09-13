@@ -142,14 +142,15 @@ describe('#toRows', () => {
     it('sets the avatar to true', () => {
       const topics = [
         [
-          { threadId: '1', messageId: '1', sentAt },
-          { threadId: '1', messageId: '2', sentAt },
+          { threadId: '1', messageId: '1', usersId: '1', sentAt },
+          { threadId: '1', messageId: '2', usersId: '2', sentAt },
         ],
       ];
       expect(toRows(topics)).toEqual([
         {
           threadId: '1',
           messageId: '1',
+          usersId: '1',
           sentAt,
           first: true,
           last: false,
@@ -159,6 +160,7 @@ describe('#toRows', () => {
         {
           threadId: '1',
           messageId: '2',
+          usersId: '2',
           sentAt,
           first: false,
           last: true,
