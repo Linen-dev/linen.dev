@@ -39,6 +39,7 @@
     "./getDisplayName": "./dist/getDisplayName.js",
     "./home": "./dist/home.js",
     "./isAuthorActive": "./dist/isAuthorActive.js",
+    "./logger": "./dist/logger.js",
     "./memoize": "./dist/memoize.js",
     "./number": "./dist/number.js",
     "./object": "./dist/object.js",
@@ -98,6 +99,9 @@
       ],
       "isAuthorActive": [
         "./dist/isAuthorActive.d.ts"
+      ],
+      "logger": [
+        "./dist/logger.d.ts"
       ],
       "memoize": [
         "./dist/memoize.d.ts"
