@@ -59,6 +59,16 @@
   font-weight: 500;
 }
 
+.sm.active {
+  position: relative;
+  height: 26px;
+}
+
+.sm.active::after {
+  height: 0.4rem;
+  width: 0.4rem;
+}
+
 .xl {
   width: 96px;
   min-width: 96px;

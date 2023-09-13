@@ -315,6 +315,7 @@ export default function ChannelView({
                 threadId: threadId,
                 messageId: messageId,
                 sentAt: message.sentAt,
+                usersId: message.usersId,
               },
             ];
           });
@@ -344,6 +345,7 @@ export default function ChannelView({
                 threadId: threadId,
                 messageId: thread.messages[0].id,
                 sentAt: thread.sentAt,
+                usersId: thread.messages[0].usersId,
               },
             ];
           });

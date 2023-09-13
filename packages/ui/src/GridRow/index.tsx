@@ -76,6 +76,7 @@ interface Props {
   info?: React.ReactNode;
   showActions?: boolean;
   showAvatar?: boolean;
+  avatarSize?: 'sm' | 'md' | 'xl';
   truncate?: boolean;
   footer?({ inView }: { inView: boolean }): React.ReactNode;
   onDelete?(messageId: string): void;
@@ -105,6 +106,7 @@ interface Props {
 
 function Left({
   showAvatar,
+  avatarSize,
   message,
   isBot,
   hover,
@@ -113,6 +115,7 @@ function Left({
   onAvatarClick,
 }: {
   showAvatar?: boolean;
+  avatarSize?: 'sm' | 'md' | 'xl';
   message: SerializedMessage;
   isBot: boolean;
   hover?: boolean;
@@ -130,6 +133,7 @@ function Left({
         text={message.author?.displayName}
         placeholder={!inView || isBot}
         active={isUserActive}
+        size={avatarSize}
         isBot={isBot}
         onClick={onAvatarClick}
       />
@@ -137,7 +141,9 @@ function Left({
   }
 
   return (
-    <div className={styles.left}>
+    <div
+      className={classNames(styles.left, { [styles.sm]: avatarSize === 'sm' })}
+    >
       {hover && (
         <span className={styles.date}>{format(message.sentAt, 'p')}</span>
       )}
@@ -170,6 +176,7 @@ function Row({
   info,
   showActions,
   showAvatar,
+  avatarSize,
   truncate,
   footer,
   onDelete,
@@ -246,6 +253,7 @@ function Row({
         <Left
           message={message}
           showAvatar={showAvatar}
+          avatarSize={avatarSize}
           isBot={isBot}
           hover={hover}
           inView={inView}

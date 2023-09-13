@@ -73,7 +73,10 @@ const ImageAvatar = function ImageAvatar({
   }
   return (
     <picture
-      className={classNames({ [styles.active]: active })}
+      className={classNames({
+        [styles.active]: active,
+        [styles.sm]: size === 'sm',
+      })}
       onClick={onClick}
     >
       <img

@@ -18,20 +18,34 @@ export type TopicRow = SerializedTopic & {
   first: boolean;
   last: boolean;
   padded: boolean;
+  avatar: boolean;
 };
 
 export function toRows(topics: SerializedTopic[][]): TopicRow[] {
-  return topics.reduce((result, current) => {
-    return [
-      ...result,
-      ...current.map((topic, index) => {
-        return {
-          ...topic,
-          first: index === 0,
-          last: index === current.length - 1,
-          padded: index > 0,
-        };
-      }),
-    ];
+  return topics.reduce((result, group) => {
+    let forcePadding = false;
+
+    const rows = group.map((current, index) => {
+      const first = group[0];
+      const previous = group[index - 1];
+      if (current.usersId && current.usersId !== first.usersId) {
+        forcePadding = true;
+      }
+      return {
+        ...current,
+        first: index === 0,
+        last: index === group.length - 1,
+        padded:
+          forcePadding ||
+          (index > 0 &&
+            (!current.usersId || first.usersId !== current.usersId)),
+        avatar:
+          index === 0 ||
+          !current.usersId ||
+          (previous && previous.usersId !== current.usersId),
+      };
+    });
+
+    return [...result, ...rows];
   }, []) as TopicRow[];
 }
