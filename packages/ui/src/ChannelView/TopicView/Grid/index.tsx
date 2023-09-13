@@ -187,6 +187,7 @@ export default function Grid({
                 className={classNames({
                   [styles.first]: item.first,
                   [styles.last]: item.last,
+                  [styles.padded]: item.padded,
                 })}
                 showTitle={item.first}
                 thread={thread}
