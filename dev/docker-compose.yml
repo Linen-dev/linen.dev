@@ -20,7 +20,7 @@ services:
     network_mode: bridge
 
   typesense:
-    image: typesense/typesense:0.25.0
+    image: typesense/typesense:0.25.1
     restart: on-failure
     ports:
       - '8108:8108'
