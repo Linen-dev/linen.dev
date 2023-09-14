@@ -186,7 +186,10 @@ function Row({
           showTitle &&
           (thread.title || thread.channel?.viewType === 'TOPIC') && (
             <div className={styles.header}>
-              {thread.title || thread.messages[0].body.substring(0, 40) + '...'}
+              <div className={styles.title}>
+                {thread.title ||
+                  thread.messages[0].body.substring(0, 40).trim() + '...'}
+              </div>
             </div>
           )
         }
