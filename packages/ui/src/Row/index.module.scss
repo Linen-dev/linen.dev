@@ -15,14 +15,15 @@
 }
 
 .header {
-  align-items: center;
-  display: inline-flex;
+  display: block;
   font-size: 14px;
   font-weight: 600;
   line-height: 1;
-  gap: 0.75rem;
   margin: 0 0 0.75rem 0;
   padding: 0;
+}
+
+.header .title {
   word-wrap: break-word;
 }
 
