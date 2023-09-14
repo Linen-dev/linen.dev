@@ -7,6 +7,24 @@
   padding: 0;
 }
 
+.header .line {
+  height: 8px;
+  width: 32px;
+  border-top-left-radius: 4px;
+  border-top: 1px solid var(--color-gray-300);
+  border-left: 1px solid var(--color-gray-300);
+}
+
+.header .info {
+  align-items: center;
+  color: var(--color-gray-600);
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: normal;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .header .title {
   word-wrap: break-word;
 }
