@@ -1,10 +1,10 @@
 import React from 'react';
 import classNames from 'classnames';
+import Header from './Header';
 import Droppable from './Droppable';
 import Avatars from '@/Avatars';
 import GridRow from '@/GridRow';
 import Votes from '@/Votes';
-import Symbol from '@/Symbol';
 import styles from './index.module.scss';
 import {
   Permissions,
@@ -42,7 +42,7 @@ interface Props {
   mode?: Mode;
   showActions?: boolean;
   showAvatar?: boolean;
-  showTitle?: boolean;
+  showHeader?: boolean;
   showVotes?: boolean;
   showMessages?: boolean;
   avatarSize?: 'sm' | 'md' | 'xl';
@@ -99,7 +99,7 @@ function Row({
   mode,
   showActions,
   showAvatar,
-  showTitle,
+  showHeader,
   showVotes,
   showMessages,
   avatarSize,
@@ -183,14 +183,9 @@ function Row({
         onUnread={onUnread}
         onImageClick={onImageClick}
         header={
-          showTitle &&
+          showHeader &&
           (thread.title || thread.channel?.viewType === 'TOPIC') && (
-            <div className={styles.header}>
-              <div className={styles.title}>
-                {thread.title ||
-                  thread.messages[0].body.substring(0, 40).trim() + '...'}
-              </div>
-            </div>
+            <Header thread={thread} />
           )
         }
         subheader={subheader}
@@ -259,7 +254,7 @@ function Row({
 }
 
 Row.defaultProps = {
-  showTitle: true,
+  showHeader: true,
 };
 
 export default Row;
