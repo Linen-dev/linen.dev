@@ -2,7 +2,7 @@ import React from 'react';
 import Avatar from '@/Avatar';
 import styles from './index.module.scss';
 import { SerializedMessage, SerializedThread } from '@linen/types';
-import { format } from '@linen/utilities/date';
+// import { format } from '@linen/utilities/date';
 
 interface Props {
   thread: SerializedThread;
@@ -13,7 +13,7 @@ export default function Header({ thread, message }: Props) {
   const isTopic = thread.channel?.viewType === 'TOPIC';
   if (thread.title || isTopic) {
     const index = thread.messages.findIndex(({ id }) => id === message.id);
-    const date = format(message.sentAt, 'p');
+    // const date = format(message.sentAt, 'p');
     return (
       <div className={styles.header}>
         {isTopic && index > 0 && (
@@ -24,7 +24,7 @@ export default function Header({ thread, message }: Props) {
               text={message.author?.displayName}
               size="sm"
             />
-            replied at {date}
+            replied
           </div>
         )}
         <div className={styles.title}>
