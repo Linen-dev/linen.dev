@@ -191,7 +191,7 @@ export default function Grid({
                   [styles['padding-bottom']]: item.last,
                   [styles['padding-left']]: item.padded,
                 })}
-                showTitle={item.first}
+                showHeader={item.first}
                 showAvatar={item.avatar}
                 avatarSize={item.padded ? 'sm' : 'md'}
                 showVotes={false}
