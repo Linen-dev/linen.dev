@@ -181,6 +181,7 @@ export default function Grid({
               key={`channel-grid-item-${item.topic.messageId}`}
               className={classNames(styles.li, {
                 [styles.active]: thread.id === currentThreadId,
+                [styles.padded]: !item.first && item.padded,
               })}
             >
               <Row

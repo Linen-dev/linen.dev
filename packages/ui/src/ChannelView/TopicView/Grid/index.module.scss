@@ -22,6 +22,11 @@
   z-index: 2;
 }
 
+.padded {
+  margin-left: 1rem;
+  border-left: 1px solid var(--color-gray-200);
+}
+
 .padding-top {
   padding-top: 0.5rem;
 }
@@ -31,5 +36,5 @@
 }
 
 .padding-left {
-  padding-left: 2rem;
+  padding-left: 0.75rem;
 }
