@@ -185,7 +185,7 @@ function Row({
         header={
           showHeader &&
           (thread.title || thread.channel?.viewType === 'TOPIC') && (
-            <Header thread={thread} />
+            <Header thread={thread} message={message} />
           )
         }
         subheader={subheader}
