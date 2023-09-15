@@ -45,6 +45,7 @@ describe('#toRows', () => {
           last: true,
           padded: false,
           avatar: true,
+          hash: '1',
         },
       ]);
     });
@@ -68,6 +69,7 @@ describe('#toRows', () => {
           last: false,
           padded: false,
           avatar: true,
+          hash: '1-2',
         },
         {
           threadId: '1',
@@ -78,6 +80,7 @@ describe('#toRows', () => {
           last: true,
           padded: false,
           avatar: false,
+          hash: '1-2',
         },
       ]);
     });
@@ -103,6 +106,7 @@ describe('#toRows', () => {
           last: false,
           padded: false,
           avatar: true,
+          hash: '1-2-3-4',
         },
         {
           threadId: '1',
@@ -113,6 +117,7 @@ describe('#toRows', () => {
           last: false,
           padded: false,
           avatar: false,
+          hash: '1-2-3-4',
         },
         {
           threadId: '1',
@@ -123,6 +128,7 @@ describe('#toRows', () => {
           last: false,
           padded: true,
           avatar: true,
+          hash: '1-2-3-4',
         },
         {
           threadId: '1',
@@ -133,6 +139,7 @@ describe('#toRows', () => {
           last: true,
           padded: true,
           avatar: true,
+          hash: '1-2-3-4',
         },
       ]);
     });
@@ -156,6 +163,7 @@ describe('#toRows', () => {
           last: false,
           padded: false,
           avatar: true,
+          hash: '1-2',
         },
         {
           threadId: '1',
@@ -166,6 +174,7 @@ describe('#toRows', () => {
           last: true,
           padded: true,
           avatar: true,
+          hash: '1-2',
         },
       ]);
     });
@@ -194,6 +203,7 @@ describe('#toRows', () => {
         last: false,
         padded: false,
         avatar: true,
+        hash: '1-2-3',
       },
       {
         threadId: '1',
@@ -204,6 +214,7 @@ describe('#toRows', () => {
         last: false,
         padded: true,
         avatar: true,
+        hash: '1-2-3',
       },
 
       {
@@ -215,6 +226,7 @@ describe('#toRows', () => {
         last: true,
         padded: true,
         avatar: true,
+        hash: '1-2-3',
       },
       {
         threadId: '2',
@@ -225,6 +237,7 @@ describe('#toRows', () => {
         last: false,
         padded: false,
         avatar: true,
+        hash: '4-5-6',
       },
       {
         threadId: '2',
@@ -235,6 +248,7 @@ describe('#toRows', () => {
         last: false,
         padded: true,
         avatar: true,
+        hash: '4-5-6',
       },
       {
         threadId: '2',
@@ -245,6 +259,7 @@ describe('#toRows', () => {
         last: true,
         padded: true,
         avatar: true,
+        hash: '4-5-6',
       },
     ]);
   });
