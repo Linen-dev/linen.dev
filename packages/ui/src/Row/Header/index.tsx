@@ -23,9 +23,12 @@ export default function Header({ thread, message }: Props) {
               thread.messages[0].body.substring(0, 40).trim() + '...'}
           </div>
         ) : (
-          <div className={styles.title}>
-            {thread.title ||
-              thread.messages[0].body.substring(0, 40).trim() + '...'}
+          <div className={styles.header}>
+            {' '}
+            <div className={styles.title}>
+              {thread.title ||
+                thread.messages[0].body.substring(0, 40).trim() + '...'}
+            </div>
           </div>
         )}
       </div>
@@ -33,9 +36,11 @@ export default function Header({ thread, message }: Props) {
   }
   if (thread.title) {
     return (
-      <div className={styles.title}>
-        {thread.title ||
-          thread.messages[0].body.substring(0, 40).trim() + '...'}
+      <div className={styles.header}>
+        <div className={styles.title}>
+          {thread.title ||
+            thread.messages[0].body.substring(0, 40).trim() + '...'}
+        </div>
       </div>
     );
   }
