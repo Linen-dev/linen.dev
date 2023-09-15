@@ -28,13 +28,17 @@
 }
 
 .padding-top {
-  padding-top: 0.5rem;
+  padding-top: 1rem;
 }
 
 .padding-bottom {
-  padding-bottom: 0.5rem;
+  padding-bottom: 1rem;
 }
 
 .padding-left {
   padding-left: 0.75rem;
+}
+
+.divider {
+  border-top: 1px solid var(--color-border);
 }
