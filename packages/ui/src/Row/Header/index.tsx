@@ -11,26 +11,31 @@ interface Props {
 
 export default function Header({ thread, message }: Props) {
   const isTopic = thread.channel?.viewType === 'TOPIC';
-  if (thread.title || isTopic) {
+  if (isTopic) {
     const index = thread.messages.findIndex(({ id }) => id === message.id);
     // const date = format(message.sentAt, 'p');
     return (
       <div className={styles.header}>
-        {isTopic && index > 0 && (
+        {index > 0 ? (
           <div className={styles.info}>
             <div className={styles.line}></div>
-            <Avatar
-              src={message.author?.profileImageUrl}
-              text={message.author?.displayName}
-              size="sm"
-            />
-            replied
+            {thread.title ||
+              thread.messages[0].body.substring(0, 40).trim() + '...'}
+          </div>
+        ) : (
+          <div className={styles.title}>
+            {thread.title ||
+              thread.messages[0].body.substring(0, 40).trim() + '...'}
           </div>
         )}
-        <div className={styles.title}>
-          {thread.title ||
-            thread.messages[0].body.substring(0, 40).trim() + '...'}
-        </div>
+      </div>
+    );
+  }
+  if (thread.title) {
+    return (
+      <div className={styles.title}>
+        {thread.title ||
+          thread.messages[0].body.substring(0, 40).trim() + '...'}
       </div>
     );
   }
