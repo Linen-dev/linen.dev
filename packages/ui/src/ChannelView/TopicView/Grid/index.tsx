@@ -35,6 +35,7 @@ interface RowItem {
   last?: boolean;
   padded?: boolean;
   avatar?: boolean;
+  hash?: string;
 }
 
 export default function Grid({
@@ -145,6 +146,7 @@ export default function Grid({
           last: topic.last,
           padded: topic.padded,
           avatar: topic.avatar,
+          hash: topic.hash,
         };
       })
       .filter((topic) => !!topic.content),
@@ -166,6 +168,7 @@ export default function Grid({
       })}
     >
       {sorted.map((item, index) => {
+        const previous = sorted[index - 1];
         const last = index === sorted.length - 1;
         if (item.type === RowType.ReadStatus && !last) {
           return (
@@ -182,6 +185,7 @@ export default function Grid({
               className={classNames(styles.li, {
                 [styles.active]: thread.id === currentThreadId,
                 [styles.padded]: !item.first && item.padded,
+                [styles.divider]: previous && item.hash !== previous.hash,
               })}
             >
               <Row

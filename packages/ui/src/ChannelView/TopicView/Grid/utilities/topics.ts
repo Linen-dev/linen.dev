@@ -19,12 +19,13 @@ export type TopicRow = SerializedTopic & {
   last: boolean;
   padded: boolean;
   avatar: boolean;
+  hash: string;
 };
 
 export function toRows(topics: SerializedTopic[][]): TopicRow[] {
   return topics.reduce((result, group) => {
     let forcePadding = false;
-
+    const hash = group.map((current) => current.messageId).join('-');
     const rows = group.map((current, index) => {
       const first = group[0];
       const previous = group[index - 1];
@@ -43,6 +44,7 @@ export function toRows(topics: SerializedTopic[][]): TopicRow[] {
           index === 0 ||
           !current.usersId ||
           (previous && previous.usersId !== current.usersId),
+        hash,
       };
     });
 
