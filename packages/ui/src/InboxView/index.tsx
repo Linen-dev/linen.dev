@@ -526,9 +526,7 @@ export default function InboxView({
         }).then((inbox) => {
           setInbox(() => {
             return {
-              threads: inbox.threads.filter(
-                (thread) => !marked.includes(thread.id)
-              ),
+              threads: inbox.threads,
               total: inbox.total,
             };
           });
@@ -729,6 +727,10 @@ export default function InboxView({
     setKey((key) => key + 1);
   }, [configuration]);
 
+  const threadsToRender = inbox.threads.filter(
+    (thread) => !marked.includes(thread.id)
+  );
+
   return (
     <>
       <SidebarLayout
@@ -749,10 +751,10 @@ export default function InboxView({
               }}
               dropdown={dropdown}
             />
-            {threads.length > 0 ? (
+            {threadsToRender.length > 0 ? (
               <Grid
                 currentThreadId={thread?.id}
-                threads={inbox.threads}
+                threads={threadsToRender}
                 loading={polling}
                 selections={selections}
                 permissions={permissions}
@@ -767,7 +769,7 @@ export default function InboxView({
                       checked,
                       index,
                       selections,
-                      ids: inbox.threads.map((thread) => thread.id),
+                      ids: threadsToRender.map((thread) => thread.id),
                       isShiftPressed,
                     });
                   });
