@@ -53,6 +53,7 @@ import { getFormData } from '@linen/utilities/files';
 import type { ApiClient } from '@linen/api-client';
 import PaginationNumbers from '@/PaginationNumbers';
 import { useViewport } from '@linen/hooks/useViewport';
+import { getThreadUrl } from '@linen/utilities/url';
 import { TypingFunctions } from '@/Thread/UsersTyping';
 
 const useLayoutEffect =
@@ -343,12 +344,45 @@ export default function Channel({
     if (!currentThread) {
       return;
     }
+    setCollapsed(true);
     onSelectThread(currentThread.id);
-    const isLastThread = currentThread.id === threads[threads.length - 1].id;
-    if (isLastThread) {
-      setTimeout(() => handleScroll(), 0);
-    }
-    handleLeftScroll();
+    const url = getThreadUrl({
+      isSubDomainRouting,
+      settings,
+      incrementId: currentThread.incrementId,
+      slug: currentThread.slug,
+      LINEN_URL:
+        process.env.NODE_ENV === 'development'
+          ? 'http://localhost:3000'
+          : 'https://www.linen.dev',
+    });
+    window.history.pushState(
+      {
+        ...window.history.state,
+        options: {
+          ...window.history.state.options,
+          _preventNextJSReload: false,
+        },
+      },
+      '',
+      url
+    );
+    window.onpopstate = (event) => {
+      event.preventDefault();
+      window.history.pushState(
+        {
+          ...window.history.state,
+          options: {
+            ...window.history.state.options,
+            _preventNextJSReload: true,
+          },
+        },
+        '',
+        window.history.state.url
+      );
+      setCollapsed(false);
+      onSelectThread(undefined);
+    };
   }
 
   const rootMargin =
@@ -662,9 +696,15 @@ export default function Channel({
               currentUser={currentUser}
               updateThread={updateThread}
               editMessage={editMessage}
-              onClose={() => onSelectThread(undefined)}
+              onClose={() => {
+                setCollapsed(false);
+                onSelectThread(undefined);
+              }}
               expanded={collapsed}
-              onExpandClick={() => setCollapsed((collapsed) => !collapsed)}
+              onExpandClick={() => {
+                setCollapsed(false);
+                onSelectThread(undefined);
+              }}
               onResolution={updateThreadResolution}
               sendMessage={sendThreadMessage}
               onDelete={deleteMessage}
