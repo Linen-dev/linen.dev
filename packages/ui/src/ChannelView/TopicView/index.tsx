@@ -608,7 +608,7 @@ export default function Channel({
                   </>
                 ) : (
                   <>
-                    {!currentChannel.readonly && (
+                    {!currentChannel.readonly && permissions.chat && (
                       <Chat
                         channel={currentChannel}
                         currentUser={currentUser}
