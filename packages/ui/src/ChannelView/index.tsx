@@ -997,7 +997,6 @@ export default function ChannelView({
           settings={settings}
           channelName={channelName}
           isSubDomainRouting={isSubDomainRouting}
-          nextCursor={nextCursor}
           isBot={isBot}
           permissions={permissions}
           currentThreadId={currentThreadId}
