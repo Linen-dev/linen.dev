@@ -70,10 +70,6 @@ interface Props {
   topics: SerializedTopic[];
   pinnedThreads: SerializedThread[];
   isSubDomainRouting: boolean;
-  nextCursor: {
-    next: string | null;
-    prev: string | null;
-  };
   pathCursor: string | null;
   isBot: boolean;
   permissions: Permissions;
@@ -161,7 +157,6 @@ export default function Channel({
   settings,
   channelName,
   isSubDomainRouting,
-  nextCursor,
   token,
   permissions,
   currentThreadId,
@@ -205,7 +200,6 @@ export default function Channel({
   const lastScrollDistanceToBottomRef = useRef<number>();
   const rightRef = useRef<HTMLDivElement>(null);
   const leftBottomRef = useRef<HTMLDivElement>(null);
-  const [cursor, setCursor] = useState(nextCursor);
   const [error, setError] = useState<{ prev?: unknown; next?: unknown }>();
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
@@ -230,30 +224,27 @@ export default function Channel({
   }, [viewport, isInfiniteScrollLoading]);
 
   async function loadMore(next: boolean = false) {
-    const key = next ? 'next' : 'prev';
     if (isInfiniteScrollLoading || isScrolling) return;
-    if (!cursor[key]) return;
     try {
       setInfiniteScrollLoading(true);
-      if (cursor[key]) {
-        const data = await api.getThreads({
-          channelId: currentChannel.id,
-          cursor: cursor[key] || undefined,
-          accountId: currentCommunity.id,
-        });
-        if (data) {
-          setCursor({ ...cursor, [key]: data?.nextCursor?.[key] });
-          if (next) {
-            setThreads((threads) => [...threads, ...data.threads]);
-          } else {
-            setThreads((threads) => [...data.threads, ...threads]);
-          }
+      const data = await api.findTopics({
+        channelId: currentChannel.id,
+        sentAt: new Date(topics[0].sentAt),
+        accountId: currentCommunity.id,
+      });
+      if (data) {
+        if (next) {
+          setThreads((threads) => [...threads, ...data.threads]);
+          setTopics((topics) => [...topics, ...data.topics]);
+        } else {
+          setThreads((threads) => [...data.threads, ...threads]);
+          setTopics((topics) => [...data.topics, ...topics]);
         }
       }
       setIsScrolling(true);
       setInfiniteScrollLoading(false);
     } catch (err) {
-      setError({ ...error, [key]: err });
+      setError({ ...error });
       setInfiniteScrollLoading(false);
     }
   }
@@ -365,18 +356,9 @@ export default function Channel({
 
   const [infiniteTopRef, { rootRef: topRootRef }] = useInfiniteScroll({
     loading: isInfiniteScrollLoading || isScrolling,
-    hasNextPage: !!cursor.prev,
+    hasNextPage: true,
     onLoadMore: loadMore,
-    disabled: !!error?.prev || !cursor.prev || isScrolling,
-    rootMargin,
-    delayInMs: 0,
-  });
-
-  const [infiniteBottomRef, { rootRef: bottomRootRef }] = useInfiniteScroll({
-    loading: isInfiniteScrollLoading || isScrolling,
-    hasNextPage: !!cursor.next,
-    onLoadMore: loadMoreNext,
-    disabled: !!error?.next || !cursor.next || isScrolling,
+    disabled: !!error || isScrolling,
     rootMargin,
     delayInMs: 0,
   });
@@ -387,11 +369,10 @@ export default function Channel({
 
   const leftRef = useCallback(
     (node: HTMLDivElement) => {
-      bottomRootRef(node);
       topRootRef(node);
       scrollableRootRef.current = node;
     },
-    [topRootRef, bottomRootRef]
+    [topRootRef]
   );
 
   const handleRootScroll = () => {
@@ -523,9 +504,7 @@ export default function Channel({
               [styles['is-empty']]: threads.length === 0,
             })}
           >
-            {cursor?.prev && !error?.prev && !isScrolling && (
-              <div ref={infiniteTopRef}></div>
-            )}
+            {!error && !isScrolling && <div ref={infiniteTopRef}></div>}
             <ChatLayout
               onDrop={(event: React.DragEvent) => {
                 event.preventDefault();
@@ -657,9 +636,6 @@ export default function Channel({
                 )
               }
             />
-            {cursor.next && !error?.next && !isScrolling && (
-              <div ref={infiniteBottomRef}></div>
-            )}
             <div ref={leftBottomRef}></div>
           </div>
         }
