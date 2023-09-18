@@ -171,8 +171,7 @@ export default class PermissionsService {
       return false;
     }
     if (community.chat === ChatType.MEMBERS) {
-      if (!!user?.role) return true;
-      return false;
+      return true;
     }
     return false;
   }

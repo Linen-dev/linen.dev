@@ -532,7 +532,7 @@ export default function Channel({
                     onHideChannelClick={showHideChannelModal}
                     api={api}
                   > */}
-                  {!currentChannel.readonly && (
+                  {!currentChannel.readonly && permissions.chat && (
                     <Chat
                       channel={currentChannel}
                       currentUser={currentUser}
