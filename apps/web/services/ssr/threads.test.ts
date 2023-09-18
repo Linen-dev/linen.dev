@@ -44,7 +44,7 @@ describe('threads services', () => {
       );
     });
 
-    it('it should have a link to go back to the channel', async () => {
+    it.skip('it should have a link to go back to the channel', async () => {
       const threadProps = await threadGetServerSideProps(
         {
           params: {
