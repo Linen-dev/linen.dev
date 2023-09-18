@@ -192,7 +192,8 @@ export default function Grid({
                 // incrementId={incrementId}
                 // slug={slug}
                 className={classNames({
-                  [styles['padding-top']]: item.first || item.avatar,
+                  [styles.avatar]: item.avatar,
+                  [styles['padding-top']]: item.first,
                   [styles['padding-bottom']]: item.last,
                   [styles['padding-left']]: item.padded,
                 })}
