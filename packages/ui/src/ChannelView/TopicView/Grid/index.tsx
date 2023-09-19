@@ -144,7 +144,6 @@ export default function Grid({
           timestamp: new Date(topic.sentAt),
           first: topic.first,
           last: topic.last,
-          padded: topic.padded,
           avatar: topic.avatar,
           hash: topic.hash,
         };
