@@ -53,6 +53,7 @@ export function Hits({
               href={url}
             >
               <Row
+                className={styles.row}
                 currentUser={undefined as any}
                 isSubDomainRouting={isSubDomainRouting}
                 settings={settings}
