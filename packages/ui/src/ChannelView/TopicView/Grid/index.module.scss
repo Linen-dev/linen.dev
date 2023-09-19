@@ -22,21 +22,16 @@
   z-index: 2;
 }
 
-.padded {
-  margin-left: 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
 .padding-avatar {
   padding-top: 0.75rem;
 }
 
 .padding-top {
-  padding-top: 1rem;
+  padding-top: 1.25rem;
 }
 
 .padding-bottom {
-  padding-bottom: 1rem;
+  padding-bottom: 1.25rem;
 }
 
 .padding-left {
@@ -44,5 +39,5 @@
 }
 
 .divider {
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-gray-200);
 }

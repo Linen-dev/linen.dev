@@ -3,7 +3,6 @@ import Icon from '@/Icon';
 import StickyHeader from '@/StickyHeader';
 import styles from './index.module.scss';
 import { SerializedUser } from '@linen/types';
-import { FiHash } from '@react-icons/all-files/fi/FiHash';
 import { FiEdit3 } from '@react-icons/all-files/fi/FiEdit3';
 import { Permissions, SerializedChannel } from '@linen/types';
 import IntegrationsModalUI from '@/IntegrationsModal';
@@ -32,7 +31,7 @@ export default function Header({
     <StickyHeader id="chat-layout-header" className={className}>
       <div className={styles.header}>
         <div className={styles.title}>
-          <FiHash /> {channel.channelName}
+          #{channel.channelName}
           <IntegrationsModalUI.ShowIntegrationDetail
             api={api}
             channel={channel}
