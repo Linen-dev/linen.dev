@@ -255,6 +255,7 @@ function Row({
 
 Row.defaultProps = {
   showHeader: true,
+  showMessages: true,
 };
 
 export default Row;
