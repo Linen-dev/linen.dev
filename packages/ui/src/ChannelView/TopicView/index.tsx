@@ -344,45 +344,12 @@ export default function Channel({
     if (!currentThread) {
       return;
     }
-    setCollapsed(true);
     onSelectThread(currentThread.id);
-    const url = getThreadUrl({
-      isSubDomainRouting,
-      settings,
-      incrementId: currentThread.incrementId,
-      slug: currentThread.slug,
-      LINEN_URL:
-        process.env.NODE_ENV === 'development'
-          ? 'http://localhost:3000'
-          : 'https://www.linen.dev',
-    });
-    window.history.pushState(
-      {
-        ...window.history.state,
-        options: {
-          ...window.history.state.options,
-          _preventNextJSReload: false,
-        },
-      },
-      '',
-      url
-    );
-    window.onpopstate = (event) => {
-      event.preventDefault();
-      window.history.pushState(
-        {
-          ...window.history.state,
-          options: {
-            ...window.history.state.options,
-            _preventNextJSReload: true,
-          },
-        },
-        '',
-        window.history.state.url
-      );
-      setCollapsed(false);
-      onSelectThread(undefined);
-    };
+    const isLastThread = currentThread.id === threads[threads.length - 1].id;
+    if (isLastThread) {
+      setTimeout(() => handleScroll(), 0);
+    }
+    handleLeftScroll();
   }
 
   const rootMargin =
@@ -697,14 +664,10 @@ export default function Channel({
               updateThread={updateThread}
               editMessage={editMessage}
               onClose={() => {
-                setCollapsed(false);
                 onSelectThread(undefined);
               }}
               expanded={collapsed}
-              onExpandClick={() => {
-                setCollapsed(false);
-                onSelectThread(undefined);
-              }}
+              onExpandClick={() => setCollapsed((collapsed) => !collapsed)}
               onResolution={updateThreadResolution}
               sendMessage={sendThreadMessage}
               onDelete={deleteMessage}
