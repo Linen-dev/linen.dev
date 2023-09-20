@@ -173,6 +173,7 @@ enum channelsIntegrationType {
   GITHUB
   EMAIL
   LINEAR
+  LLM
 }
 
 enum AnonymizeType {

@@ -37,6 +37,7 @@ export const channelsIntegrationType = makeEnum({
   GITHUB: 'GITHUB',
   EMAIL: 'EMAIL',
   LINEAR: 'LINEAR',
+  LLM: 'LLM',
 });
 
 export type channelsIntegrationType =

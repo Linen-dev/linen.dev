@@ -1,10 +1,15 @@
 import { ChannelType, mentions, users } from '@linen/database';
-import { createNotificationJob, createTwoWaySyncJob } from 'queue/jobs';
+import {
+  createLlmQuestionTask,
+  createNotificationJob,
+  createTwoWaySyncJob,
+} from 'queue/jobs';
 import { resolvePush } from 'services/push';
 import { eventNewMentions } from './eventNewMentions';
 import ChannelsService from 'services/channels';
 import { matrixNewThread } from 'services/matrix';
-import { MentionNode } from '@linen/types';
+import { MentionNode, channelsIntegrationType } from '@linen/types';
+import { findOrCreateLinenBot } from 'services/users/findOrCreateLinenBot';
 
 type NewThreadEvent = {
   channelId: any;
@@ -72,6 +77,23 @@ export async function eventNewThread({
     if (channel?.type === ChannelType.DM) {
       promises.push(
         ChannelsService.unarchiveChannel({ channelId: channel.id })
+      );
+    }
+
+    const llm = channel?.channelsIntegration.find(
+      (ci) => ci.type === channelsIntegrationType.LLM
+    );
+    if (channel?.accountId && llm?.data) {
+      const { communityName } = llm.data as any; // hack to allow us using another account on linenhq
+      const bot = await findOrCreateLinenBot(channel.accountId);
+      promises.push(
+        createLlmQuestionTask({
+          accountId: channel.accountId,
+          authorId: bot.id,
+          channelId,
+          threadId,
+          communityName,
+        })
       );
     }
   }

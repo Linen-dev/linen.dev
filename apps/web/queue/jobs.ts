@@ -185,3 +185,16 @@ export async function createTypesenseOnNewCommunity(payload: {
     maxAttempts: 1,
   });
 }
+
+export async function createLlmQuestionTask(payload: {
+  accountId: string;
+  authorId: string;
+  channelId: string;
+  threadId: string;
+  communityName: string;
+}) {
+  const worker = await WorkerSingleton.getInstance();
+  return await worker.addJob('llmQuestion', payload, {
+    maxAttempts: 1,
+  });
+}

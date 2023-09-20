@@ -1,6 +1,7 @@
 import { accounts, prisma, users } from '@linen/database';
 import { MessageFormat } from '@linen/types';
 import { config } from 'config';
+import { findOrCreateLinenBot } from 'services/users/findOrCreateLinenBot';
 
 export async function notifyChannels(
   user: users & {
@@ -74,30 +75,6 @@ export function processMessage(body: string, displayName: string) {
     body = init.concat(result);
   }
   return body;
-}
-
-async function findOrCreateLinenBot(accountId: string) {
-  let linenBot = await prisma.users.findUnique({
-    where: {
-      externalUserId_accountsId: {
-        accountsId: accountId,
-        externalUserId: config.linen.bot.externalId,
-      },
-    },
-  });
-  if (!linenBot) {
-    linenBot = await prisma.users.create({
-      data: {
-        isAdmin: false,
-        isBot: true,
-        accountsId: accountId,
-        externalUserId: config.linen.bot.externalId,
-        displayName: config.linen.bot.displayName,
-        profileImageUrl: config.linen.squareLogo,
-      },
-    });
-  }
-  return linenBot;
 }
 
 async function createThread({

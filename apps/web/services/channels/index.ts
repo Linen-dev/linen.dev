@@ -557,6 +557,8 @@ class ChannelsService {
     return await prisma.channels.findUnique({
       select: {
         id: true,
+        channelsIntegration: true,
+        accountId: true,
         memberships: {
           select: {
             archived: true,

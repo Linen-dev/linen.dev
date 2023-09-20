@@ -20,6 +20,7 @@
     "@linen/integration-github": "*",
     "@linen/integration-linear": "*",
     "@linen/pagination": "*",
+    "@linen/sdk": "*",
     "@linen/sitemap": "*",
     "@linen/types": "*",
     "@linen/typesense": "*",

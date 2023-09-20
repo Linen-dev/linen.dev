@@ -31,6 +31,7 @@ import {
   typesenseOnChannelDeletion,
   typesenseOnCommunityDeletion,
 } from './tasks/typesense';
+import { llmQuestion } from './tasks/llm';
 
 export type TaskInterface = (
   payload: any,
@@ -83,6 +84,7 @@ async function runWorker() {
       typesenseOnUserNameUpdate,
       typesenseOnChannelDeletion,
       typesenseOnCommunityDeletion,
+      llmQuestion,
     },
     parsedCronItems: parseCronItems([
       {
