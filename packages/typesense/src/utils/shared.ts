@@ -18,9 +18,6 @@ import { collectionSchema } from './model';
 import { env } from './env';
 import { createUserKey, createAccountKey } from './keys';
 import { anonymizeMessages } from '@linen/serializers/anonymizeMessages';
-import { TypesenseThread } from './types';
-import { delay } from './delay';
-import { countOccurrences } from './countOccurrences';
 
 export async function getAccountSettings(accountId: string, logger: Logger) {
   const account = await prisma.accounts.findUnique({
@@ -151,43 +148,17 @@ export async function pushToTypesense({
     )
     .filter((t) => !!t.body);
 
-  await upsert(documents, logger);
-}
-
-async function upsert(
-  documents: TypesenseThread[],
-  logger: Logger,
-  attempt = 1
-) {
-  try {
-    await client
-      .collections(collectionSchema.name)
-      .documents()
-      .import(documents, { action: 'upsert' });
-  } catch (error: any) {
-    if (error.importResults) {
-      logger.log(
-        countOccurrences(
-          error.importResults
-            ?.filter((result: any) => !result.success)
-            ?.map((result: any) => result.error)
-        )
+  await client
+    .collections(collectionSchema.name)
+    .documents()
+    .import(documents, { action: 'upsert' })
+    .catch((error: any) => {
+      logger.error(
+        error.importResults
+          ?.filter((result: any) => !result.success)
+          ?.map((result: any) => result.error) || error
       );
-      return;
-    }
-    if (attempt > 10) {
-      logger.error({ retries_exceeded: attempt });
-      throw error;
-    }
-    if (error.httpStatus === 422) {
-      logger.error({ error });
-      const wait = Math.pow(2, attempt - 1) * 1000;
-      logger.warn({ attempt, wait });
-      await delay(wait);
-      return upsert(documents, logger, attempt + 1);
-    }
-    throw error;
-  }
+    });
 }
 
 export async function createUserKeyAndPersist({
