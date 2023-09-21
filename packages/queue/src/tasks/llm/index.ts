@@ -4,9 +4,10 @@ import { z } from 'zod';
 import { appendProtocol } from '@linen/utilities/url';
 import { getIntegrationUrl } from '@linen/utilities/domain';
 import LinenSdk from '@linen/sdk';
-import { MessageFormat } from '@linen/types';
+import { MessageFormat, accounts } from '@linen/types';
 import crypto from 'crypto';
 import { prisma } from '@linen/database';
+import { getThreadUrl } from '@linen/utilities/url';
 
 const linenSdk = new LinenSdk({
   apiKey: process.env.INTERNAL_API_KEY!,
@@ -74,17 +75,25 @@ export const llmQuestion = async (payload: any, helpers: JobHelpers) => {
     query: thread.messages.map((m) => m.body).join(' '),
   });
 
-  const body = parseBody(llmResponse);
-
-  await linenSdk.createNewMessage({
-    accountId,
-    authorId,
-    body,
-    channelId,
-    externalMessageId: crypto.randomUUID(),
-    threadId,
-    messageFormat: MessageFormat.LINEN,
+  const account = await prisma.accounts.findUnique({
+    where: {
+      id: accountId,
+    },
   });
+
+  if (account) {
+    const body = await parseBody(llmResponse, { account, communityName });
+
+    await linenSdk.createNewMessage({
+      accountId,
+      authorId,
+      body,
+      channelId,
+      externalMessageId: crypto.randomUUID(),
+      threadId,
+      messageFormat: MessageFormat.LINEN,
+    });
+  }
 };
 
 export function getReferences(documents: SourceDocument[]): string[] {
@@ -98,16 +107,59 @@ export function getReferences(documents: SourceDocument[]): string[] {
   return sources;
 }
 
-export function parseBody(response: LLMPredictionResponse): string {
+function getUrls(references: string[]) {
+  return references.filter(
+    (url) => url.startsWith('https://') || url.startsWith('http://')
+  );
+}
+
+function getThreadIds(references: string[]) {
+  return references.filter(
+    (url) => !url.startsWith('https://') && !url.startsWith('http://')
+  );
+}
+
+export async function parseBody(
+  response: LLMPredictionResponse,
+  { account, communityName }: { account: accounts; communityName: string }
+): Promise<string> {
   // TODO: if is a url, show it, otherwise, it will be a threadId, we should build the url
-  // TODO: source documents can be dup, we should clean up these
-  return [
-    response.text,
-    'References:',
-    getReferences(response.sourceDocuments)
-      .map((source) => `- ${source}`)
-      .join('\n'),
-  ].join('\n\n');
+  // TODO https urls should not be wrapped by <>
+  const references = getReferences(response.sourceDocuments);
+  const urls = getUrls(references);
+  const threadIds = getThreadIds(references);
+  const threads = await prisma.threads.findMany({
+    where: {
+      id: { in: threadIds },
+    },
+  });
+
+  const threadUrls = threads.map((thread) => {
+    return getThreadUrl({
+      isSubDomainRouting: true,
+      slug: thread.slug,
+      incrementId: thread.incrementId,
+      settings: {
+        communityName,
+        redirectDomain: account.redirectDomain as string | undefined,
+      },
+      LINEN_URL:
+        process.env.NODE_ENV === 'development'
+          ? 'http://localhost:3000'
+          : 'https://www.linen.dev',
+    });
+  });
+
+  const refs = [...urls, ...threadUrls];
+
+  if (refs.length > 0) {
+    return [
+      response.text,
+      'References:',
+      [...urls, ...threadUrls].map((source) => `- ${source}`).join('\n'),
+    ].join('\n\n');
+  }
+  return response.text;
 }
 
 // TODO: follow up (replies)
