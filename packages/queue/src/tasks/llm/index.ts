@@ -16,7 +16,8 @@ const linenSdk = new LinenSdk({
 
 const llmServer = axios.create({
   // TODO: var
-  baseURL: `http://llm.stage.linendev.com:3000`,
+  // baseURL: `http://llm.stage.linendev.com:3000`,
+  baseURL: `http://localhost:3001`,
   headers: {
     ['x-api-internal']: process.env.INTERNAL_API_KEY!,
   },
