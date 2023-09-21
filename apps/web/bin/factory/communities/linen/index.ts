@@ -22,6 +22,11 @@ export default async function createLinenCommunity() {
       premium: true,
       description: 'Modern chat platform.',
       featurePreview: true,
+      searchSettings: JSON.stringify({
+        engine: 'typesense',
+        scope: 'private',
+        apiKey: 'private',
+      }),
     },
   });
   const auth1 = await prisma.auths.create({
@@ -935,6 +940,31 @@ export default async function createLinenCommunity() {
         page: Math.ceil(number / 10),
       },
     });
+  });
+
+  const channel10 = await prisma.channels.create({
+    data: {
+      accountId: community.id,
+      channelName: 'qa-bot',
+      viewType: 'TOPIC',
+    },
+  });
+
+  await prisma.channelsIntegration.create({
+    data: {
+      channelId: channel10.id,
+      type: 'LLM',
+      createdByUserId: user1.id,
+      data: { communityName: 'discuss.flyte.org' },
+      externalId: 'fake',
+    },
+  });
+
+  await prisma.memberships.createMany({
+    data: users.map((user) => ({
+      channelsId: channel10.id,
+      usersId: user.id,
+    })),
   });
 
   await prisma.channels.createMany({
