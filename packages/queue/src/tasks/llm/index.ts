@@ -24,26 +24,28 @@ const llmServer = axios.create({
 });
 
 // TODO: move to types
-type PredictResponse = {
-  text: string;
-  sourceDocuments: {
-    pageContent: string;
-    metadata: {
-      source: string;
-      loc: {
-        lines: {
-          from: number;
-          to: number;
-        };
+type SourceDocument = {
+  pageContent: string;
+  metadata: {
+    source: string;
+    loc: {
+      lines: {
+        from: number;
+        to: number;
       };
-      title?: string;
-      language?: string;
     };
-  }[];
+    title?: string;
+    language?: string;
+  };
+};
+
+type LLMPredictionResponse = {
+  text: string;
+  sourceDocuments: SourceDocument[];
 };
 
 async function llmPredict(data: { communityName: string; query: string }) {
-  const r = await llmServer.post<PredictResponse>('/predict', data);
+  const r = await llmServer.post<LLMPredictionResponse>('/predict', data);
   return r.data;
 }
 
@@ -85,13 +87,26 @@ export const llmQuestion = async (payload: any, helpers: JobHelpers) => {
   });
 };
 
-function parseBody(llmResponse: PredictResponse): string {
+export function getReferences(documents: SourceDocument[]): string[] {
+  const sources: string[] = [];
+  documents.forEach((document) => {
+    const source = document.metadata.source;
+    if (!sources.includes(source)) {
+      sources.push(source);
+    }
+  });
+  return sources;
+}
+
+export function parseBody(response: LLMPredictionResponse): string {
   // TODO: if is a url, show it, otherwise, it will be a threadId, we should build the url
   // TODO: source documents can be dup, we should clean up these
   return [
-    llmResponse.text,
+    response.text,
     'References:',
-    llmResponse.sourceDocuments.map((s) => `- ${s.metadata.source}`).join('\n'),
+    getReferences(response.sourceDocuments)
+      .map((source) => `- ${source}`)
+      .join('\n'),
   ].join('\n\n');
 }
 
