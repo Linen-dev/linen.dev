@@ -1,7 +1,8 @@
 import { getReferences, parseBody } from '.';
+import { accounts } from '@linen/types';
 
 describe('#parseBody', () => {
-  it('returns a body of a message', () => {
+  it('returns a body of a message', async () => {
     const response = {
       text: 'Lorem ipsum dolor sit amet.',
       sourceDocuments: [
@@ -19,7 +20,11 @@ describe('#parseBody', () => {
         },
       ],
     };
-    expect(parseBody(response).replace(/\n/g, ' ')).toEqual(
+    const body = await parseBody(response, {
+      account: {} as accounts,
+      communityName: 'foo',
+    });
+    expect(body.replace(/\n/g, ' ')).toEqual(
       `Lorem ipsum dolor sit amet.  References:  - https://foo.bar`
     );
   });
