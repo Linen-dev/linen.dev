@@ -15,11 +15,8 @@ const linenSdk = new LinenSdk({
   linenUrl: appendProtocol(getIntegrationUrl()),
 });
 
-const baseURL =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3001'
-    : 'http://llm.stage.linendev.com:3000';
-
+const baseURL = 'http://llm.stage.linendev.com:3000';
+    
 const llmServer = axios.create({
   baseURL: baseURL,
   headers: {
