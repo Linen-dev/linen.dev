@@ -279,8 +279,9 @@ function DiscordSync({
         </span>
 
         <span>
-          In order for Linen to effectively sync Discord data, it is essential
-          to manually assign the appropriate permissions to the LinenBot.
+          In order for Linenbot to work make sure Linenbot has the same roles
+          and permissions as the users who have completed the onboarding
+          process.
         </span>
 
         <span>
