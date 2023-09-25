@@ -5,7 +5,7 @@ module.exports = async function (globalConfig, projectConfig) {
     throw result.error;
   }
 
-  process.env.NEXT_PUBLIC_TYPESENSE_HOST = 'localhost';
+  process.env.NEXT_PUBLIC_TYPESENSE_HOST = '127.0.0.1';
   process.env.TYPESENSE_ADMIN = 'xyz';
   process.env.TYPESENSE_DATABASE = 'testing';
 
