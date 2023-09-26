@@ -10,8 +10,16 @@ import { v4 } from 'uuid';
 import { qs } from '@linen/utilities/url';
 import { AccountType, ChatType, postThreadType } from '@linen/types';
 import mockThreadsServices from 'services/threads';
+import mockChannelsServices from 'services/channels';
 
 const mockGet = jest.spyOn(mockThreadsServices, 'get');
+
+jest
+  .spyOn(mockChannelsServices, 'isChannelUsable')
+  .mockImplementation(async () => ({
+    hidden: false,
+    readonly: false,
+  }));
 
 describe('threads api (internal)', () => {
   const base = '/api/threads';

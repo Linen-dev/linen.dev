@@ -14,10 +14,11 @@ import {
   NotFound,
   NotImplemented,
 } from 'server/exceptions';
-import { Roles } from 'server/middlewares/tenant';
 import MessagesService from 'services/messages';
 import { isNotManager } from 'utilities/roles';
 import { ApiEvent, trackApiEvent } from 'utilities/ssr-metrics';
+import ChannelsService from 'services/channels';
+import to from '@linen/utilities/await-to-js';
 
 export class MessagesController {
   static async get(
@@ -79,6 +80,16 @@ export class MessagesController {
       isNotManager(req.tenant_user?.role)
     ) {
       return next(new Forbidden('User is not allow to chat'));
+    }
+
+    const [err, _] = await to(
+      ChannelsService.isChannelUsable({
+        channelId: req.body.channelId,
+        accountId: req.tenant?.id!,
+      })
+    );
+    if (err) {
+      return next(new BadRequest(err.message));
     }
 
     const message = await MessagesService.create({

@@ -20,6 +20,8 @@ import {
 import { createSsoSession, getSsoSession } from 'services/sso';
 import ThreadsService from 'services/threads';
 import MessagesService from 'services/messages';
+import to from '@linen/utilities/await-to-js';
+import ChannelsService from 'services/channels';
 
 async function acceptInvites(userEmail: string) {
   // accept invites
@@ -83,6 +85,16 @@ const authRouter = CreateRouter({
         });
         if (user && account && account.chat === ChatType.MEMBERS) {
           const { thread, message } = payload;
+          const [err, _] = await to(
+            ChannelsService.isChannelUsable({
+              channelId: thread?.channelId || message?.channelId,
+              accountId: account.id,
+            })
+          );
+          if (err) {
+            console.error(err);
+            return;
+          }
           if (thread) {
             await ThreadsService.create({
               ...thread,

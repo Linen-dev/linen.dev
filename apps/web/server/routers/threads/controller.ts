@@ -10,13 +10,19 @@ import {
   type findTopicsSchema,
   MentionNode,
 } from '@linen/types';
-import { Forbidden, NotFound, NotImplemented } from 'server/exceptions';
-import { Roles } from 'server/middlewares/tenant';
+import {
+  BadRequest,
+  Forbidden,
+  NotFound,
+  NotImplemented,
+} from 'server/exceptions';
 import ThreadsServices from 'services/threads';
 import { findTopics } from 'services/threads/topics';
 import { trackApiEvent, ApiEvent } from 'utilities/ssr-metrics';
 import { parse, find } from '@linen/ast';
 import { isMember, isNotManager } from 'utilities/roles';
+import { to } from '@linen/utilities/await-to-js';
+import ChannelsService from 'services/channels';
 
 export class ThreadsController {
   static async get(
@@ -98,6 +104,15 @@ export class ThreadsController {
       isNotManager(req.tenant_user?.role)
     ) {
       return next(new Forbidden('User is not allow to mention a channel'));
+    }
+    const [err, _] = await to(
+      ChannelsService.isChannelUsable({
+        channelId: req.body.channelId,
+        accountId: req.tenant?.id!,
+      })
+    );
+    if (err) {
+      return next(new BadRequest(err.message));
     }
 
     const thread = await ThreadsServices.create({

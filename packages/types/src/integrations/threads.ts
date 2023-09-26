@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { MessageFormat } from '../messages';
+import { ThreadState } from '../threads';
 
 export const threadPostSchema = z.object({
   channelId: z.string().uuid(),
@@ -15,14 +16,7 @@ export const threadPostSchema = z.object({
       })
     )
     .optional(),
-  messageFormat: z
-    .enum([
-      MessageFormat.DISCORD,
-      MessageFormat.LINEN,
-      MessageFormat.SLACK,
-      MessageFormat.MATRIX,
-    ])
-    .optional(),
+  messageFormat: z.nativeEnum(MessageFormat).optional(),
 });
 export type threadPostType = z.infer<typeof threadPostSchema>;
 
@@ -31,7 +25,7 @@ export const threadPutSchema = z.object({
   accountId: z.string().uuid().optional(),
   channelId: z.string().uuid(),
   externalThreadId: z.string().min(1).optional(),
-  status: z.enum(['OPEN', 'CLOSE']).optional(),
+  status: z.nativeEnum(ThreadState).optional(),
   threadId: z.string().uuid().optional(),
 });
 export type threadPutType = z.infer<typeof threadPutSchema>;

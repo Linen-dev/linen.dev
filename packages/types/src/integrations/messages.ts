@@ -48,14 +48,7 @@ export const messagePostSchema = z.object({
       })
     )
     .optional(),
-  messageFormat: z
-    .enum([
-      MessageFormat.DISCORD,
-      MessageFormat.LINEN,
-      MessageFormat.SLACK,
-      MessageFormat.MATRIX,
-    ])
-    .optional(),
+  messageFormat: z.nativeEnum(MessageFormat).optional(),
 });
 export type messagePostType = z.infer<typeof messagePostSchema>;
 

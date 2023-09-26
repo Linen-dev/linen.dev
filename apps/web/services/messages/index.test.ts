@@ -4,7 +4,8 @@ import { create } from '@linen/factory';
 
 describe('MessagesService', () => {
   describe('create', () => {
-    it('throws when the channel is readonly', async () => {
+    // validation was moved to controller
+    it.skip('throws when the channel is readonly', async () => {
       const community = await create('account');
       const channel = await create('channel', {
         accountId: community.id,
@@ -27,8 +28,8 @@ describe('MessagesService', () => {
         })
       ).rejects.toThrow('channel is readonly');
     });
-
-    it('throws when the channel is hidden', async () => {
+    // validation was moved to controller
+    it.skip('throws when the channel is hidden', async () => {
       const community = await create('account');
       const channel = await create('channel', {
         accountId: community.id,

@@ -9,6 +9,8 @@ import { cors, preflight } from 'utilities/cors';
 import ThreadsService from 'services/threads';
 import MessagesService from 'services/messages';
 import OnboardingService from 'services/onboarding';
+import ChannelsService from 'services/channels';
+import to from '@linen/utilities/await-to-js';
 
 const createSchema = z.object({
   email: z.string().email(),
@@ -71,6 +73,16 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
       email,
     });
     if (user && account && account.chat === ChatType.MEMBERS) {
+      const [err, _] = await to(
+        ChannelsService.isChannelUsable({
+          channelId: thread?.channelId || message?.channelId,
+          accountId,
+        })
+      );
+      if (err) {
+        console.error(err);
+        return;
+      }
       if (thread) {
         await ThreadsService.create({
           ...thread,

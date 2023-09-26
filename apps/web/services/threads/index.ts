@@ -208,14 +208,6 @@ class ThreadsServices {
       throw new Error("can't find the channel");
     }
 
-    if (channel.readonly) {
-      throw new Error('channel is readonly');
-    }
-
-    if (channel.hidden) {
-      throw new Error('channel is hidden');
-    }
-
     sentAt = sentAt || new Date();
 
     const tree = parse.linen(body);

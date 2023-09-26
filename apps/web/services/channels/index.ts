@@ -582,6 +582,35 @@ class ChannelsService {
       data: { externalPageCursor: null },
     });
   }
+
+  static async isChannelUsable({
+    channelId,
+    accountId,
+  }: {
+    channelId?: string;
+    accountId?: string;
+  }) {
+    if (!channelId) {
+      throw new Error('missing channelId');
+    }
+    if (!accountId) {
+      throw new Error('missing accountId');
+    }
+    const channel = await prisma.channels.findFirst({
+      select: { readonly: true, hidden: true },
+      where: { id: channelId, accountId },
+    });
+    if (!channel) {
+      throw new Error('channel does not exist');
+    }
+    if (channel.readonly) {
+      throw new Error('channel is readonly');
+    }
+    if (channel.hidden) {
+      throw new Error('channel is hidden');
+    }
+    return channel;
+  }
 }
 
 export default ChannelsService;
