@@ -9,6 +9,7 @@ import {
   messageGetResponseType,
   messageGetType,
   messagePutType,
+  ChatType,
   UploadedFile,
 } from '@linen/types';
 import { v4 as uuid } from 'uuid';
@@ -39,6 +40,15 @@ export default class MessagesService {
     mentions?: { id: string }[];
     messageFormat?: MessageFormat;
   }) {
+    const account = await prisma.accounts.findFirst({
+      where: { id: accountId },
+    });
+    if (!account) {
+      throw new Error("can't find the account");
+    }
+    if (account.chat === ChatType.NONE) {
+      throw new Error('chat is disabled');
+    }
     const channel = await prisma.channels.findFirst({
       where: { id: channelId, accountId },
     });
@@ -49,6 +59,10 @@ export default class MessagesService {
 
     if (channel.readonly) {
       throw new Error('channel is readonly');
+    }
+
+    if (channel.hidden) {
+      throw new Error('channel is hidden');
     }
 
     const sentAt = new Date();
