@@ -22,6 +22,9 @@ export const createUserEvent = async (
   email: string,
   createdAt: Date
 ) => {
+  if (process.env.NODE_ENV === 'test') {
+    return;
+  }
   try {
     client?.identify(email, {
       id,
@@ -33,6 +36,9 @@ export const createUserEvent = async (
 };
 
 export const createAccountEvent = async (email: string, accountId: string) => {
+  if (process.env.NODE_ENV === 'test') {
+    return;
+  }
   try {
     client?.track(email, {
       name: 'Account created',

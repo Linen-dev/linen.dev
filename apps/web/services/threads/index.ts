@@ -12,6 +12,7 @@ import {
 import { slugify } from '@linen/utilities/string';
 import { GetType, FindType, UpdateType } from './types';
 import {
+  ChatType,
   MessageFormat,
   threadFindResponseType,
   threadFindType,
@@ -123,7 +124,6 @@ class ThreadsServices {
       },
     });
 
-    console.log('UPDATE MESSAGE BODY!', messageBody);
     if (messageBody) {
       const messageId = thread.messages[0].id;
       await prisma.messages.update({
@@ -191,6 +191,15 @@ class ThreadsServices {
     mentions?: { id: string }[];
     messageFormat?: MessageFormat;
   }) {
+    const account = await prisma.accounts.findFirst({
+      where: { id: accountId },
+    });
+    if (!account) {
+      throw new Error("can't find the account");
+    }
+    if (account.chat === ChatType.NONE) {
+      throw new Error('chat is disabled');
+    }
     const channel = await prisma.channels.findFirst({
       where: { id: channelId, accountId },
     });
@@ -201,6 +210,10 @@ class ThreadsServices {
 
     if (channel.readonly) {
       throw new Error('channel is readonly');
+    }
+
+    if (channel.hidden) {
+      throw new Error('channel is hidden');
     }
 
     sentAt = sentAt || new Date();
