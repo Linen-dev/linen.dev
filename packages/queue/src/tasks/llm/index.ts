@@ -16,7 +16,7 @@ const linenSdk = new LinenSdk({
 });
 
 const baseURL = 'http://llm.stage.linendev.com:3000';
-    
+
 const llmServer = axios.create({
   baseURL: baseURL,
   headers: {
@@ -65,7 +65,7 @@ export const llmQuestion = async (payload: any, helpers: JobHelpers) => {
     parsedPayload;
 
   const thread = await prisma.threads.findUnique({
-    include: { messages: true },
+    include: { messages: true, channel: true },
     where: { id: threadId },
     rejectOnNotFound: true,
   });
@@ -75,24 +75,28 @@ export const llmQuestion = async (payload: any, helpers: JobHelpers) => {
     query: thread.messages.map((m) => m.body).join(' '),
   });
 
-  const account = await prisma.accounts.findUnique({
-    where: {
-      id: accountId,
-    },
-  });
+  const threadAccountId = thread.channel.accountId;
 
-  if (account) {
-    const body = await parseBody(llmResponse, { account, communityName });
-
-    await linenSdk.createNewMessage({
-      accountId,
-      authorId,
-      body,
-      channelId,
-      externalMessageId: crypto.randomUUID(),
-      threadId,
-      messageFormat: MessageFormat.LINEN,
+  if (threadAccountId) {
+    const account = await prisma.accounts.findUnique({
+      where: {
+        id: threadAccountId,
+      },
     });
+
+    if (account) {
+      const body = await parseBody(llmResponse, { account, communityName });
+
+      await linenSdk.createNewMessage({
+        accountId,
+        authorId,
+        body,
+        channelId,
+        externalMessageId: crypto.randomUUID(),
+        threadId,
+        messageFormat: MessageFormat.LINEN,
+      });
+    }
   }
 };
 
