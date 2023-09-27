@@ -8,6 +8,7 @@ import { MessageFormat, accounts } from '@linen/types';
 import crypto from 'crypto';
 import { prisma } from '@linen/database';
 import { getThreadUrl } from '@linen/utilities/url';
+import { Logger } from '../../helpers/logger';
 
 const linenSdk = new LinenSdk({
   apiKey: process.env.INTERNAL_API_KEY!,
@@ -15,7 +16,8 @@ const linenSdk = new LinenSdk({
   linenUrl: appendProtocol(getIntegrationUrl()),
 });
 
-const baseURL = 'http://llm.stage.linendev.com:3000';
+const baseURL =
+  process.env.LLM_SERVICE_URL || 'http://llm.stage.linendev.com:3000';
 
 const llmServer = axios.create({
   baseURL: baseURL,
@@ -51,52 +53,68 @@ async function llmPredict(data: { communityName: string; query: string }) {
 }
 
 export const llmQuestion = async (payload: any, helpers: JobHelpers) => {
-  const parsedPayload = z
-    .object({
-      accountId: z.string().uuid(),
-      authorId: z.string().uuid(),
-      channelId: z.string().uuid(),
-      threadId: z.string().uuid(),
-      communityName: z.string(),
-    })
-    .parse(payload);
+  const logger = new Logger(helpers.logger);
 
-  const { accountId, authorId, channelId, threadId, communityName } =
-    parsedPayload;
+  logger.info(payload);
 
-  const thread = await prisma.threads.findUnique({
-    include: { messages: true, channel: true },
-    where: { id: threadId },
-    rejectOnNotFound: true,
-  });
+  try {
+    const parsedPayload = z
+      .object({
+        accountId: z.string().uuid(),
+        authorId: z.string().uuid(),
+        channelId: z.string().uuid(),
+        threadId: z.string().uuid(),
+        communityName: z.string(),
+      })
+      .parse(payload);
 
-  const llmResponse = await llmPredict({
-    communityName,
-    query: thread.messages.map((m) => m.body).join(' '),
-  });
+    const { accountId, authorId, channelId, threadId, communityName } =
+      parsedPayload;
 
-  const threadAccountId = thread.channel.accountId;
-
-  if (threadAccountId) {
-    const account = await prisma.accounts.findUnique({
-      where: {
-        id: threadAccountId,
-      },
+    const thread = await prisma.threads.findUnique({
+      include: { messages: true, channel: true },
+      where: { id: threadId },
+      rejectOnNotFound: true,
     });
 
-    if (account) {
-      const body = await parseBody(llmResponse, { account, communityName });
+    logger.info({ llm: `found thread ${thread.id}` });
 
-      await linenSdk.createNewMessage({
-        accountId,
-        authorId,
-        body,
-        channelId,
-        externalMessageId: crypto.randomUUID(),
-        threadId,
-        messageFormat: MessageFormat.LINEN,
+    const llmResponse = await llmPredict({
+      communityName,
+      query: thread.messages.map((m) => m.body).join(' '),
+    });
+
+    logger.info({ llm: `llm response ready` });
+
+    const threadAccountId = thread.channel.accountId;
+
+    if (threadAccountId) {
+      const account = await prisma.accounts.findUnique({
+        where: {
+          id: threadAccountId,
+        },
       });
+
+      if (account) {
+        const body = await parseBody(llmResponse, { account, communityName });
+
+        logger.info({
+          llm: `creating a new linen message for thread ${threadId}`,
+        });
+
+        await linenSdk.createNewMessage({
+          accountId,
+          authorId,
+          body,
+          channelId,
+          externalMessageId: crypto.randomUUID(),
+          threadId,
+          messageFormat: MessageFormat.LINEN,
+        });
+      }
     }
+  } catch (exception: any) {
+    logger.error(exception.message);
   }
 };
 
