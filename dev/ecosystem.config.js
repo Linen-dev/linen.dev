@@ -20,7 +20,8 @@ module.exports = {
         MIX_ENV: 'prod',
         PORT: 4000,
         PUSH_SERVICE_KEY: process.env.PUSH_SERVICE_KEY,
-        AUTH_SERVICE_URL: process.env.AUTH_SERVICE_URL,
+        AUTH_SERVICE_URL:
+          process.env.AUTH_SERVICE_URL || 'http://localhost:3000',
         SECRET_KEY_BASE: process.env.SECRET_KEY_BASE,
       },
     },
