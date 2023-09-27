@@ -281,6 +281,22 @@ export default class AccountsService {
         : `https://www.linen.dev/s/${row.slackDomain}`
     );
   }
+
+  static async getAccountByThreadId(threadId: string) {
+    return await prisma.accounts.findFirst({
+      where: {
+        channels: {
+          some: {
+            threads: {
+              some: {
+                id: threadId,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
 }
 
 export async function findAccountsPremium() {

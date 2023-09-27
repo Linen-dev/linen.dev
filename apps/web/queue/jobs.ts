@@ -198,3 +198,43 @@ export async function createLlmQuestionTask(payload: {
     maxAttempts: 1,
   });
 }
+
+export async function createTypesenseOnMessageCreation(payload: {
+  accountId: string;
+  threadId: string;
+}) {
+  const worker = await WorkerSingleton.getInstance();
+  return await worker.addJob('typesenseOnMessageCreation', payload, {
+    maxAttempts: 1,
+  });
+}
+
+export async function createTypesenseOnMessageUpdate(payload: {
+  accountId: string;
+  threadId: string;
+}) {
+  const worker = await WorkerSingleton.getInstance();
+  return await worker.addJob('typesenseOnMessageUpdate', payload, {
+    maxAttempts: 1,
+  });
+}
+
+export async function createTypesenseOnThreadCreation(payload: {
+  accountId: string;
+  threadId: string;
+}) {
+  const worker = await WorkerSingleton.getInstance();
+  return await worker.addJob('typesenseOnThreadCreation', payload, {
+    maxAttempts: 1,
+  });
+}
+
+export async function createTypesenseOnThreadUpdate(payload: {
+  accountId: string;
+  threadId: string;
+}) {
+  const worker = await WorkerSingleton.getInstance();
+  return await worker.addJob('typesenseOnThreadUpdate', payload, {
+    maxAttempts: 1,
+  });
+}

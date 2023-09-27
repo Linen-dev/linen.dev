@@ -1,8 +1,8 @@
 import {
   setup,
-  sync,
-  syncAll,
-  deletion,
+  // sync,
+  // syncAll,
+  handleDeletion,
   refreshApiKeys,
   handleChannelNameUpdate,
   handleChannelTypeUpdate,
@@ -10,6 +10,10 @@ import {
   handleUserNameUpdate,
   handleChannelDeletion,
   handleCommunityDeletion,
+  handleMessageCreation,
+  handleMessageUpdate,
+  handleThreadCreation,
+  handleThreadUpdate,
 } from '@linen/typesense';
 import type { JobHelpers } from 'graphile-worker';
 import { KeepAlive } from '../helpers/keep-alive';
@@ -35,38 +39,38 @@ export const typesenseSetup = async (payload: any, helpers: JobHelpers) => {
   }
 };
 
-export const typesenseSync = async (payload: any, helpers: JobHelpers) => {
-  const logger = new Logger(helpers.logger);
-  logger.info(payload);
+// export const typesenseSync = async (payload: any, helpers: JobHelpers) => {
+//   const logger = new Logger(helpers.logger);
+//   logger.info(payload);
 
-  const { accountId } = z
-    .object({
-      accountId: z.string().uuid(),
-    })
-    .parse(payload);
+//   const { accountId } = z
+//     .object({
+//       accountId: z.string().uuid(),
+//     })
+//     .parse(payload);
 
-  const keepAlive = new KeepAlive(helpers);
-  keepAlive.start();
+//   const keepAlive = new KeepAlive(helpers);
+//   keepAlive.start();
 
-  try {
-    await sync({ accountId, logger });
-  } finally {
-    keepAlive.end();
-  }
-};
+//   try {
+//     await sync({ accountId, logger });
+//   } finally {
+//     keepAlive.end();
+//   }
+// };
 
-export const typesenseSyncAll = async (_: any, helpers: JobHelpers) => {
-  const logger = new Logger(helpers.logger);
+// export const typesenseSyncAll = async (_: any, helpers: JobHelpers) => {
+//   const logger = new Logger(helpers.logger);
 
-  const keepAlive = new KeepAlive(helpers);
-  keepAlive.start();
+//   const keepAlive = new KeepAlive(helpers);
+//   keepAlive.start();
 
-  try {
-    await syncAll({ logger });
-  } finally {
-    keepAlive.end();
-  }
-};
+//   try {
+//     await syncAll({ logger });
+//   } finally {
+//     keepAlive.end();
+//   }
+// };
 
 export const typesenseDeletion = async (payload: any, helpers: JobHelpers) => {
   const logger = new Logger(helpers.logger);
@@ -79,18 +83,11 @@ export const typesenseDeletion = async (payload: any, helpers: JobHelpers) => {
     })
     .parse(payload);
 
-  const keepAlive = new KeepAlive(helpers);
-  keepAlive.start();
-
-  try {
-    await deletion({
-      accountId,
-      threadId,
-      logger,
-    });
-  } finally {
-    keepAlive.end();
-  }
+  await handleDeletion({
+    accountId,
+    threadId,
+    logger,
+  });
 };
 
 export const typesenseRefreshApiKeys = async (_: any, helpers: JobHelpers) => {
@@ -234,4 +231,84 @@ export const typesenseOnUserNameUpdate = async (
   } finally {
     keepAlive.end();
   }
+};
+
+export const typesenseOnMessageCreation = async (
+  payload: any,
+  helpers: JobHelpers
+) => {
+  const logger = new Logger(helpers.logger);
+  logger.info(payload);
+
+  const parsedPayload = z
+    .object({
+      accountId: z.string().uuid(),
+      threadId: z.string().uuid(),
+    })
+    .parse(payload);
+
+  await handleMessageCreation({
+    ...parsedPayload,
+    logger,
+  });
+};
+
+export const typesenseOnMessageUpdate = async (
+  payload: any,
+  helpers: JobHelpers
+) => {
+  const logger = new Logger(helpers.logger);
+  logger.info(payload);
+
+  const parsedPayload = z
+    .object({
+      accountId: z.string().uuid(),
+      threadId: z.string().uuid(),
+    })
+    .parse(payload);
+
+  await handleMessageUpdate({
+    ...parsedPayload,
+    logger,
+  });
+};
+
+export const typesenseOnThreadCreation = async (
+  payload: any,
+  helpers: JobHelpers
+) => {
+  const logger = new Logger(helpers.logger);
+  logger.info(payload);
+
+  const parsedPayload = z
+    .object({
+      accountId: z.string().uuid(),
+      threadId: z.string().uuid(),
+    })
+    .parse(payload);
+
+  await handleThreadCreation({
+    ...parsedPayload,
+    logger,
+  });
+};
+
+export const typesenseOnThreadUpdate = async (
+  payload: any,
+  helpers: JobHelpers
+) => {
+  const logger = new Logger(helpers.logger);
+  logger.info(payload);
+
+  const parsedPayload = z
+    .object({
+      accountId: z.string().uuid(),
+      threadId: z.string().uuid(),
+    })
+    .parse(payload);
+
+  await handleThreadUpdate({
+    ...parsedPayload,
+    logger,
+  });
 };

@@ -1,6 +1,7 @@
 import type { mentions, users } from '@linen/database';
 import { MentionNode } from '@linen/types';
-import { createTwoWaySyncJob } from 'queue/jobs';
+import { createTwoWaySyncJob, createTypesenseOnThreadUpdate } from 'queue/jobs';
+import AccountsService from 'services/accounts';
 
 type ThreadUpdatedEvent = {
   channelId: any;
@@ -20,9 +21,6 @@ export async function eventThreadUpdated({
   messageId,
   threadId,
   imitationId,
-  mentions = [],
-  mentionNodes = [],
-  communityId,
   thread,
 }: ThreadUpdatedEvent) {
   const event = {
@@ -38,6 +36,16 @@ export async function eventThreadUpdated({
   const promises: Promise<any>[] = [
     createTwoWaySyncJob({ ...event, event: 'threadUpdated', id: messageId }),
   ];
+
+  const account = await AccountsService.getAccountByThreadId(threadId);
+  if (!!account?.searchSettings && threadId) {
+    promises.push(
+      createTypesenseOnThreadUpdate({
+        threadId,
+        accountId: account.id,
+      })
+    );
+  }
 
   await Promise.allSettled(promises);
 }

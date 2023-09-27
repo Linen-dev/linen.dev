@@ -1,5 +1,9 @@
 import { ChannelType, mentions, users } from '@linen/database';
-import { createNotificationJob, createTwoWaySyncJob } from 'queue/jobs';
+import {
+  createNotificationJob,
+  createTwoWaySyncJob,
+  createTypesenseOnMessageCreation,
+} from 'queue/jobs';
 import { resolvePush } from 'services/push';
 import ThreadsServices from 'services/threads';
 import UserThreadStatusService from 'services/user-thread-status';
@@ -7,6 +11,7 @@ import { eventNewMentions } from 'services/events/eventNewMentions';
 import ChannelsService from 'services/channels';
 import { matrixNewMessage } from 'services/matrix';
 import { MentionNode } from '@linen/types';
+import AccountsService from 'services/accounts';
 
 export type NewMessageEvent = {
   channelId: any;
@@ -82,6 +87,16 @@ export async function eventNewMessage({
         ChannelsService.unarchiveChannel({ channelId: channel.id })
       );
     }
+  }
+
+  const account = await AccountsService.getAccountByThreadId(threadId);
+  if (!!account?.searchSettings && threadId) {
+    promises.push(
+      createTypesenseOnMessageCreation({
+        threadId,
+        accountId: account.id,
+      })
+    );
   }
 
   await Promise.allSettled(promises);

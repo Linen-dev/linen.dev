@@ -3,6 +3,7 @@ import {
   createLlmQuestionTask,
   createNotificationJob,
   createTwoWaySyncJob,
+  createTypesenseOnThreadCreation,
 } from 'queue/jobs';
 import { resolvePush } from 'services/push';
 import { eventNewMentions } from './eventNewMentions';
@@ -10,6 +11,7 @@ import ChannelsService from 'services/channels';
 import { matrixNewThread } from 'services/matrix';
 import { MentionNode, channelsIntegrationType } from '@linen/types';
 import { findOrCreateLinenBot } from 'services/users/findOrCreateLinenBot';
+import AccountsService from 'services/accounts';
 
 type NewThreadEvent = {
   channelId: any;
@@ -96,6 +98,16 @@ export async function eventNewThread({
         })
       );
     }
+  }
+
+  const account = await AccountsService.getAccountByThreadId(threadId);
+  if (!!account?.searchSettings && threadId) {
+    promises.push(
+      createTypesenseOnThreadCreation({
+        threadId,
+        accountId: account.id,
+      })
+    );
   }
 
   await Promise.allSettled(promises);

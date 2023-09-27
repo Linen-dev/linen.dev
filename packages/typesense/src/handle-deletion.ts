@@ -7,7 +7,7 @@ import {
 import { client } from './utils/client';
 import { collectionSchema } from './utils/model';
 
-export async function deletion({
+export async function handleDeletion({
   accountId,
   threadId,
   logger,

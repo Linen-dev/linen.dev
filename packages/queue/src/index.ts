@@ -20,8 +20,8 @@ import { checkPropagation } from './tasks/custom-domain-propagate';
 import { cleanupUserThreadStatusTask } from './tasks/cleanup-user-thread-status';
 import {
   typesenseSetup,
-  typesenseSyncAll,
-  typesenseSync,
+  // typesenseSyncAll,
+  // typesenseSync,
   typesenseDeletion,
   typesenseRefreshApiKeys,
   typesenseOnChannelNameUpdate,
@@ -30,6 +30,10 @@ import {
   typesenseOnUserNameUpdate,
   typesenseOnChannelDeletion,
   typesenseOnCommunityDeletion,
+  typesenseOnMessageCreation,
+  typesenseOnMessageUpdate,
+  typesenseOnThreadCreation,
+  typesenseOnThreadUpdate,
 } from './tasks/typesense';
 import { llmQuestion } from './tasks/llm';
 
@@ -74,8 +78,8 @@ async function runWorker() {
       buildFeed,
       checkPropagation,
       typesenseSetup,
-      typesenseSync,
-      typesenseSyncAll,
+      // typesenseSync,
+      // typesenseSyncAll,
       typesenseDeletion,
       typesenseRefreshApiKeys,
       typesenseOnChannelNameUpdate,
@@ -84,6 +88,10 @@ async function runWorker() {
       typesenseOnUserNameUpdate,
       typesenseOnChannelDeletion,
       typesenseOnCommunityDeletion,
+      typesenseOnMessageCreation,
+      typesenseOnMessageUpdate,
+      typesenseOnThreadCreation,
+      typesenseOnThreadUpdate,
       llmQuestion,
     },
     parsedCronItems: parseCronItems([
