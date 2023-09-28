@@ -12,6 +12,11 @@ module.exports = {
       script: 'yarn td queue',
       cwd: '..',
     },
+    // {
+    //   name: 'discord-bot',
+    //   script: 'yarn tsx src/discord-bot.ts bot=2',
+    //   cwd: '../packages/queue',
+    // },
     {
       name: 'push-service',
       script: 'mix phx.server',
