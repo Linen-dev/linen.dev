@@ -48,11 +48,7 @@ export default function NavLeftBar() {
   const [allUsers] = useUsersContext();
 
   function onJoinChannel(channel: SerializedChannel) {
-    setChannels(
-      [...channels, channel].sort((a, b) =>
-        a.displayOrder > b.displayOrder ? 1 : -1
-      )
-    );
+    setChannels([...channels, channel]);
   }
   function onLeaveChannel(channel: SerializedChannel) {
     setChannels(channels.filter(({ id }) => id !== channel.id));

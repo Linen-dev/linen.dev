@@ -5,6 +5,7 @@ import {
   Response,
   Permissions,
   validatePermissionsResponse,
+  SerializedChannel,
 } from '@linen/types';
 import { serializeAccount } from '@linen/serializers/account';
 import { serializeChannel } from '@linen/serializers/channel';
@@ -62,9 +63,7 @@ async function getProps(
   return {
     token: permissions.token,
     currentCommunity,
-    channels: [...joinedChannels, ...privateChannels].sort(
-      (a, b) => a.displayOrder - b.displayOrder
-    ),
+    channels: [...joinedChannels, ...privateChannels] as SerializedChannel[],
     communities: communities.map(serializeAccount),
     permissions,
     settings,
