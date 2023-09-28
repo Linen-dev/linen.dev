@@ -2,6 +2,7 @@
  * @jest-environment node
  */
 
+jest.mock('services/events/eventNewThread');
 import { createUserAndSignIn } from './helpers';
 import ApplicationMailer from 'mailers/ApplicationMailer';
 import { invitesServices } from '__mocks__/invitesServicesMock';

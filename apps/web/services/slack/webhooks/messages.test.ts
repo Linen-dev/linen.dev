@@ -1,3 +1,4 @@
+jest.mock('services/events/eventNewThread');
 import { accounts, channels } from '@linen/database';
 import { v4 } from 'uuid';
 import { create } from '@linen/factory';
