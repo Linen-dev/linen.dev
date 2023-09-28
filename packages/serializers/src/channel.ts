@@ -17,7 +17,10 @@ export function serializeChannel(
     accountId: channel.accountId,
     pages: channel.pages,
     type: channel.type,
-    displayOrder: channel.displayOrder || 0,
+    displayOrder:
+      typeof channel.displayOrder === 'number'
+        ? channel.displayOrder
+        : Infinity,
     viewType: channel.viewType,
   };
 }

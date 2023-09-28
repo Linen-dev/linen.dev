@@ -98,7 +98,7 @@ export function createThreadImitation({
       readonly: channel.readonly,
       accountId: null,
       pages: null,
-      displayOrder: 0,
+      displayOrder: channel.displayOrder,
       viewType: channel.viewType,
     },
     channelId: channel.id,

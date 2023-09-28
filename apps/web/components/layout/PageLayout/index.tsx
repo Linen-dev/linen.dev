@@ -132,9 +132,7 @@ function PageLayout({
 
   const onJoinChannel = (channel: SerializedChannel) => {
     setChannels((channels) => {
-      return [channel, ...channels].sort((a, b) =>
-        a.displayOrder > b.displayOrder ? 1 : -1
-      );
+      return [channel, ...channels];
     });
   };
 

@@ -24,9 +24,6 @@ class ChannelsService {
           in: [ChannelType.PUBLIC, ChannelType.PRIVATE],
         },
       },
-      orderBy: {
-        displayOrder: 'asc',
-      },
     });
   }
 
@@ -40,9 +37,6 @@ class ChannelsService {
         type: ChannelType.PUBLIC,
         hidden: false,
         ...(isBot ? { threads: { some: {} } } : {}),
-      },
-      orderBy: {
-        displayOrder: 'asc',
       },
     });
   }
@@ -97,9 +91,6 @@ class ChannelsService {
         where: {
           accountId: communityId,
           type: { not: ChannelType.DM },
-        },
-        orderBy: {
-          displayOrder: 'asc',
         },
       })
       .then((channels) =>

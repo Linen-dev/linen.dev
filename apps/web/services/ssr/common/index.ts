@@ -4,7 +4,11 @@ import CommunityService from 'services/community';
 import PermissionsService from 'services/permissions';
 import { qs } from '@linen/utilities/url';
 import { GetServerSidePropsContext } from 'next';
-import { Permissions, validatePermissionsResponse } from '@linen/types';
+import {
+  Permissions,
+  SerializedChannel,
+  validatePermissionsResponse,
+} from '@linen/types';
 import { serializeAccount } from '@linen/serializers/account';
 import { serializeChannel } from '@linen/serializers/channel';
 import { cleanUpUrl } from '@linen/utilities/url';
@@ -54,9 +58,7 @@ export async function ssr(
       token: permissions.token,
       currentCommunity,
       publicChannels,
-      channels: [...joinedChannels, ...privateChannels].sort(
-        (a, b) => a.displayOrder - b.displayOrder
-      ),
+      channels: [...joinedChannels, ...privateChannels] as SerializedChannel[],
       communities: communities.map(serializeAccount),
       permissions,
       settings,
