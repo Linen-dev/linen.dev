@@ -28,6 +28,7 @@ import { serializeMessage } from '@linen/serializers/message';
 import { serializeThread } from '@linen/serializers/thread';
 import { filterMessages, parseMessage } from 'services/slack/sync/parseMessage';
 import { eventNewThread } from 'services/events/eventNewThread';
+import { eventMessageUpdated } from 'services/events/eventMessageUpdate';
 
 const findOrCreateUserFromUserInfo = async (
   externalUserId: string,
@@ -244,7 +245,6 @@ async function deleteMessage(
   return {};
 }
 
-// TODO: replace by update instead of remove and insert
 async function changeMessage(
   channel: channels & {
     account: (accounts & { slackAuthorizations: slackAuthorizations[] }) | null;
@@ -252,31 +252,75 @@ async function changeMessage(
   event: SlackMessageEvent,
   logger: Logger
 ) {
-  // First remove previous message
-  if (event.previous_message) {
-    const message = await MessagesService.findMessageByChannelIdAndTs({
-      channelId: channel.id,
-      ts: event.previous_message.ts,
-    });
-    try {
-      if (message && message.channel.accountId) {
-        await MessagesService.delete({
-          accountId: message.channel.accountId,
-          id: message.id,
-        });
-      }
-    } catch (error) {
-      logger.warn({
-        'Message not found': event.deleted_ts,
-        channelId: channel.id,
-      });
-    }
+  const parsedMessage = event.message ? parseMessage(event.message) : null;
+  if (!parsedMessage) {
+    return;
   }
 
-  let message = {};
-  if (event.message) {
-    message = await addMessage(channel, parseMessage(event.message), logger);
+  const thread_ts = parsedMessage.thread_ts || parsedMessage.ts;
+  const accessToken = channel.account?.slackAuthorizations[0]?.accessToken!;
+
+  const externalUserId = parsedMessage.bot_id || parsedMessage.user;
+  if (!externalUserId) {
+    return { error: 'missing externalUserId', event };
   }
+
+  const user = await findOrCreateUserFromUserInfo(
+    externalUserId,
+    channel.accountId!,
+    accessToken
+  );
+
+  const thread = await findOrCreateThread({
+    externalThreadId: thread_ts,
+    channelId: channel.id,
+    sentAt: parseSlackSentAt(parsedMessage.ts),
+    lastReplyAt: parseSlackSentAt(parsedMessage.ts),
+    slug: slugify(parsedMessage.text),
+  });
+
+  const mentionUsersMap = (parsedMessage.text.match(/<@(.*?)>/g) || []).map(
+    (m) => m.replace('<@', '').replace('>', '')
+  );
+  const mentionUsers = await Promise.all(
+    mentionUsersMap.map((userId) =>
+      findOrCreateUserFromUserInfo(userId, channel.accountId!, accessToken)
+    )
+  );
+
+  const mentionIds = mentionUsers.filter(Boolean).map((x) => x!.id);
+
+  const param: Prisma.messagesUncheckedCreateInput = {
+    body: parsedMessage.text,
+    channelId: channel.id,
+    sentAt: tsToSentAt(parsedMessage.ts),
+    threadId: thread?.id,
+    externalMessageId: parsedMessage.ts,
+    usersId: user?.id,
+    messageFormat: MessageFormat.SLACK,
+  };
+
+  const message = await MessagesService.createMessageWithMentions(
+    param,
+    mentionIds
+  );
+
+  if (accessToken) {
+    await processAttachments(
+      {
+        files: parsedMessage.files,
+      } as any,
+      message,
+      accessToken,
+      logger
+    );
+  }
+
+  await eventMessageUpdated({
+    threadId: message.threadId,
+    channelId: message.channelId,
+    messageId: message.id,
+  });
 
   return message;
 }

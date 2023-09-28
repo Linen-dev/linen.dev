@@ -15,6 +15,7 @@ import {
 import { v4 as uuid } from 'uuid';
 import unique from 'lodash.uniq';
 import { eventMessageDeletion } from 'services/events/eventMessageDeletion';
+import { eventMessageUpdated } from 'services/events/eventMessageUpdate';
 
 export default class MessagesService {
   static async create({
@@ -286,11 +287,17 @@ export default class MessagesService {
   }
 
   static async update({ messageId, body, externalMessageId }: messagePutType) {
+    // TODO: handle mentions and attachments, also slugs if is the first message
     if (body) {
-      return await prisma.messages.update({
+      const message = await prisma.messages.update({
         where: { id: messageId },
         data: { body },
       });
+      await eventMessageUpdated({
+        ...message,
+        messageId: message.id,
+      });
+      return message;
     }
     return await prisma.messages.update({
       where: { id: messageId },
@@ -332,7 +339,7 @@ export default class MessagesService {
       create: {
         ...msg,
         mentions: {
-          create: mentionsId.map((id) => ({ usersId: id })),
+          createMany: { data: mentionsId.map((id) => ({ usersId: id })) },
         },
       },
       where: {
@@ -343,6 +350,10 @@ export default class MessagesService {
       },
       update: {
         ...msg,
+        mentions: {
+          deleteMany: {},
+          createMany: { data: mentionsId.map((id) => ({ usersId: id })) },
+        },
       },
     });
     if (!!newMessage.threadId) {

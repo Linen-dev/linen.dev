@@ -179,7 +179,7 @@ export async function findMessageByChannelIdAndExternalId({
     },
   });
 }
-
+// TODO: call message services instead
 export async function updateMessage({
   id,
   body,
