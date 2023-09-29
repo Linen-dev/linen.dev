@@ -459,13 +459,17 @@ export default function ChannelsView({
                       options={[
                         { value: 'CHAT', label: 'Chat' },
                         { value: 'FORUM', label: 'Forum' },
+                        { value: 'TOPIC', label: 'Topic' },
                       ]}
                       defaultValue={channel.viewType}
                       style={{ width: 'auto' }}
                       onChange={(event) => {
                         event.preventDefault();
                         event.stopPropagation();
-                        const viewType = event.target.value as 'CHAT' | 'FORUM';
+                        const viewType = event.target.value as
+                          | 'CHAT'
+                          | 'FORUM'
+                          | 'TOPIC';
                         debouncedUpdateChannel({
                           ...channel,
                           viewType,

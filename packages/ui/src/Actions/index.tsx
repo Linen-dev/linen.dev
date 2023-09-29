@@ -100,8 +100,6 @@ export default function Actions({
   onUnread,
 }: Props) {
   // const [modal, setModal] = useState<ModalView>(ModalView.NONE);
-  const viewType = thread.channel?.viewType;
-  const isForumView = viewType === 'FORUM';
   const owner = currentUser ? currentUser.id === message.usersId : false;
   const draggable = !!permissions?.manage || owner;
 

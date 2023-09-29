@@ -5,7 +5,7 @@ import ChannelsService from 'services/channels';
 import { slugify } from '@linen/utilities/string';
 import { channels } from '@linen/database';
 
-enum ChannelType {
+enum DiscordChannelType {
   TEXT = 0,
   FORUM = 15,
 }
@@ -36,7 +36,7 @@ export async function listChannelsAndPersist({
   try {
     const channelPromises: channels[] = [];
     const filteredChannels = channels.filter((c) =>
-      [ChannelType.TEXT, ChannelType.FORUM].includes(c.type)
+      [DiscordChannelType.TEXT, DiscordChannelType.FORUM].includes(c.type)
     );
     for (const channel of filteredChannels) {
       try {

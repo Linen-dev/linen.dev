@@ -137,6 +137,7 @@ export default function NewChannelModal({
               options={[
                 { label: 'Chat', value: ChannelViewType.CHAT },
                 { label: 'Forum', value: ChannelViewType.FORUM },
+                { label: 'Topic', value: ChannelViewType.TOPIC },
               ]}
               defaultValue={viewType}
               onChange={(event) =>
