@@ -20,8 +20,6 @@ import { checkPropagation } from './tasks/custom-domain-propagate';
 import { cleanupUserThreadStatusTask } from './tasks/cleanup-user-thread-status';
 import {
   typesenseSetup,
-  // typesenseSyncAll,
-  // typesenseSync,
   typesenseDeletion,
   typesenseRefreshApiKeys,
   typesenseOnChannelNameUpdate,
@@ -78,8 +76,6 @@ async function runWorker() {
       buildFeed,
       checkPropagation,
       typesenseSetup,
-      // typesenseSync,
-      // typesenseSyncAll,
       typesenseDeletion,
       typesenseRefreshApiKeys,
       typesenseOnChannelNameUpdate,
@@ -157,16 +153,6 @@ async function runWorker() {
         },
         task: 'typesenseRefreshApiKeys',
         identifier: 'typesenseRefreshApiKeys',
-      },
-      {
-        pattern: '0 * * * *', // every 1 hour
-        options: {
-          queueName: 'typesenseSyncAll',
-          backfillPeriod: 0,
-          maxAttempts: 1,
-        },
-        task: 'typesenseSyncAll',
-        identifier: 'typesenseSyncAll',
       },
     ]),
   });
