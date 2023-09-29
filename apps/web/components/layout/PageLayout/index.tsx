@@ -31,6 +31,7 @@ import { useJoinContext } from 'contexts/Join';
 import { analyticsMiddleware, searchClient } from 'utilities/typesenseClient';
 import { createInstantSearchRouterNext } from 'react-instantsearch-router-nextjs';
 import EventEmitter from '@linen/utilities/event';
+import { sortByDisplayOrder } from '@linen/utilities/object';
 
 interface Props {
   className?: string;
@@ -74,7 +75,9 @@ function PageLayout({
   onDrop,
 }: Props) {
   const [channels, setChannels] = useState(
-    initialChannels.filter((c: SerializedChannel) => !c.hidden)
+    initialChannels
+      .filter((c: SerializedChannel) => !c.hidden)
+      .sort(sortByDisplayOrder)
   );
   const [dms, setDms] = useState(initialDms);
   const { googleAnalyticsId, googleSiteVerification } = settings;
@@ -101,7 +104,11 @@ function PageLayout({
   []);
 
   useEffect(() => {
-    setChannels(initialChannels.filter((c: SerializedChannel) => !c.hidden));
+    setChannels(
+      initialChannels
+        .filter((c: SerializedChannel) => !c.hidden)
+        .sort(sortByDisplayOrder)
+    );
   }, [initialChannels]);
 
   useEffect(() => {
@@ -132,7 +139,7 @@ function PageLayout({
 
   const onJoinChannel = (channel: SerializedChannel) => {
     setChannels((channels) => {
-      return [channel, ...channels];
+      return [channel, ...channels].sort(sortByDisplayOrder);
     });
   };
 

@@ -13,6 +13,7 @@ import { serializeAccount } from '@linen/serializers/account';
 import { serializeChannel } from '@linen/serializers/channel';
 import { cleanUpUrl } from '@linen/utilities/url';
 import type { accounts } from '@linen/database';
+import { sortByDisplayOrder } from '@linen/utilities/object';
 
 export async function ssr(
   context: GetServerSidePropsContext,
@@ -58,7 +59,9 @@ export async function ssr(
       token: permissions.token,
       currentCommunity,
       publicChannels,
-      channels: [...joinedChannels, ...privateChannels] as SerializedChannel[],
+      channels: [...joinedChannels, ...privateChannels].sort(
+        sortByDisplayOrder
+      ) as SerializedChannel[],
       communities: communities.map(serializeAccount),
       permissions,
       settings,
