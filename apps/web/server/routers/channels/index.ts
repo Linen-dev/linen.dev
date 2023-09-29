@@ -52,6 +52,7 @@ import { serialize } from 'superjson';
 import { serializeUser } from '@linen/serializers/user';
 import { eventChannelUpdate } from 'services/events/eventChannelUpdate';
 import { eventChannelDeletion } from 'services/events/eventChannelDeletion';
+import { sortByDisplayOrder } from '@linen/utilities/object';
 
 const prefix = '/api/channels';
 
@@ -143,7 +144,11 @@ channelsRouter.get(
     res: Response
   ) => {
     const channels = await ChannelsService.findPublic(req.tenant?.id!);
-    return res.status(200).json({ channels: channels.map(serializeChannel) });
+    return res
+      .status(200)
+      .json({
+        channels: channels.map(serializeChannel).sort(sortByDisplayOrder),
+      });
   }
 );
 

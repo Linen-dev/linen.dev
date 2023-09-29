@@ -16,3 +16,17 @@ export const toObject = <T extends Record<string, any>, K extends keyof T>(
 export function sortBySentAtAsc(a: { sentAt: bigint }, b: { sentAt: bigint }) {
   return Number(a.sentAt) - Number(b.sentAt);
 }
+
+export function sortByDisplayOrder(
+  a: { displayOrder?: number },
+  b: { displayOrder?: number }
+) {
+  const displayOrder1 =
+    typeof a.displayOrder === 'number' ? a.displayOrder : Infinity;
+  const displayOrder2 =
+    typeof b.displayOrder === 'number' ? b.displayOrder : Infinity;
+  if (displayOrder1 === displayOrder2) {
+    return 0;
+  }
+  return displayOrder1 > displayOrder2 ? 1 : -1;
+}

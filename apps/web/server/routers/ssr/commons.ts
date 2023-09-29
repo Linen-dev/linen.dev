@@ -13,6 +13,7 @@ import validationMiddleware from 'server/middlewares/validation';
 import CommunityService from 'services/community';
 import PermissionsService from 'services/permissions';
 import { allowAccess, fetchCommon } from 'services/ssr/common';
+import { sortByDisplayOrder } from '@linen/utilities/object';
 
 const prefix = '/api/ssr/commons';
 const ssrRouter = Router();
@@ -63,7 +64,9 @@ async function getProps(
   return {
     token: permissions.token,
     currentCommunity,
-    channels: [...joinedChannels, ...privateChannels] as SerializedChannel[],
+    channels: [...joinedChannels, ...privateChannels].sort(
+      sortByDisplayOrder
+    ) as SerializedChannel[],
     communities: communities.map(serializeAccount),
     permissions,
     settings,

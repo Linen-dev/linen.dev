@@ -13,7 +13,7 @@ import {
 } from 'utilities/redirects';
 import { z } from 'zod';
 import { buildCursor } from 'utilities/buildCursor';
-import { sortBySentAtAsc } from '@linen/utilities/object';
+import { sortBySentAtAsc, sortByDisplayOrder } from '@linen/utilities/object';
 import { ssr, allowAccess, allowManagers } from 'services/ssr/common';
 import { ChannelType, prisma } from '@linen/database';
 import { serializeChannel } from '@linen/serializers/channel';
@@ -226,9 +226,6 @@ export async function getChannelsSettingsServerSideProps(
     include: {
       _count: { select: { threads: true, memberships: true } },
     },
-    orderBy: {
-      displayOrder: 'asc',
-    },
   });
 
   const counts = channels.map((channel) => {
@@ -242,7 +239,7 @@ export async function getChannelsSettingsServerSideProps(
   return {
     props: {
       ...props,
-      channels: channels.map(serializeChannel),
+      channels: channels.map(serializeChannel).sort(sortByDisplayOrder),
       isSubDomainRouting,
       counts,
     },

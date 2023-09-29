@@ -136,13 +136,6 @@ export default function ChannelsGroup({
       : []),
   ];
 
-  const sortedChannels = channels.sort((a, b) => {
-    if (a.displayOrder === b.displayOrder) {
-      return 0;
-    }
-    return a.displayOrder > b.displayOrder ? 1 : -1;
-  });
-
   return (
     <>
       <Nav.Group
@@ -178,7 +171,7 @@ export default function ChannelsGroup({
       </Nav.Group>
       {show && (
         <>
-          {sortedChannels.map((channel: SerializedChannel, index: number) => {
+          {channels.map((channel: SerializedChannel, index: number) => {
             const count = highlights.reduce((count: number, id: string) => {
               if (id === channel.id) {
                 return count + 1;
@@ -298,7 +291,7 @@ export default function ChannelsGroup({
               api={api}
               onJoinChannel={onJoinChannel}
               onLeaveChannel={onLeaveChannel}
-              channels={sortedChannels}
+              channels={channels}
             />
           )}
 
