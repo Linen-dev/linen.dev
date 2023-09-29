@@ -131,6 +131,7 @@ export default function EditChannelModal({
             options={[
               { label: 'Chat', value: 'CHAT' },
               { label: 'Forum', value: 'FORUM' },
+              { label: 'Topic', value: 'TOPIC' },
             ]}
             defaultValue={viewType}
             onChange={(event) =>
