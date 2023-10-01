@@ -334,11 +334,10 @@ export const updateAccount = async (
   accountId: string,
   account: Prisma.accountsUpdateInput
 ) => {
-  const oldAccount = await prisma.accounts.findUnique({
+  const oldAccount = await prisma.accounts.findUniqueOrThrow({
     where: {
       id: accountId,
     },
-    rejectOnNotFound: true,
   });
   const updatedAccount = await prisma.accounts.update({
     where: {

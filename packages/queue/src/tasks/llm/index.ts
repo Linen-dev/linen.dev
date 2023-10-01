@@ -71,10 +71,9 @@ export const llmQuestion = async (payload: any, helpers: JobHelpers) => {
     const { accountId, authorId, channelId, threadId, communityName } =
       parsedPayload;
 
-    const thread = await prisma.threads.findUnique({
+    const thread = await prisma.threads.findUniqueOrThrow({
       include: { messages: true, channel: true },
       where: { id: threadId },
-      rejectOnNotFound: true,
     });
 
     logger.info({ llm: `found thread ${thread.id}` });

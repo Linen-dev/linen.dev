@@ -132,9 +132,8 @@ describe('private community', () => {
     let searchSettings: SerializedSearchSettings;
 
     test('user1 token should exist', async () => {
-      const user = await prisma.users.findUnique({
+      const user = await prisma.users.findUniqueOrThrow({
         where: { id: userId1 },
-        rejectOnNotFound: true,
       });
       const userSettings: SerializedSearchSettings = JSON.parse(
         user.searchSettings!
@@ -169,9 +168,8 @@ describe('private community', () => {
     let searchSettings: SerializedSearchSettings;
 
     test('user2 token should exist', async () => {
-      const user = await prisma.users.findUnique({
+      const user = await prisma.users.findUniqueOrThrow({
         where: { id: userId2 },
-        rejectOnNotFound: true,
       });
       const userSettings: SerializedSearchSettings = JSON.parse(
         user.searchSettings!

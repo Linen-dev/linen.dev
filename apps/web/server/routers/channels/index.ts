@@ -164,12 +164,11 @@ channelsRouter.delete(
     const { id } = req.body;
 
     try {
-      const channel = await prisma.channels.findUnique({
+      const channel = await prisma.channels.findUniqueOrThrow({
         select: { id: true, accountId: true, channelName: true },
         where: {
           id,
         },
-        rejectOnNotFound: true,
       });
       if (!channel.accountId || channel.accountId !== req.tenant?.id!) {
         // if channel accountId is missing or belongs to another account, throw forbidden

@@ -277,7 +277,7 @@ describe('notification service', () => {
       'createNotificationEmailTask'
     );
 
-    const message = await prisma.messages.findFirst({
+    const message = await prisma.messages.findFirstOrThrow({
       where: { id: mockMessage2.id },
       include: {
         author: true,
@@ -289,7 +289,6 @@ describe('notification service', () => {
           },
         },
       },
-      rejectOnNotFound: true,
     });
 
     await handleNotificationEvent(
@@ -344,7 +343,7 @@ describe('notification service', () => {
       'createNotificationEmailTask'
     );
 
-    const message = await prisma.messages.findFirst({
+    const message = await prisma.messages.findFirstOrThrow({
       where: { id: mockMessage3.id },
       include: {
         author: true,
@@ -356,7 +355,6 @@ describe('notification service', () => {
           },
         },
       },
-      rejectOnNotFound: true,
     });
 
     await handleNotificationEvent(
@@ -420,7 +418,7 @@ describe('notification service', () => {
       'createNotificationEmailTask'
     );
 
-    const message = await prisma.messages.findFirst({
+    const message = await prisma.messages.findFirstOrThrow({
       where: { id: mockMessage2.id },
       include: {
         author: true,
@@ -432,7 +430,6 @@ describe('notification service', () => {
           },
         },
       },
-      rejectOnNotFound: true,
     });
 
     await handleNotificationEvent(
