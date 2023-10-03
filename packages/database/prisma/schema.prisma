@@ -4,12 +4,13 @@
 generator client {
   provider        = "prisma-client-js"
   binaryTargets   = ["native", "rhel-openssl-1.0.x"]
-  previewFeatures = ["fullTextSearch", "interactiveTransactions", "extendedIndexes"]
+  previewFeatures = ["fullTextSearch", "interactiveTransactions", "extendedIndexes", "postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [vector]
 }
 
 model messages {
@@ -32,7 +33,7 @@ model messages {
   reactions                messageReactions[]
   author                   users?                   @relation(fields: [usersId], references: [id])
   usersId                  String?
-  textsearchable_index_col Unsupported("tsvector")?
+  textsearchable_index_col Unsupported("tsvector")? @default(dbgenerated("to_tsvector('english'::regconfig, COALESCE(body, ''::text))"))
   messageFormat            MessageFormat?
   notifications            notifications[]
 
@@ -83,6 +84,7 @@ model threads {
   robotsMetaTag     String?
   createdAt         DateTime            @default(now())
   updatedAt         DateTime?           @updatedAt()
+  embeddings        embeddings[]
 
   @@unique([channelId, externalThreadId])
   @@unique([incrementId])
@@ -225,6 +227,7 @@ model accounts {
   notifications         notifications[]
   integrationMatrix     integrationMatrix[]
   accountTag            accountTag[]
+  embeddings            embeddings[]
 
   @@unique([redirectDomain])
   @@unique([slackDomain])
@@ -527,4 +530,24 @@ model apiKeys {
 
   @@index([hash])
   @@index([accountId])
+}
+
+model embeddings {
+  accountId String
+  account   accounts       @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  threadId  String
+  thread    threads        @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  type      EmbeddingsType
+  value     String
+
+  embedding Unsupported("vector(1536)")?
+
+  @@id([threadId, type])
+  @@index([accountId])
+}
+
+enum EmbeddingsType {
+  QUESTION
+  ANSWER
+  SUMMARY
 }
