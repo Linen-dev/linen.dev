@@ -46,3 +46,4 @@ dist
 
 packages/vite
 packages/cra
+.db

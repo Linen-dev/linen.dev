@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "experimentalDecorators": true,
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "emitDeclarationOnly": false,
+    "noEmit": false,
+    "declaration": true,
+    "outDir": "dist"
+  },
+  "exclude": ["**/**.test.*"]
+}
