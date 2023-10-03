@@ -42,6 +42,7 @@ interface Props {
   topics?: SerializedTopic[];
   onChannelClick(channelId: string): void;
   onSettingsClick(channelId: string): void;
+  onTopicClick?(topic: SerializedTopic): void;
   onJoinChannel(channel: SerializedChannel): void;
   onLeaveChannel(channel: SerializedChannel): void;
   onDrop?({
@@ -82,6 +83,7 @@ export default function ChannelsGroup({
   permissions,
   onChannelClick,
   onSettingsClick,
+  onTopicClick,
   onDrop,
   onJoinChannel,
   onLeaveChannel,
@@ -290,7 +292,13 @@ export default function ChannelsGroup({
                 {active &&
                   channel.viewType === 'TOPIC' &&
                   threads &&
-                  topics && <RecentTopics threads={threads} topics={topics} />}
+                  topics && (
+                    <RecentTopics
+                      threads={threads}
+                      topics={topics}
+                      onTopicClick={onTopicClick}
+                    />
+                  )}
               </div>
             );
           })}

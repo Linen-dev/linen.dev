@@ -349,6 +349,11 @@ export default function DesktopNavBar({
                 setEditedChannel(channel);
                 setModal(ModalView.EDIT_CHANNEL);
               }}
+              onTopicClick={(topic) => {
+                if (topics) {
+                  EventEmitter.emit('navbar:topic:clicked', topic);
+                }
+              }}
               onJoinChannel={onJoinChannel}
               onLeaveChannel={onLeaveChannel}
               onDrop={onDrop}

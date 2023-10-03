@@ -7,9 +7,10 @@ import styles from './index.module.scss';
 interface Props {
   threads: SerializedThread[];
   topics: SerializedTopic[];
+  onTopicClick?(topic: SerializedTopic): void;
 }
 
-export default function RecentTopics({ threads, topics }: Props) {
+export default function RecentTopics({ threads, topics, onTopicClick }: Props) {
   if (threads.length === 0 || topics.length === 0) {
     return null;
   }
@@ -22,10 +23,11 @@ export default function RecentTopics({ threads, topics }: Props) {
       )
         .slice(0, 10)
         .map((group) => {
-          const threadId = group[0].threadId;
+          const topic = group[0];
+          const threadId = topic.threadId;
           const thread = threads.find(({ id }) => id === threadId)!;
           return (
-            <li>
+            <li onClick={() => onTopicClick?.(topic)}>
               <FiMinus />{' '}
               {thread.title ||
                 thread.messages[0].body.substring(0, 20).trim() + '...'}
