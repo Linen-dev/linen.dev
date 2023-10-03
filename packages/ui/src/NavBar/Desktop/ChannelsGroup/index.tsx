@@ -5,6 +5,8 @@ import {
   Permissions,
   SerializedAccount,
   SerializedChannel,
+  SerializedThread,
+  SerializedTopic,
   SerializedUser,
 } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
@@ -21,6 +23,7 @@ import { FiRadio } from '@react-icons/all-files/fi/FiRadio';
 import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiLogOut } from '@react-icons/all-files/fi/FiLogOut';
 import { FiEdit } from '@react-icons/all-files/fi/FiEdit';
+import RecentTopics from './RecentTopics';
 import { ContextMenu, useContextMenu } from '@/ContextMenu';
 import ConfirmationModal from '@/ConfirmationModal';
 import IntegrationsModalUI from '@/IntegrationsModal';
@@ -35,6 +38,8 @@ interface Props {
   highlights: string[];
   mode: Mode;
   permissions: Permissions;
+  threads?: SerializedThread[];
+  topics?: SerializedTopic[];
   onChannelClick(channelId: string): void;
   onSettingsClick(channelId: string): void;
   onJoinChannel(channel: SerializedChannel): void;
@@ -72,6 +77,8 @@ export default function ChannelsGroup({
   currentCommunity,
   highlights,
   mode,
+  threads,
+  topics,
   permissions,
   onChannelClick,
   onSettingsClick,
@@ -219,7 +226,11 @@ export default function ChannelsGroup({
 
             return (
               <div
-                key={`${channel.channelName}-${index}`}
+                key={
+                  topics
+                    ? `${channel.channelName}-${index}-${topics.length}`
+                    : `${channel.channelName}-${index}`
+                }
                 onContextMenu={(e: any) => {
                   e.preventDefault();
                   setClicked(true);
@@ -275,6 +286,11 @@ export default function ChannelsGroup({
                     )}
                   </Nav.Item>
                 </Link>
+
+                {active &&
+                  channel.viewType === 'TOPIC' &&
+                  threads &&
+                  topics && <RecentTopics threads={threads} topics={topics} />}
               </div>
             );
           })}

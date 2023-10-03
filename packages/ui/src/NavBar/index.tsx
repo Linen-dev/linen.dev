@@ -3,6 +3,8 @@ import {
   Permissions,
   SerializedAccount,
   SerializedChannel,
+  SerializedThread,
+  SerializedTopic,
   SerializedUser,
 } from '@linen/types';
 import DesktopNavBar from './Desktop';
@@ -19,6 +21,8 @@ interface Props {
   channelName?: string;
   communities: SerializedAccount[];
   permissions: Permissions;
+  threads?: SerializedThread[];
+  topics?: SerializedTopic[];
   onDrop?({
     source,
     target,
@@ -57,6 +61,8 @@ export default function NavBar({
   communities,
   permissions,
   dms,
+  threads,
+  topics,
   onDrop,
   Link,
   routerAsPath,
@@ -84,6 +90,8 @@ export default function NavBar({
           permissions={permissions}
           onDrop={onDrop}
           dms={dms}
+          threads={threads}
+          topics={topics}
           // injection
           Link={Link}
           routerAsPath={routerAsPath}

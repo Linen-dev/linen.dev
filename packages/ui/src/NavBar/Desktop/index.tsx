@@ -6,6 +6,8 @@ import {
   SerializedAccount,
   SerializedChannel,
   SerializedReadStatus,
+  SerializedThread,
+  SerializedTopic,
   SerializedUser,
 } from '@linen/types';
 import useWebsockets from '@linen/hooks/websockets';
@@ -45,6 +47,8 @@ interface Props {
   currentChannel?: SerializedChannel;
   channels: SerializedChannel[];
   dms: SerializedChannel[];
+  threads?: SerializedThread[];
+  topics?: SerializedTopic[];
   channelName?: string;
   communities: SerializedAccount[];
   permissions: Permissions;
@@ -92,6 +96,8 @@ export default function DesktopNavBar({
   communities,
   permissions,
   dms,
+  threads,
+  topics,
   onDrop,
   Link,
   routerAsPath,
@@ -322,6 +328,8 @@ export default function DesktopNavBar({
             <ChannelsGroup
               channelName={channelName}
               channels={channels}
+              threads={threads}
+              topics={topics}
               currentCommunity={currentCommunity}
               currentUser={currentUser}
               highlights={highlights}

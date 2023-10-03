@@ -11,6 +11,8 @@ import type {
   SerializedAccount,
   SerializedChannel,
   SerializedSearchMessage,
+  SerializedThread,
+  SerializedTopic,
   SerializedUser,
   Settings,
 } from '@linen/types';
@@ -46,6 +48,8 @@ interface Props {
   isSubDomainRouting: boolean;
   permissions: Permissions;
   innerRef?: any;
+  threads?: SerializedThread[];
+  topics?: SerializedTopic[];
   onDrop?({
     source,
     target,
@@ -72,6 +76,8 @@ function PageLayout({
   permissions,
   innerRef,
   dms: initialDms,
+  threads,
+  topics,
   onDrop,
 }: Props) {
   const [channels, setChannels] = useState(
@@ -217,6 +223,8 @@ function PageLayout({
           permissions={permissions}
           onDrop={onDrop}
           dms={dms}
+          threads={threads}
+          topics={topics}
           // injection
           Link={InternalLink}
           routerAsPath={router.asPath}
