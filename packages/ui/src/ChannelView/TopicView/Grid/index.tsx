@@ -178,9 +178,11 @@ export default function Grid({
         } else if (item.type === RowType.Topic) {
           const thread = item.content as SerializedThread;
           const { incrementId, slug, id } = thread;
+          const listId = `channel-grid-item-${item.topic.messageId}`;
           return (
             <li
-              key={`channel-grid-item-${item.topic.messageId}`}
+              key={listId}
+              id={listId}
               className={classNames(styles.li, {
                 [styles.active]: thread.id === currentThreadId,
                 [styles.padded]: !item.first && item.padded,

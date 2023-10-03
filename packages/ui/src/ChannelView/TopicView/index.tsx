@@ -55,6 +55,7 @@ import PaginationNumbers from '@/PaginationNumbers';
 import { useViewport } from '@linen/hooks/useViewport';
 import { getThreadUrl } from '@linen/utilities/url';
 import { TypingFunctions } from '@/Thread/UsersTyping';
+import EventEmitter from '@linen/utilities/event';
 
 const useLayoutEffect =
   typeof window !== 'undefined' ? useClientLayoutEffect : () => {};
@@ -223,6 +224,28 @@ export default function Channel({
       viewport === 'mobile' && NProgress.start();
     }
   }, [viewport, isInfiniteScrollLoading]);
+
+  useEffect(() => {
+    const callback = (topic: SerializedTopic) => {
+      const node = document.getElementById(
+        `channel-grid-item-${topic.messageId}`
+      );
+
+      const layout = document.getElementById('sidebar-layout-left');
+      const footer = document.getElementById('chat-layout-footer');
+      if (node && layout && footer) {
+        node.scrollIntoView({ block: 'end' });
+        const offset = footer.clientHeight;
+        layout.scrollTop = layout.scrollTop + offset;
+      }
+    };
+
+    EventEmitter.on('navbar:topic:clicked', callback);
+
+    return () => {
+      EventEmitter.off('navbar:topic:clicked', callback);
+    };
+  }, []);
 
   async function loadMore(next: boolean = false) {
     if (isInfiniteScrollLoading || isScrolling) return;
