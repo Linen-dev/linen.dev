@@ -36,7 +36,7 @@ export default function RecentTopics({ threads, topics, onTopicClick }: Props) {
           const thread = threads.find(({ id }) => id === threadId)!;
           return (
             <li onClick={() => onTopicClick?.(topic)}>
-              <FiMinus /> {getTitle(thread)}
+              {getTitle(thread)}
             </li>
           );
         })}
