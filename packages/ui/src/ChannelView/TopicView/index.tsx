@@ -227,6 +227,8 @@ export default function Channel({
 
   useEffect(() => {
     const callback = (topic: SerializedTopic) => {
+      selectThread(topic.threadId);
+
       const node = document.getElementById(
         `channel-grid-item-${topic.messageId}`
       );
@@ -238,7 +240,6 @@ export default function Channel({
         const offset = footer.clientHeight;
         layout.scrollTop = layout.scrollTop + offset;
       }
-      selectThread(topic.threadId);
     };
 
     EventEmitter.on('navbar:topic:clicked', callback);
