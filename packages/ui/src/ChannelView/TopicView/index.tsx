@@ -227,7 +227,7 @@ export default function Channel({
 
   useEffect(() => {
     const callback = (topic: SerializedTopic) => {
-      selectThread(topic.threadId);
+      selectThread(topic.threadId, false);
 
       const node = document.getElementById(
         `channel-grid-item-${topic.messageId}`
@@ -357,7 +357,7 @@ export default function Channel({
     }
   }
 
-  async function selectThread(threadId: string) {
+  async function selectThread(threadId: string, scroll: boolean = true) {
     const text = getSelectedText();
     if (text) {
       return null;
@@ -374,7 +374,8 @@ export default function Channel({
     if (isLastThread) {
       setTimeout(() => handleScroll(), 0);
     }
-    handleLeftScroll();
+
+    scroll && handleLeftScroll();
   }
 
   const rootMargin =
