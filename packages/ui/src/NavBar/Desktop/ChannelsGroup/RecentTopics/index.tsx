@@ -29,15 +29,21 @@ export default function RecentTopics({ threads, topics, onTopicClick }: Props) {
           return new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime();
         })
       )
+        //dedupe threads
+        .filter(
+          (group, index, self) =>
+            index === self.findIndex((t) => t[0].threadId === group[0].threadId)
+        )
         .slice(0, 10)
         .map((group) => {
           const topic = group[0];
           const threadId = topic.threadId;
-          const thread = threads.find(({ id }) => id === threadId)!;
+          const thread = threads.find(({ id }) => id === threadId);
+          if (!thread) {
+            return null;
+          }
           return (
-            <li onClick={() => onTopicClick?.(topic)}>
-              {getTitle(thread)}
-            </li>
+            <li onClick={() => onTopicClick?.(topic)}>{getTitle(thread)}</li>
           );
         })}
     </ul>
