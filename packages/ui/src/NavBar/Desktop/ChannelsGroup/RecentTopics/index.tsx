@@ -10,6 +10,14 @@ interface Props {
   onTopicClick?(topic: SerializedTopic): void;
 }
 
+function getTitle(thread: SerializedThread) {
+  const title = thread.title || thread.messages[0].body;
+  if (title.length > 20) {
+    return title.substring(0, 20).trim() + '...';
+  }
+  return title;
+}
+
 export default function RecentTopics({ threads, topics, onTopicClick }: Props) {
   if (threads.length === 0 || topics.length === 0) {
     return null;
@@ -28,9 +36,7 @@ export default function RecentTopics({ threads, topics, onTopicClick }: Props) {
           const thread = threads.find(({ id }) => id === threadId)!;
           return (
             <li onClick={() => onTopicClick?.(topic)}>
-              <FiMinus />{' '}
-              {thread.title ||
-                thread.messages[0].body.substring(0, 20).trim() + '...'}
+              <FiMinus /> {getTitle(thread)}
             </li>
           );
         })}
