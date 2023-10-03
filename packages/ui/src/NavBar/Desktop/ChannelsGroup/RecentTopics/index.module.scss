@@ -1,0 +1,17 @@
+.threads {
+  font-size: 12px;
+}
+
+.threads li {
+  align-items: center;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  display: flex;
+  font-weight: 500;
+  gap: 0.375rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.threads li:hover {
+  background: var(--color-gray-50);
+}

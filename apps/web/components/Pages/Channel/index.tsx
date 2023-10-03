@@ -90,6 +90,8 @@ export default function Channel(props: ChannelProps) {
       settings={settings}
       isSubDomainRouting={isSubDomainRouting}
       permissions={permissions}
+      threads={threads}
+      topics={topics}
       onDrop={OnChannelDrop({
         setThreads,
         currentCommunity,
