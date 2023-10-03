@@ -238,6 +238,7 @@ export default function Channel({
         const offset = footer.clientHeight;
         layout.scrollTop = layout.scrollTop + offset;
       }
+      selectThread(topic.threadId);
     };
 
     EventEmitter.on('navbar:topic:clicked', callback);
