@@ -18,7 +18,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:13
+        image: ankane/pgvector
         env:
           POSTGRES_PASSWORD: linentest
           POSTGRES_USER: linentest
