@@ -296,6 +296,7 @@ export default function ChannelsGroup({
                     <RecentTopics
                       threads={threads}
                       topics={topics}
+                      currentUser={currentUser}
                       onTopicClick={onTopicClick}
                     />
                   )}

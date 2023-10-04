@@ -16,7 +16,6 @@ import {
   ReminderTypes,
   onResolve,
   ThreadState,
-  SerializedMessage,
 } from '@linen/types';
 import { Mode } from '@linen/hooks/mode';
 import { FiMessageCircle } from '@react-icons/all-files/fi/FiMessageCircle';
@@ -24,7 +23,7 @@ import { FiUsers } from '@react-icons/all-files/fi/FiUsers';
 import { FiUser } from '@react-icons/all-files/fi/FiUser';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
 import { uniqueUsers } from './utilities/uniqueUsers';
-import { getUserMentions } from './utilities/mentions';
+import { getUserMentions } from '@linen/utilities/mentions';
 import { FiAtSign } from '@react-icons/all-files/fi/FiAtSign';
 import { FiAlertCircle } from '@react-icons/all-files/fi/FiAlertCircle';
 import { isAuthorActive } from '@linen/utilities/isAuthorActive';

@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
-import { SerializedThread, SerializedTopic } from '@linen/types';
+import {
+  SerializedThread,
+  SerializedTopic,
+  SerializedUser,
+} from '@linen/types';
+import classNames from 'classnames';
+import { getUserMentions } from '@linen/utilities/mentions';
 import { groupByThread } from './utilities/topics';
+import { FiAtSign } from '@react-icons/all-files/fi/FiAtSign';
+import { FiAlertCircle } from '@react-icons/all-files/fi/FiAlertCircle';
 import styles from './index.module.scss';
 
 interface Props {
   threads: SerializedThread[];
   topics: SerializedTopic[];
+  currentUser: SerializedUser | null;
   onTopicClick?(topic: SerializedTopic): void;
 }
 
@@ -17,7 +26,22 @@ function getTitle(thread: SerializedThread) {
   return title;
 }
 
-export default function RecentTopics({ threads, topics, onTopicClick }: Props) {
+function TopicIcon({ mentions }: { mentions: string[] }) {
+  if (mentions.includes('signal')) {
+    return <FiAlertCircle />;
+  }
+  if (mentions.includes('user')) {
+    return <FiAtSign />;
+  }
+  return null;
+}
+
+export default function RecentTopics({
+  threads,
+  topics,
+  currentUser,
+  onTopicClick,
+}: Props) {
   const [query, setQuery] = useState('');
   if (threads.length === 0 || topics.length === 0) {
     return null;
@@ -50,9 +74,18 @@ export default function RecentTopics({ threads, topics, onTopicClick }: Props) {
             if (!thread) {
               return null;
             }
+            const mentions = getUserMentions({ currentUser, thread });
             const title = getTitle(thread);
             if (!query || title.toLowerCase().startsWith(query.toLowerCase())) {
-              return <li onClick={() => onTopicClick?.(topic)}>{title}</li>;
+              return (
+                <li
+                  className={classNames(styles.item)}
+                  onClick={() => onTopicClick?.(topic)}
+                >
+                  <TopicIcon mentions={mentions} />
+                  {title}
+                </li>
+              );
             }
             return null;
           })
