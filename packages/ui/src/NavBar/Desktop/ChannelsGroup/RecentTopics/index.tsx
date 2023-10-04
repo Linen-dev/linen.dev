@@ -1,5 +1,4 @@
-import React from 'react';
-import { FiMinus } from '@react-icons/all-files/fi/FiMinus';
+import React, { useState } from 'react';
 import { SerializedThread, SerializedTopic } from '@linen/types';
 import { groupByThread } from './utilities/topics';
 import styles from './index.module.scss';
@@ -19,33 +18,46 @@ function getTitle(thread: SerializedThread) {
 }
 
 export default function RecentTopics({ threads, topics, onTopicClick }: Props) {
+  const [query, setQuery] = useState('');
   if (threads.length === 0 || topics.length === 0) {
     return null;
   }
   return (
-    <ul className={styles.threads}>
-      {groupByThread(
-        topics.sort((a, b) => {
-          return new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime();
-        })
-      )
-        //dedupe threads
-        .filter(
-          (group, index, self) =>
-            index === self.findIndex((t) => t[0].threadId === group[0].threadId)
+    <>
+      <input
+        className={styles.input}
+        value={query}
+        onChange={(event) => setQuery(event.target.value)}
+        placeholder="Search"
+      />
+      <ul className={styles.threads}>
+        {groupByThread(
+          topics.sort((a, b) => {
+            return new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime();
+          })
         )
-        .slice(0, 10)
-        .map((group) => {
-          const topic = group[0];
-          const threadId = topic.threadId;
-          const thread = threads.find(({ id }) => id === threadId);
-          if (!thread) {
+          //dedupe threads
+          .filter(
+            (group, index, self) =>
+              index ===
+              self.findIndex((t) => t[0].threadId === group[0].threadId)
+          )
+          .slice(0, 10)
+          .map((group) => {
+            const topic = group[0];
+            const threadId = topic.threadId;
+            const thread = threads.find(({ id }) => id === threadId);
+            if (!thread) {
+              return null;
+            }
+            const title = getTitle(thread);
+            if (!query || title.toLowerCase().startsWith(query.toLowerCase())) {
+              return <li onClick={() => onTopicClick?.(topic)}>{title}</li>;
+            }
             return null;
-          }
-          return (
-            <li onClick={() => onTopicClick?.(topic)}>{getTitle(thread)}</li>
-          );
-        })}
-    </ul>
+          })
+          .filter(Boolean)}
+      </ul>
+    </>
   );
 }
