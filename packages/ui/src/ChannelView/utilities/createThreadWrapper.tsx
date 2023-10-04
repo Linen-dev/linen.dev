@@ -114,7 +114,7 @@ export function createThreadWrapper({
                 return {
                   threadId: thread.id,
                   messageId: thread.messages[0].id,
-                  sentAt: thread.sentAt,
+                  sentAt: new Date(Number(thread.sentAt)).toISOString(),
                   usersId: currentUser.id,
                 };
               }

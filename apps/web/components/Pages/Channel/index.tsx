@@ -113,7 +113,9 @@ export default function Channel(props: ChannelProps) {
         pinnedThreads={props.pinnedThreads}
         settings={props.settings}
         threads={threads}
+        setThreads={setThreads}
         topics={topics}
+        setTopics={setTopics}
         queryIntegration={router.query.integration}
         api={api}
         startSignUp={startSignUp}

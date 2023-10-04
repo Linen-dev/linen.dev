@@ -31,8 +31,8 @@ import usePresenceWebsockets from '@linen/hooks/websockets-presence';
 const SHORTCUTS_ENABLED = false;
 
 export default function ChannelView({
-  threads: initialThreads,
-  topics: initialTopics,
+  threads,
+  topics,
   pinnedThreads: initialPinnedThreads,
   currentChannel: initialChannel,
   currentCommunity,
@@ -44,6 +44,8 @@ export default function ChannelView({
   isBot,
   permissions,
   queryIntegration,
+  setThreads,
+  setTopics,
   playNotificationSound,
   useUsersContext,
   usePath,
@@ -68,6 +70,8 @@ export default function ChannelView({
   isBot: boolean;
   permissions: Permissions;
   queryIntegration?: any;
+  setThreads: React.Dispatch<React.SetStateAction<SerializedThread[]>>;
+  setTopics: React.Dispatch<React.SetStateAction<SerializedTopic[]>>;
   playNotificationSound: (volume: number) => Promise<void>;
   useUsersContext: () => [SerializedUser[], any];
   usePath(options: any): any;
@@ -76,8 +80,6 @@ export default function ChannelView({
   startSignUp: (props: StartSignUpProps) => Promise<void>;
   selectedThreadId?: string;
 }) {
-  const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
-  const [topics, setTopics] = useState<SerializedTopic[]>(initialTopics);
   const [pinnedThreads, setPinnedThreads] =
     useState<SerializedThread[]>(initialPinnedThreads);
   const [currentChannel, setCurrentChannel] = useState(initialChannel);
@@ -96,14 +98,6 @@ export default function ChannelView({
   useEffect(() => {
     setCurrentThreadId(selectedThreadId);
   }, [selectedThreadId]);
-
-  useEffect(() => {
-    setThreads(initialThreads);
-  }, [initialThreads]);
-
-  useEffect(() => {
-    setTopics(initialTopics);
-  }, [initialTopics]);
 
   useEffect(() => {
     setPinnedThreads(initialPinnedThreads);
@@ -405,7 +399,7 @@ export default function ChannelView({
 
     return api
       .deleteMessage({ id: messageId, accountId: currentCommunity.id })
-      .then((response) => {
+      .then((response: any) => {
         if (response.ok) {
           return;
         }
