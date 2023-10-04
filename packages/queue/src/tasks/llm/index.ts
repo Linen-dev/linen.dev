@@ -17,7 +17,7 @@ const linenSdk = new LinenSdk({
 });
 
 const baseURL =
-  process.env.LLM_SERVICE_URL || 'http://llm.stage.linendev.com:3000';
+  process.env.LLM_SERVICE_URL || 'http://llm.stage.linendev.com:3001';
 
 const llmServer = axios.create({
   baseURL: baseURL,
@@ -30,7 +30,8 @@ const llmServer = axios.create({
 type SourceDocument = {
   pageContent: string;
   metadata: {
-    source: string;
+    source?: string;
+    threadId?: string;
     loc: {
       lines: {
         from: number;
@@ -47,7 +48,11 @@ type LLMPredictionResponse = {
   sourceDocuments: SourceDocument[];
 };
 
-async function llmPredict(data: { communityName: string; query: string }) {
+async function llmPredict(data: {
+  communityName: string;
+  query: string;
+  threadId: string;
+}) {
   const r = await llmServer.post<LLMPredictionResponse>('/predict', data);
   return r.data;
 }
@@ -81,6 +86,7 @@ export const llmQuestion = async (payload: any, helpers: JobHelpers) => {
     const llmResponse = await llmPredict({
       communityName,
       query: thread.messages.map((m) => m.body).join(' '),
+      threadId: thread.id,
     });
 
     logger.info({ llm: `llm response ready` });
@@ -120,8 +126,8 @@ export const llmQuestion = async (payload: any, helpers: JobHelpers) => {
 export function getReferences(documents: SourceDocument[]): string[] {
   const sources: string[] = [];
   documents.forEach((document) => {
-    const source = document.metadata.source;
-    if (!sources.includes(source)) {
+    const source = document.metadata.source || document.metadata.threadId;
+    if (source && !sources.includes(source)) {
       sources.push(source);
     }
   });

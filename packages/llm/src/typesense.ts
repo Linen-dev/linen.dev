@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { env } from './utils/env';
+import env from './utils/env';
 import { measure } from './utils/measure';
 
 type ResponseT = {

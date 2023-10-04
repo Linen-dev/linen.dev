@@ -1,38 +1,28 @@
 import fs from 'fs';
-import { RetrievalQAChain } from 'langchain/chains';
-import { PromptTemplate } from 'langchain/prompts';
+import { LLMChain, RetrievalQAChain } from 'langchain/chains';
+import { ChatPromptTemplate, PromptTemplate } from 'langchain/prompts';
 import { FaissStore } from 'langchain/vectorstores/faiss';
 import { TokenTextSplitter } from 'langchain/text_splitter';
 import { Document } from 'langchain/document';
 import { measure } from './utils/measure';
-import { env } from './utils/env';
+import env from './utils/env';
 import Typesense from './typesense';
 import { OpenAI } from 'langchain/llms/openai';
 import StringUtils from './utils/string';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import WebCrawler from './crawlers/web';
 import FileStore from './stores/file';
+import { PrismaVectorStore } from 'langchain/vectorstores/prisma';
+import * as database from '@linen/database';
 
-const embeddings = new OpenAIEmbeddings({
+const embeddingsModel = new OpenAIEmbeddings({
   openAIApiKey: env.OPENAI_API_TOKEN,
 });
 
-// import '@tensorflow/tfjs-node';
-// import { TensorFlowEmbeddings } from 'langchain/embeddings/tensorflow';
-// const embeddings = new TensorFlowEmbeddings();
-
-// import { Replicate } from 'langchain/llms/replicate';
-// const model = new Replicate({
-//   model:
-//     "meta/llama-2-7b-chat:8e6975e5ed6174911a6ff3d60540dfd4844201974602551e10e9e87ab143d81e",
-//   apiKey: env.REPLICATE_API_TOKEN,
-//   maxRetries: 1,
-// });
-
 const model = new OpenAI({
-  // modelName: "gpt-4-32k",
   modelName: 'gpt-3.5-turbo-16k',
   openAIApiKey: env.OPENAI_API_TOKEN,
+  temperature: 0,
 });
 
 interface CrawlOptions {
@@ -46,11 +36,15 @@ export default class LangChain {
     typesenseApiKey,
     communityName,
     summarize,
+    accountId,
+    threadId,
   }: {
     query: string;
     typesenseApiKey: string;
     communityName: string;
+    accountId: string;
     summarize: boolean;
+    threadId: string;
   }) {
     const body = await Typesense.queryThreads({
       query,
@@ -62,18 +56,42 @@ export default class LangChain {
         item.body = await this.summarize(item.body);
       }
     }
-
-    const data = body.map(
-      (b) =>
-        new Document({
-          pageContent: b.body,
-          metadata: { source: b.id },
-        })
-    );
-    const splitDocs = await this.splitDocuments(data);
+    const typesenseResults = body
+      .filter((t) => t.id !== threadId)
+      .map(
+        (b) =>
+          new Document({
+            pageContent: b.body,
+            metadata: { source: b.id },
+          })
+      );
 
     const directory = `.db/${communityName}`;
-    const vectorStore = await this.storeFunction({ directory, splitDocs });
+    const fileStore = await FaissStore.load(directory, embeddingsModel);
+    const fileResults = await fileStore.similaritySearch(query, env.CHUNKS);
+
+    const prismaVectorStore = PrismaVectorStore.withModel<database.embeddings>(
+      database.prisma
+    ).create(embeddingsModel, {
+      prisma: database.Prisma,
+      tableName: 'embeddings',
+      vectorColumnName: 'embedding',
+      columns: {
+        threadId: PrismaVectorStore.IdColumn,
+        value: PrismaVectorStore.ContentColumn,
+      },
+      filter: {
+        accountId: { equals: accountId },
+        confidence: { equals: 100 },
+      },
+    });
+    const vectorResults = await prismaVectorStore.similaritySearch(
+      query,
+      env.CHUNKS
+    );
+
+    const docs = [...typesenseResults, ...fileResults, ...vectorResults];
+    const vectorStore = await FaissStore.fromDocuments(docs, embeddingsModel);
 
     return await this.askLLM({ query, vectorStore });
   }
@@ -134,7 +152,7 @@ Helpful Answer:`;
 
     const chain = RetrievalQAChain.fromLLM(
       model,
-      vectorStore.asRetriever({ k: env.CHUNKS }),
+      vectorStore.asRetriever({ k: env.CHUNKS * 2 }),
       {
         prompt: PromptTemplate.fromTemplate(template),
         returnSourceDocuments: true,
@@ -171,19 +189,28 @@ Helpful Answer:`;
     directory?: string;
     splitDocs: Document[];
   }) {
-    const vectorStore = await FaissStore.fromDocuments(splitDocs, embeddings);
+    const vectorStore = await FaissStore.fromDocuments(
+      splitDocs,
+      embeddingsModel
+    );
     if (!!directory && fs.existsSync(directory)) {
-      const loadedVectorStore = await FaissStore.load(directory, embeddings);
+      const loadedVectorStore = await FaissStore.load(
+        directory,
+        embeddingsModel
+      );
       await vectorStore.mergeFrom(loadedVectorStore);
     }
     return vectorStore;
   }
 
   @measure
-  private static async splitDocuments(documents: Document[]) {
+  private static async splitDocuments(
+    documents: Document[],
+    chunkSize = env.CHUNK_SIZE
+  ) {
     const splitter = new TokenTextSplitter({
       encodingName: 'gpt2',
-      chunkSize: env.CHUNK_SIZE,
+      chunkSize,
       chunkOverlap: 0,
     });
     return await splitter.splitDocuments(documents);
@@ -195,5 +222,50 @@ Helpful Answer:`;
     return files.map(({ content }) => {
       return new Document(JSON.parse(content));
     });
+  }
+
+  @measure
+  static async generateQuestionAnswerSummary(input: string[]) {
+    const chatPrompt = ChatPromptTemplate.fromMessages([
+      [
+        'system',
+        `You are a helpful assistant that extract the question and the answer from given context.
+        Also you will summarize the context.
+        Output MUST BE in json format within "question", "answer", "summary", 
+        "confidence_question", "confidence_answer" and "confidence_summary" keys.
+        Your response must have a confidence interval from 0 to 100 (avoid decimals) for each json key.`,
+      ],
+      ['human', '{text}'],
+    ]);
+    const chainB = new LLMChain({
+      prompt: chatPrompt,
+      llm: model,
+    });
+    try {
+      const resB = await chainB.call({
+        text: input.join('\n'),
+      });
+      try {
+        return JSON.parse(String(resB.text).trim()) as {
+          question: string;
+          answer: string;
+          summary: string;
+          confidence_question: number;
+          confidence_answer: number;
+          confidence_summary: number;
+        };
+      } catch (error) {
+        console.error('parse failure: ' + error, resB);
+        return null;
+      }
+    } catch (error) {
+      console.error('api failure: ' + error);
+      return null;
+    }
+  }
+
+  @measure
+  static async generateEmbeddings(input: string[]) {
+    return await embeddingsModel.embedDocuments(input);
   }
 }

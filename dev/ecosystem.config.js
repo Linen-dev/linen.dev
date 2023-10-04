@@ -9,13 +9,24 @@ module.exports = {
     },
     {
       name: 'queue',
-      script: 'yarn td queue',
-      cwd: '..',
+      script: 'yarn tsx watch src/index.ts',
+      cwd: '../packages/queue',
     },
     // {
-    //   name: 'discord-bot',
+    //   name: 'bot1',
+    //   script: 'yarn tsx src/discord-bot.ts bot=1',
+    //   cwd: '../packages/queue',
+    // },
+    // {
+    //   name: 'bot2',
     //   script: 'yarn tsx src/discord-bot.ts bot=2',
     //   cwd: '../packages/queue',
+    // },
+    // {
+    //   name: 'pagination',
+    //   script: 'yarn tsx src/pagination.ts',
+    //   cwd: '../packages/queue',
+    //   restart_delay: 1000 * 60 * 30,
     // },
     {
       name: 'push-service',
@@ -35,5 +46,10 @@ module.exports = {
     //   cwd: '/opt/homebrew/bin/',
     //   script: `ngrok http --region=us --hostname=${process.env.NGROK_HOSTNAME} 3000`,
     // },
+    {
+      name: 'llm-server',
+      script: 'yarn tsx watch src/server.ts',
+      cwd: '../packages/llm',
+    },
   ],
 };

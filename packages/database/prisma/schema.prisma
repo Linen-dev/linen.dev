@@ -533,12 +533,13 @@ model apiKeys {
 }
 
 model embeddings {
-  accountId String
-  account   accounts       @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  threadId  String
-  thread    threads        @relation(fields: [threadId], references: [id], onDelete: Cascade)
-  type      EmbeddingsType
-  value     String
+  accountId  String
+  account    accounts       @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  threadId   String
+  thread     threads        @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  type       EmbeddingsType
+  value      String
+  confidence Int?
 
   embedding Unsupported("vector(1536)")?
 

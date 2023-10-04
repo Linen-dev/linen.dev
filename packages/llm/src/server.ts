@@ -2,7 +2,7 @@ import express from 'express';
 import z from 'zod';
 import Linen from './linen';
 import LangChain from './langchain';
-import { env } from './utils/env';
+import env from './utils/env';
 import { Unauthorized } from './utils/error';
 
 const app = express();
@@ -30,6 +30,7 @@ app.post('/predict', async (req, res, next) => {
       .object({
         communityName: z.string().min(1),
         query: z.string().min(1),
+        threadId: z.string().uuid(),
         summarize: z.boolean().optional(),
       })
       .parse(req.body);
@@ -40,7 +41,9 @@ app.post('/predict', async (req, res, next) => {
       query: body.query,
       typesenseApiKey: community.search.apiKey,
       communityName: community.name,
-      summarize: body.summarize || false,
+      accountId: community.id,
+      summarize: false,
+      threadId: body.threadId,
     });
 
     res.json(result);
