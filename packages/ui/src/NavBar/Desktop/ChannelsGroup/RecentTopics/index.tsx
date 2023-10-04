@@ -66,7 +66,6 @@ export default function RecentTopics({
               index ===
               self.findIndex((t) => t[0].threadId === group[0].threadId)
           )
-          .slice(0, 10)
           .map((group) => {
             const topic = group[0];
             const threadId = topic.threadId;
