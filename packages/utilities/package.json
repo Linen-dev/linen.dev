@@ -10,6 +10,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "@linen/ast": "*",
     "@linen/scripts": "*",
     "@linen/types": "*",
     "@linen/factory": "*",
@@ -38,9 +39,11 @@
     "./files": "./dist/files.js",
     "./getDisplayName": "./dist/getDisplayName.js",
     "./home": "./dist/home.js",
+    "./index.d": "./dist/index.d.js",
     "./isAuthorActive": "./dist/isAuthorActive.js",
     "./logger": "./dist/logger.js",
     "./memoize": "./dist/memoize.js",
+    "./mentions": "./dist/mentions.js",
     "./number": "./dist/number.js",
     "./object": "./dist/object.js",
     "./password": "./dist/password.js",
@@ -97,6 +100,9 @@
       "home": [
         "./dist/home.d.ts"
       ],
+      "index.d": [
+        "./dist/index.d.d.ts"
+      ],
       "isAuthorActive": [
         "./dist/isAuthorActive.d.ts"
       ],
@@ -105,6 +111,9 @@
       ],
       "memoize": [
         "./dist/memoize.d.ts"
+      ],
+      "mentions": [
+        "./dist/mentions.d.ts"
       ],
       "number": [
         "./dist/number.d.ts"
