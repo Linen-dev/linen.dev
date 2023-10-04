@@ -88,7 +88,7 @@ async function runWorker() {
       typesenseOnMessageUpdate,
       typesenseOnThreadCreation,
       typesenseOnThreadUpdate,
-      llmQuestion,
+      // llmQuestion,
     },
     parsedCronItems: parseCronItems([
       {
