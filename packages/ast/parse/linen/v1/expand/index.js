@@ -1,5 +1,5 @@
-const parse = require('../../parse');
-const { explicit, regexp, topline } = require('../../combinators');
+const parse = require('../../../parse');
+const { explicit, regexp, topline } = require('../../../combinators');
 
 const deep = (type, callback) => (match, _, position) => {
   const [result, content] = match;
@@ -38,7 +38,7 @@ const strike = explicit(
 const quote = topline(
   regexp(/^\> (.*)(\n|$)/, (match, _, position) => {
     const [result] = match;
-    const content = result.substr(2)
+    const content = result.substr(2);
 
     return [
       {
@@ -55,7 +55,7 @@ const header = topline(
   regexp(/^\#{1,6} (.*)(\n|$)/, (match, _, position) => {
     const [result] = match;
     const depth = result.split(' ')[0].length;
-    const content = result.substr(depth + 1)
+    const content = result.substr(depth + 1);
 
     return [
       {
@@ -74,7 +74,7 @@ const matchers = [bold, italic, strike, quote, header];
 function expand(tokens) {
   return tokens.reduce((result, token) => {
     if (token.children) {
-      token.children = expand(token.children)
+      token.children = expand(token.children);
     }
     if (token.type === 'text') {
       const { value } = token;
