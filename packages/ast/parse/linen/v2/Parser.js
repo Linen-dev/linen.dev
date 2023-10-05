@@ -12,6 +12,8 @@ class Parser {
         tree.push(this.parseHeader());
       } else if (token.type === 'list') {
         tree.push(this.parseList());
+      } else if (token.type === 'text') {
+        tree.push(this.parseText());
       }
     }
     return tree;
@@ -44,6 +46,17 @@ class Parser {
         };
       }),
       ordered: token.ordered,
+      source: token.source,
+    };
+  }
+
+  parseText() {
+    const token = this.tokens[this.current];
+
+    this.current += 1;
+    return {
+      type: 'text',
+      value: token.value,
       source: token.source,
     };
   }

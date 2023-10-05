@@ -8,6 +8,9 @@ class Lexer {
     let inList = false;
     let listItems = [];
     let listItemStartIndex = 0;
+    let inText = false;
+    let textContent = '';
+    let textStartIndex = 0;
     lines.forEach((line, index) => {
       if (line.startsWith('-')) {
         if (!inList) {
@@ -15,6 +18,16 @@ class Lexer {
           listItemStartIndex = index; // Record start index of list
         }
         listItems.push(line.substring(2).trim());
+
+        if (index === lines.length - 1) {
+          const source = lines.slice(listItemStartIndex).join('\n');
+          this.tokens.push({
+            type: 'list',
+            ordered: false,
+            value: listItems,
+            source,
+          });
+        }
       } else if (inList) {
         const source = lines.slice(listItemStartIndex, index).join('\n');
         this.tokens.push({
@@ -25,22 +38,33 @@ class Lexer {
         });
         inList = false;
         listItems = [];
-      }
-
-      if (inList && index === lines.length - 1) {
-        const source = lines.slice(listItemStartIndex).join('\n');
-        this.tokens.push({
-          type: 'list',
-          ordered: false,
-          value: listItems,
-          source,
-        });
-      }
-
-      if (line.startsWith('#')) {
+      } else if (line.startsWith('#')) {
         const depth = line.lastIndexOf('#') + 1;
         const value = line.substring(depth).trim();
         this.tokens.push({ type: 'header', depth, value, source: line });
+      } else if (line) {
+        if (!inText) {
+          inText = true;
+          textStartIndex = index;
+        }
+        textContent += line.trim() + '\n';
+        if (index === lines.length - 1) {
+          const source = lines.slice(textStartIndex).join('\n');
+          this.tokens.push({
+            type: 'text',
+            value: textContent.trim(),
+            source,
+          });
+        }
+      } else if (inText) {
+        const source = lines.slice(textStartIndex, index).join('\n');
+        this.tokens.push({
+          type: 'text',
+          value: textContent.trim(),
+          source,
+        });
+        inText = false;
+        textContent = '';
       }
     });
     return this.tokens;

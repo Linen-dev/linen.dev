@@ -17,7 +17,7 @@ const {
 } = require('./spec-helpers');
 
 describe('parse', () => {
-  it.skip('returns a `text` node', () => {
+  it('returns a `text` node', () => {
     expect(parse('foo')).toEqual(root([text('foo')]));
     expect(parse('foo\nbar')).toEqual(root([text('foo\nbar')]));
     expect(parse('john@doe.com')).toEqual(root([text('john@doe.com')]));
