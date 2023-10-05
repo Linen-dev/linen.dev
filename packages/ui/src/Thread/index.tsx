@@ -229,7 +229,7 @@ function Thread({
   const manage = permissions.manage || isThreadCreator(currentUser, thread);
 
   useEffect(() => {
-    permissions.chat && thread.channel?.viewType !== 'FORUM' && handleScroll();
+    permissions.chat && thread.channel?.viewType !== 'FORUM';
   }, [permissions, thread]);
 
   const views = viewCount + 1;
