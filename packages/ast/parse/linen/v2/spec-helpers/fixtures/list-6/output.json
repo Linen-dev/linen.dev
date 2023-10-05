@@ -1,0 +1,69 @@
+{
+  "type": "root",
+  "children": [
+    {
+      "source": "- foo\n- bar",
+      "type": "list",
+      "ordered": false,
+      "children": [
+        {
+          "type": "item",
+          "source": "foo",
+          "children": [
+            {
+              "type": "text",
+              "value": "foo",
+              "source": "foo"
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "source": "bar",
+          "children": [
+            {
+              "type": "text",
+              "value": "bar",
+              "source": "bar"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "source": "\n",
+      "value": "\n"
+    },
+    {
+      "source": "1. baz\n2. qux",
+      "type": "list",
+      "ordered": true,
+      "children": [
+        {
+          "type": "item",
+          "source": "baz",
+          "children": [
+            {
+              "type": "text",
+              "value": "baz",
+              "source": "baz"
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "source": "qux",
+          "children": [
+            {
+              "type": "text",
+              "value": "qux",
+              "source": "qux"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "source": "- foo\n- bar\n\n1. baz\n2. qux"
+}

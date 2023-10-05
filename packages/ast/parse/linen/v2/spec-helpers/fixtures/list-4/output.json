@@ -1,0 +1,35 @@
+{
+  "type": "root",
+  "children": [
+    {
+      "source": "1. foo\n2. bar",
+      "type": "list",
+      "ordered": true,
+      "children": [
+        {
+          "type": "item",
+          "source": "foo",
+          "children": [
+            {
+              "type": "text",
+              "value": "foo",
+              "source": "foo"
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "source": "bar",
+          "children": [
+            {
+              "type": "text",
+              "value": "bar",
+              "source": "bar"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "source": "1. foo\n2. bar"
+}
