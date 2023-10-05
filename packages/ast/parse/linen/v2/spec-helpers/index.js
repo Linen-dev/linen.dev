@@ -27,7 +27,14 @@ function code(value) {
 }
 
 function pre(value, language) {
-  return { type: 'pre', value, source: `\`\`\`${value}\`\`\``, language };
+  return {
+    type: 'pre',
+    value,
+    source: `\`\`\`${
+      language ? language + '\n' + value + '\n' : '\n' + value + '\n'
+    }\`\`\``,
+    language,
+  };
 }
 
 function user(id) {

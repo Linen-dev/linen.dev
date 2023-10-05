@@ -14,6 +14,8 @@ class Parser {
         tree.push(this.parseList());
       } else if (token.type === 'text') {
         tree.push(this.parseText());
+      } else if (token.type === 'pre') {
+        tree.push(this.parsePre());
       }
     }
     return tree;
@@ -58,6 +60,17 @@ class Parser {
       type: 'text',
       value: token.value,
       source: token.source,
+    };
+  }
+
+  parsePre() {
+    const token = this.tokens[this.current];
+    this.current += 1;
+    return {
+      type: 'pre',
+      value: token.value,
+      source: token.source,
+      language: token.language,
     };
   }
 }

@@ -91,10 +91,10 @@ describe('parse', () => {
     expect(parse('hey !uid1')).toEqual(root([text('hey '), signal('uid1')]));
   });
 
-  it.skip('returns a `pre` node', () => {
-    expect(parse('```foo```')).toEqual(root([pre('foo')]));
-    expect(parse('```bash `` bar```')).toEqual(
-      root([pre('bash `` bar', 'bash')])
+  it('returns a `pre` node', () => {
+    expect(parse('```\nfoo\n```')).toEqual(root([pre('foo')]));
+    expect(parse('```bash\n `` bar\n```')).toEqual(
+      root([pre(' `` bar', 'bash')])
     );
   });
 
