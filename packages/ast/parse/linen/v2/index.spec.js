@@ -139,152 +139,151 @@ describe('parse', () => {
     expect(parse('> ~foo~')).toEqual(root([quote([strike([text('foo')])])]));
   });
 
-  it.skip('returns a `header` node', () => {
+  it('returns a `header` node', () => {
     expect(parse('# foo')).toEqual(root([header([text('foo')])]));
-    expect(parse('# foo\n')).toEqual(root([header([text('foo\n')])]));
-    expect(parse('# foo\nbar')).toEqual(
-      root([header([text('foo\n')]), text('bar')])
-    );
-    expect(parse('# *foo*')).toEqual(root([header([bold([text('foo')])])]));
-    expect(parse('# _foo_')).toEqual(root([header([italic([text('foo')])])]));
-    expect(parse('# ~foo~')).toEqual(root([header([strike([text('foo')])])]));
+    // expect(parse('# foo\nbar')).toEqual(
+    //   root([header([text('foo\n')]), text('bar')])
+    // );
+    // expect(parse('# *foo*')).toEqual(root([header([bold([text('foo')])])]));
+    // expect(parse('# _foo_')).toEqual(root([header([italic([text('foo')])])]));
+    // expect(parse('# ~foo~')).toEqual(root([header([strike([text('foo')])])]));
 
-    expect(parse('## foo')).toEqual(root([header([text('foo')], 2)]));
-    expect(parse('## *foo*')).toEqual(root([header([bold([text('foo')])], 2)]));
-    expect(parse('## _foo_')).toEqual(
-      root([header([italic([text('foo')])], 2)])
-    );
-    expect(parse('## ~foo~')).toEqual(
-      root([header([strike([text('foo')])], 2)])
-    );
+    // expect(parse('## foo')).toEqual(root([header([text('foo')], 2)]));
+    // expect(parse('## *foo*')).toEqual(root([header([bold([text('foo')])], 2)]));
+    // expect(parse('## _foo_')).toEqual(
+    //   root([header([italic([text('foo')])], 2)])
+    // );
+    // expect(parse('## ~foo~')).toEqual(
+    //   root([header([strike([text('foo')])], 2)])
+    // );
 
-    expect(parse('### foo')).toEqual(root([header([text('foo')], 3)]));
-    expect(parse('### *foo*')).toEqual(
-      root([header([bold([text('foo')])], 3)])
-    );
-    expect(parse('### _foo_')).toEqual(
-      root([header([italic([text('foo')])], 3)])
-    );
-    expect(parse('### ~foo~')).toEqual(
-      root([header([strike([text('foo')])], 3)])
-    );
+    // expect(parse('### foo')).toEqual(root([header([text('foo')], 3)]));
+    // expect(parse('### *foo*')).toEqual(
+    //   root([header([bold([text('foo')])], 3)])
+    // );
+    // expect(parse('### _foo_')).toEqual(
+    //   root([header([italic([text('foo')])], 3)])
+    // );
+    // expect(parse('### ~foo~')).toEqual(
+    //   root([header([strike([text('foo')])], 3)])
+    // );
 
-    expect(parse('#### foo')).toEqual(root([header([text('foo')], 4)]));
-    expect(parse('#### *foo*')).toEqual(
-      root([header([bold([text('foo')])], 4)])
-    );
-    expect(parse('#### _foo_')).toEqual(
-      root([header([italic([text('foo')])], 4)])
-    );
-    expect(parse('#### ~foo~')).toEqual(
-      root([header([strike([text('foo')])], 4)])
-    );
+    // expect(parse('#### foo')).toEqual(root([header([text('foo')], 4)]));
+    // expect(parse('#### *foo*')).toEqual(
+    //   root([header([bold([text('foo')])], 4)])
+    // );
+    // expect(parse('#### _foo_')).toEqual(
+    //   root([header([italic([text('foo')])], 4)])
+    // );
+    // expect(parse('#### ~foo~')).toEqual(
+    //   root([header([strike([text('foo')])], 4)])
+    // );
 
-    expect(parse('##### foo')).toEqual(root([header([text('foo')], 5)]));
-    expect(parse('##### *foo*')).toEqual(
-      root([header([bold([text('foo')])], 5)])
-    );
-    expect(parse('##### _foo_')).toEqual(
-      root([header([italic([text('foo')])], 5)])
-    );
-    expect(parse('##### ~foo~')).toEqual(
-      root([header([strike([text('foo')])], 5)])
-    );
+    // expect(parse('##### foo')).toEqual(root([header([text('foo')], 5)]));
+    // expect(parse('##### *foo*')).toEqual(
+    //   root([header([bold([text('foo')])], 5)])
+    // );
+    // expect(parse('##### _foo_')).toEqual(
+    //   root([header([italic([text('foo')])], 5)])
+    // );
+    // expect(parse('##### ~foo~')).toEqual(
+    //   root([header([strike([text('foo')])], 5)])
+    // );
 
-    expect(parse('###### foo')).toEqual(root([header([text('foo')], 6)]));
-    expect(parse('###### *foo*')).toEqual(
-      root([header([bold([text('foo')])], 6)])
-    );
-    expect(parse('###### _foo_')).toEqual(
-      root([header([italic([text('foo')])], 6)])
-    );
-    expect(parse('###### ~foo~')).toEqual(
-      root([header([strike([text('foo')])], 6)])
-    );
+    // expect(parse('###### foo')).toEqual(root([header([text('foo')], 6)]));
+    // expect(parse('###### *foo*')).toEqual(
+    //   root([header([bold([text('foo')])], 6)])
+    // );
+    // expect(parse('###### _foo_')).toEqual(
+    //   root([header([italic([text('foo')])], 6)])
+    // );
+    // expect(parse('###### ~foo~')).toEqual(
+    //   root([header([strike([text('foo')])], 6)])
+    // );
 
-    expect(parse('####### foo')).toEqual(root([text('####### foo')]));
+    // expect(parse('####### foo')).toEqual(root([text('####### foo')]));
   });
 
-  it.skip('returns a `list` node', () => {
+  it('returns a `list` node', () => {
     expect(parse('- foo')).toEqual(root([list([item([text('foo')])])]));
-    expect(parse('- *foo*')).toEqual(
-      root([list([item([bold([text('foo')])])])])
-    );
-    expect(parse('- foo *bar*')).toEqual(
-      root([list([item([text('foo '), bold([text('bar')])])])])
-    );
-    expect(parse('- foo\n- bar')).toEqual(
-      root([list([item([text('foo')]), item([text('bar')])])])
-    );
-    expect(parse('- foo\n- bar\n- baz')).toEqual(
-      root([
-        list([item([text('foo')]), item([text('bar')]), item([text('baz')])]),
-      ])
-    );
+    // expect(parse('- *foo*')).toEqual(
+    //   root([list([item([bold([text('foo')])])])])
+    // );
+    // expect(parse('- foo *bar*')).toEqual(
+    //   root([list([item([text('foo '), bold([text('bar')])])])])
+    // );
+    // expect(parse('- foo\n- bar')).toEqual(
+    //   root([list([item([text('foo')]), item([text('bar')])])])
+    // );
+    // expect(parse('- foo\n- bar\n- baz')).toEqual(
+    //   root([
+    //     list([item([text('foo')]), item([text('bar')]), item([text('baz')])]),
+    //   ])
+    // );
 
-    expect(parse('• foo')).toEqual(
-      root([list([item([text('foo')])], { prefix: '•' })])
-    );
-    expect(parse('• *foo*')).toEqual(
-      root([list([item([bold([text('foo')])])], { prefix: '•' })])
-    );
-    expect(parse('• foo *bar*')).toEqual(
-      root([list([item([text('foo '), bold([text('bar')])])], { prefix: '•' })])
-    );
-    expect(parse('• foo\n• bar')).toEqual(
-      root([list([item([text('foo')]), item([text('bar')])], { prefix: '•' })])
-    );
-    expect(parse('• foo\n• bar\n• baz')).toEqual(
-      root([
-        list([item([text('foo')]), item([text('bar')]), item([text('baz')])], {
-          prefix: '•',
-        }),
-      ])
-    );
+    // expect(parse('• foo')).toEqual(
+    //   root([list([item([text('foo')])], { prefix: '•' })])
+    // );
+    // expect(parse('• *foo*')).toEqual(
+    //   root([list([item([bold([text('foo')])])], { prefix: '•' })])
+    // );
+    // expect(parse('• foo *bar*')).toEqual(
+    //   root([list([item([text('foo '), bold([text('bar')])])], { prefix: '•' })])
+    // );
+    // expect(parse('• foo\n• bar')).toEqual(
+    //   root([list([item([text('foo')]), item([text('bar')])], { prefix: '•' })])
+    // );
+    // expect(parse('• foo\n• bar\n• baz')).toEqual(
+    //   root([
+    //     list([item([text('foo')]), item([text('bar')]), item([text('baz')])], {
+    //       prefix: '•',
+    //     }),
+    //   ])
+    // );
 
-    expect(parse('1. foo')).toEqual(
-      root([list([item([text('foo')])], { ordered: true })])
-    );
-    expect(parse('1. *foo*')).toEqual(
-      root([list([item([bold([text('foo')])])], { ordered: true })])
-    );
-    expect(parse('1. foo *bar*')).toEqual(
-      root([
-        list([item([text('foo '), bold([text('bar')])])], { ordered: true }),
-      ])
-    );
-    expect(parse('1. foo\n2. bar')).toEqual(
-      root([
-        list([item([text('foo')]), item([text('bar')])], { ordered: true }),
-      ])
-    );
-    expect(
-      parse(
-        '1. foo\n2. bar\n3. baz\n4. foo\n5. bar\n6. baz\n7. foo\n8. bar\n9. baz\n10. foo'
-      )
-    ).toEqual(
-      root([
-        list(
-          [
-            item([text('foo')]),
-            item([text('bar')]),
-            item([text('baz')]),
-            item([text('foo')]),
-            item([text('bar')]),
-            item([text('baz')]),
-            item([text('foo')]),
-            item([text('bar')]),
-            item([text('baz')]),
-            item([text('foo')]),
-          ],
-          { ordered: true }
-        ),
-      ])
-    );
+    // expect(parse('1. foo')).toEqual(
+    //   root([list([item([text('foo')])], { ordered: true })])
+    // );
+    // expect(parse('1. *foo*')).toEqual(
+    //   root([list([item([bold([text('foo')])])], { ordered: true })])
+    // );
+    // expect(parse('1. foo *bar*')).toEqual(
+    //   root([
+    //     list([item([text('foo '), bold([text('bar')])])], { ordered: true }),
+    //   ])
+    // );
+    // expect(parse('1. foo\n2. bar')).toEqual(
+    //   root([
+    //     list([item([text('foo')]), item([text('bar')])], { ordered: true }),
+    //   ])
+    // );
+    // expect(
+    //   parse(
+    //     '1. foo\n2. bar\n3. baz\n4. foo\n5. bar\n6. baz\n7. foo\n8. bar\n9. baz\n10. foo'
+    //   )
+    // ).toEqual(
+    //   root([
+    //     list(
+    //       [
+    //         item([text('foo')]),
+    //         item([text('bar')]),
+    //         item([text('baz')]),
+    //         item([text('foo')]),
+    //         item([text('bar')]),
+    //         item([text('baz')]),
+    //         item([text('foo')]),
+    //         item([text('bar')]),
+    //         item([text('baz')]),
+    //         item([text('foo')]),
+    //       ],
+    //       { ordered: true }
+    //     ),
+    //   ])
+    // );
 
-    expect(parse('foo\n1. bar')).toEqual(
-      root([text('foo\n'), list([item([text('bar')])], { ordered: true })])
-    );
+    // expect(parse('foo\n1. bar')).toEqual(
+    //   root([text('foo\n'), list([item([text('bar')])], { ordered: true })])
+    // );
   });
 
   it.skip('works for urls inside of lists', () => {
