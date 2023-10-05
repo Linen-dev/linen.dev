@@ -83,9 +83,9 @@ export default function Header({
                 manage={manage}
                 onSetTitle={onSetTitle}
               />
-          <div className={styles.channelName}>
-            # {' ' + thread.channel?.channelName}
-          </div>
+              <div className={styles.channelName}>
+                # {' ' + thread.channel?.channelName}
+              </div>
             </div>
           </div>
         </div>
