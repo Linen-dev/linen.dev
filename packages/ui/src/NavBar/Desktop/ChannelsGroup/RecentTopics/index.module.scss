@@ -9,7 +9,7 @@
   display: flex;
   font-weight: 500;
   gap: 0.125rem;
-  padding: 0.25rem 0.5rem 0 1.5rem;
+  padding: 0.125rem 0.5rem 0.125rem 1.5rem;
 }
 
 .threads .item:hover {
@@ -18,14 +18,19 @@
 
 .input {
   margin: 0.25rem 0.5rem 0 1.5rem;
-  border: 1px solid var(--color-gray-200);
+  border-bottom: 1px solid var(--color-gray-200);
   max-width: 100%;
   padding: 0.25rem 0.5rem;
   font-size: 12px;
-  border-radius: 0.25rem;
+  background: transparent;
+  transition: border-color 0.2s ease;
 }
 
 .input:focus {
   outline: none;
   border-color: var(--color-primary);
+}
+
+.more {
+  color: var(--color-gray-500);
 }
