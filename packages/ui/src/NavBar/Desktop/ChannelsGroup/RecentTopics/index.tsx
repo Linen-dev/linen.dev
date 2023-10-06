@@ -8,7 +8,6 @@ import classNames from 'classnames';
 import { getUserMentions } from '@linen/utilities/mentions';
 import { groupByThread } from './utilities/topics';
 import { matches } from './utilities/search';
-import { FiChevronDown } from '@react-icons/all-files/fi/FiChevronDown';
 import styles from './index.module.scss';
 
 interface Props {
@@ -43,7 +42,6 @@ export default function RecentTopics({
   onTopicClick,
 }: Props) {
   const [query, setQuery] = useState('');
-  const [limit, setLimit] = useState(10);
   if (threads.length === 0 || topics.length === 0) {
     return null;
   }
@@ -88,15 +86,7 @@ export default function RecentTopics({
             return null;
           })
           .filter(Boolean)
-          .slice(0, limit)}
-        {topicsToRender.length > 5 && (
-          <li
-            className={classNames(styles.item, styles.more)}
-            onClick={() => setLimit((limit) => limit + 10)}
-          >
-            Show more <FiChevronDown />
-          </li>
-        )}
+          .slice(0, 10)}
       </ul>
     </>
   );
