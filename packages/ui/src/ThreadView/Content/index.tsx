@@ -124,9 +124,6 @@ export default function Content({
         id,
         body,
       })
-      .then(() => {
-        Toast.success('Updated successfully.');
-      })
       .catch((_) => {
         Toast.error('Failed to update the message.');
       });
