@@ -114,7 +114,8 @@ export default function Actions({
   const isStarVisible = onStar && !!permissions?.starred;
   const isEmojiVisible = onEmoji && currentUser;
   const isResolutionVisible = onResolution && currentUser;
-  const isDragVisible = currentUser && draggable;
+  const isDragVisible =
+    thread.channel?.viewType === 'CHAT' && currentUser && draggable;
   const isDeleteVisible =
     onDelete &&
     currentUser &&
