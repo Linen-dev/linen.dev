@@ -811,17 +811,13 @@ export default function ChannelView({
         accountId: settings.communityId,
         id,
         title,
-        message,
-      })
-      .then(() => {
-        Toast.success('Updated successfully.');
       })
       .catch((_) => {
         Toast.error('Failed to edit the thread.');
       });
   };
 
-  const editMessage = ({
+  const editMessage = async ({
     id: messageId,
     body,
   }: {
@@ -855,9 +851,6 @@ export default function ChannelView({
         accountId: settings.communityId,
         id: messageId,
         body,
-      })
-      .then(() => {
-        Toast.success('Updated successfully.');
       })
       .catch((_) => {
         Toast.error('Failed to edit the message.');

@@ -98,7 +98,6 @@ class ThreadsServices {
     channelId,
     resolutionId,
     externalThreadId,
-    message: messageBody,
   }: UpdateType) {
     const exist = await prisma.threads.findFirst({
       where: { id, channel: { accountId, id: channelId } },
@@ -123,16 +122,6 @@ class ThreadsServices {
         externalThreadId,
       },
     });
-
-    if (messageBody) {
-      const messageId = thread.messages[0].id;
-      await prisma.messages.update({
-        where: { id: messageId },
-        data: {
-          body: messageBody,
-        },
-      });
-    }
 
     if (exist.state !== thread.state) {
       if (thread.state === ThreadState.CLOSE) {

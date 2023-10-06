@@ -128,8 +128,14 @@ interface Props {
     message: string;
     title: string;
     files: UploadedFile[];
-  }): Promise<void>;
-  editMessage({ id, body }: { id: string; body: string }): Promise<void>;
+  }): Promise<SerializedThread | void>;
+  editMessage({
+    id,
+    body,
+  }: {
+    id: string;
+    body: string;
+  }): Promise<SerializedMessage | void>;
   updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
   queryIntegration?: string;
   playNotificationSound: (volume: number) => Promise<void>;
@@ -207,6 +213,7 @@ export default function Channel({
   const [uploads, setUploads] = useState<UploadedFile[]>([]);
   const [allUsers] = useUsersContext();
   const { mode } = useMode();
+  const [editedMessage, setEditedMessage] = useState<SerializedMessage>();
   const [editedThread, setEditedThread] = useState<SerializedThread>();
   const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const membersPath = usePath({ href: '/members' });
@@ -402,10 +409,16 @@ export default function Channel({
     setModal(ModalView.ADD_THREAD);
   }
 
-  function showEditThreadModal(threadId: string) {
+  function showEditThreadModal(threadId: string, messageId: string) {
     const thread = threads.find(({ id }) => id === threadId);
-    setEditedThread(thread);
-    setModal(ModalView.EDIT_THREAD);
+    if (thread) {
+      const message = thread.messages.find(
+        (message) => message.id === messageId
+      );
+      setEditedMessage(message);
+      setEditedThread(thread);
+      setModal(ModalView.EDIT_THREAD);
+    }
   }
 
   function scrollDown(offset = 0) {
@@ -734,7 +747,7 @@ export default function Channel({
         uploadFiles={uploadFiles}
       />
 
-      {editedThread && (
+      {editedThread && editedMessage && (
         <EditThreadModal
           api={api}
           communityId={currentCommunity.id}
@@ -743,10 +756,21 @@ export default function Channel({
           open={modal === ModalView.EDIT_THREAD}
           close={() => {
             setModal(ModalView.NONE);
+            setEditedMessage(undefined);
             setEditedThread(undefined);
           }}
-          onSend={({ title, message }: { title: string; message: string }) => {
+          onSend={async ({
+            title,
+            message,
+          }: {
+            title: string;
+            message: string;
+          }) => {
             setModal(ModalView.NONE);
+            await editMessage({
+              id: editedMessage.id,
+              body: message,
+            });
             return editThread({
               id: editedThread.id,
               message,
@@ -754,6 +778,7 @@ export default function Channel({
               files: uploads,
             }).then(() => {
               setUploads([]);
+              setEditedMessage(undefined);
               setEditedThread(undefined);
             });
           }}

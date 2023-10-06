@@ -49,11 +49,11 @@ import Row from '@/Row';
 import ChatLayout from '@/ChatLayout';
 import AddThreadModal from '@/AddThreadModal';
 import EditThreadModal from '@/EditThreadModal';
+import EditMessageModal from '@/EditMessageModal';
 import { getFormData } from '@linen/utilities/files';
 import type { ApiClient } from '@linen/api-client';
 import PaginationNumbers from '@/PaginationNumbers';
 import { useViewport } from '@linen/hooks/useViewport';
-import { getThreadUrl } from '@linen/utilities/url';
 import { TypingFunctions } from '@/Thread/UsersTyping';
 import EventEmitter from '@linen/utilities/event';
 
@@ -129,8 +129,14 @@ interface Props {
     message: string;
     title: string;
     files: UploadedFile[];
-  }): Promise<void>;
-  editMessage({ id, body }: { id: string; body: string }): Promise<void>;
+  }): Promise<SerializedThread | void>;
+  editMessage({
+    id,
+    body,
+  }: {
+    id: string;
+    body: string;
+  }): Promise<SerializedMessage | void>;
   updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
   queryIntegration?: string;
   playNotificationSound: (volume: number) => Promise<void>;
@@ -148,6 +154,7 @@ enum ModalView {
   NONE,
   ADD_THREAD,
   EDIT_THREAD,
+  EDIT_MESSAGE,
 }
 
 export default function Channel({
@@ -209,6 +216,7 @@ export default function Channel({
   const [allUsers] = useUsersContext();
   const { mode } = useMode();
   const [editedThread, setEditedThread] = useState<SerializedThread>();
+  const [editedMessage, setEditedMessage] = useState<SerializedMessage>();
   const [modal, setModal] = useState<ModalView>(ModalView.NONE);
   const membersPath = usePath({ href: '/members' });
   const viewport = useViewport();
@@ -415,10 +423,23 @@ export default function Channel({
     setModal(ModalView.ADD_THREAD);
   }
 
-  function showEditThreadModal(threadId: string) {
+  function onEdit(threadId: string, messageId: string) {
     const thread = threads.find(({ id }) => id === threadId);
-    setEditedThread(thread);
-    setModal(ModalView.EDIT_THREAD);
+    if (thread) {
+      const index = thread.messages.findIndex(
+        (message) => message.id === messageId
+      );
+      if (index > 0) {
+        const message = thread.messages[index];
+        setEditedMessage(message);
+        setModal(ModalView.EDIT_MESSAGE);
+      } else {
+        const message = thread.messages[0];
+        setEditedThread(thread);
+        setEditedMessage(message);
+        setModal(ModalView.EDIT_THREAD);
+      }
+    }
   }
 
   function scrollDown(offset = 0) {
@@ -604,7 +625,7 @@ export default function Channel({
                           currentUser={currentUser}
                           onClick={selectThread}
                           onDelete={deleteMessage}
-                          onEdit={showEditThreadModal}
+                          onEdit={onEdit}
                           onMute={muteThread}
                           onUnmute={unmuteThread}
                           onPin={pinThread}
@@ -746,7 +767,7 @@ export default function Channel({
         uploadFiles={uploadFiles}
       />
 
-      {editedThread && (
+      {editedThread && editedMessage && (
         <EditThreadModal
           api={api}
           communityId={currentCommunity.id}
@@ -756,9 +777,20 @@ export default function Channel({
           close={() => {
             setModal(ModalView.NONE);
             setEditedThread(undefined);
+            setEditedMessage(undefined);
           }}
-          onSend={({ title, message }: { title: string; message: string }) => {
+          onSend={async ({
+            title,
+            message,
+          }: {
+            title: string;
+            message: string;
+          }) => {
             setModal(ModalView.NONE);
+            await editMessage({
+              id: editedMessage.id,
+              body: message,
+            });
             return editThread({
               id: editedThread.id,
               message,
@@ -767,8 +799,34 @@ export default function Channel({
             }).then(() => {
               setUploads([]);
               setEditedThread(undefined);
+              setEditedMessage(undefined);
             });
           }}
+          progress={progress}
+          uploading={uploading}
+          uploads={uploads}
+          uploadFiles={uploadFiles}
+        />
+      )}
+      {currentUser && editedMessage && (
+        <EditMessageModal
+          api={api}
+          communityId={settings.communityId}
+          currentUser={currentUser}
+          open={modal === ModalView.EDIT_MESSAGE}
+          close={() => {
+            setEditedThread(undefined);
+            setEditedMessage(undefined);
+            setModal(ModalView.NONE);
+          }}
+          onSend={({ message }) => {
+            setModal(ModalView.NONE);
+            return editMessage({
+              id: editedMessage.id,
+              body: message,
+            });
+          }}
+          currentMessage={editedMessage}
           progress={progress}
           uploading={uploading}
           uploads={uploads}

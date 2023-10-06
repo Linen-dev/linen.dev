@@ -72,7 +72,13 @@ interface Props {
     active: boolean;
   }): void;
   onResolution?: onResolve;
-  editMessage?({ id, body }: { id: string; body: string }): Promise<void>;
+  editMessage?({
+    id,
+    body,
+  }: {
+    id: string;
+    body: string;
+  }): Promise<SerializedMessage | void>;
   useUsersContext(): any;
   fetchMentions(term?: string | undefined): Promise<SerializedUser[]>;
   api: ApiClient;
