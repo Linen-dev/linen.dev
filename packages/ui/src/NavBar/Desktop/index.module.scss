@@ -51,7 +51,7 @@
   color: var(--color-text);
   max-height: calc(100vh - var(--push-height));
   min-height: calc(100vh - var(--push-height));
-  overflow-y: auto;
+  overflow-y: hidden;
   width: 200px;
   padding: 0.5rem 0 0;
   scrollbar-gutter: stable;
@@ -59,6 +59,12 @@
   justify-content: space-between;
   flex-direction: column;
   overflow-x: hidden;
+}
+
+.navbar:hover {
+  overflow-y: auto;
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  // scrollbar-width: none; /* Firefox */
 }
 
 @media screen and (max-width: 1023px) {
