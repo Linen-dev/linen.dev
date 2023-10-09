@@ -125,6 +125,7 @@ export default function NewChannelModal({
               }
               onChange={(event) => {
                 event.target.value = event.target.value.toLowerCase();
+                event.target.value = event.target.value.replace(/\s/g, '-');
               }}
             />
           </Field>
