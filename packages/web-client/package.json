@@ -1,0 +1,16 @@
+{
+  "name": "@linen/web-client",
+  "private": true,
+  "version": "1.0.0",
+  "sideEffect": false,
+  "scripts": {
+    "build": "rollup -c rollup.config.mjs",
+    "build:watch": "npm run build -- --watch",
+    "start:watch": "node test/server.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "express": "^4.18.2",
+    "rollup": "^4.0.2"
+  }
+}
