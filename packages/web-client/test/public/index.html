@@ -14,6 +14,15 @@
   </head>
   <body>
     <main id="root"></main>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="/index.js"></script>
+    <script>
+      const node = document.getElementById('root')
+      if (node) {
+        const root = ReactDOM.createRoot(node);
+        root.render(React.createElement(LinenWebClient))
+      }
+    </script>
   </body>
 </html>

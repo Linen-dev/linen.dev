@@ -10,7 +10,13 @@ export default {
   output: {
     dir: 'dist',
     format: 'umd',
+    name: 'LinenWebClient',
+    globals: {
+      react: 'React',
+      'react-dom': 'ReactDOM',
+    },
   },
+  external: ['react', 'react-dom'],
   plugins: [
     typescript({
       tsconfig: './tsconfig.json',
