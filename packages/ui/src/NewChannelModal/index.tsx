@@ -123,6 +123,9 @@ export default function NewChannelModal({
               title={
                 'Channels name should start with letter and could contain letters, underscore, numbers and hyphens. e.g. announcements'
               }
+              onChange={(event) => {
+                event.target.value = event.target.value.toLowerCase();
+              }}
             />
           </Field>
           <Field>
