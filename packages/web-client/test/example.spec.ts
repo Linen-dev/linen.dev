@@ -13,5 +13,7 @@ test('shows a logo on page load', async ({ page }) => {
   if (image) {
     const alt = await image.getAttribute('alt');
     expect(alt).toEqual('Linen Logo');
+  } else {
+    throw new Error('Splash image is missing');
   }
 });

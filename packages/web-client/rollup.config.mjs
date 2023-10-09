@@ -3,6 +3,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import replace from '@rollup/plugin-replace';
 import image from '@rollup/plugin-image';
+import scss from '@linen/rollup-plugin-scss-modules';
 
 export default {
   input: 'src/index.tsx',
@@ -16,6 +17,7 @@ export default {
     }),
     resolve(),
     commonjs(),
+    scss(),
     replace({
       'process.env.NODE_ENV': JSON.stringify('production'),
       preventAssignment: true,
