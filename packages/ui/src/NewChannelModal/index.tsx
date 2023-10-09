@@ -170,6 +170,7 @@ export default function NewChannelModal({
             removeUser={removeUser}
             currentUser={permissions.user}
             api={api}
+            focus={false}
           />
         </div>
         <div className={styles.btnWrapper}>

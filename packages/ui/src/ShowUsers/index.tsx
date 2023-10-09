@@ -15,6 +15,7 @@ export default function ShowUsers({
   removeUser,
   currentUser,
   api,
+  focus = true,
 }: {
   communityId: string;
   users: SerializedUser[];
@@ -22,6 +23,7 @@ export default function ShowUsers({
   removeUser(user: SerializedUser): void;
   currentUser: SerializedUser | null;
   api: ApiClient;
+  focus?: boolean | true;
 }) {
   const ref = useRef(null);
   const [query, setQuery] = useState<SerializedUser[]>([]);
@@ -31,8 +33,8 @@ export default function ShowUsers({
     <>
       <Label htmlFor="userId">Add member</Label>
       <TextInput
+        autoFocus={focus}
         inputRef={ref}
-        autoFocus
         id="userId"
         name="userId"
         value={val}
