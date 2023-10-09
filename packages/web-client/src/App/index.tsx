@@ -1,6 +1,11 @@
-import React from 'react';
-import Logo from './Logo';
+import React, { useState } from 'react';
+import SplashLoader from './SplashLoader';
+import DefaultLayout from './DefaultLayout';
 
 export default function App() {
-  return <Logo />;
+  const [loading, setLoading] = useState(true);
+  if (loading) {
+    return <SplashLoader />;
+  }
+  return <DefaultLayout />;
 }
