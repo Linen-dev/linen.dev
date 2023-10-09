@@ -3,9 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "sideEffect": false,
+  "main": "dist/index.js",
   "scripts": {
     "build": "rollup -c rollup.config.mjs",
-    "build:watch": "npm run build -- --watch",
+    "build:watch": "yarn build -- --watch",
     "start:watch": "node test/server.js",
     "test": "playwright test"
   },
