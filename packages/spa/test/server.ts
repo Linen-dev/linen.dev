@@ -1,9 +1,14 @@
-const express = require('express');
-const { join } = require('path');
+import express from 'express';
+import { join } from 'path';
+import { build } from '@linen/factory';
+import { SerializedAccount } from '@linen/types';
+import { serializeAccount } from '@linen/serializers/account';
 
-class Server {
-  constructor() {}
-  start({ port, statuses = {} }) {
+export default class Server {
+  app: any;
+  server: any;
+  start({ port, statuses = { start: 200 } }): Promise<{ port: number }> {
+    const community: SerializedAccount = build('account', { name: 'linen' });
     this.app = express();
     this.app.use(express.static(join(__dirname, 'public')));
     this.app.use(express.static(join(__dirname, '../dist')));
@@ -11,9 +16,7 @@ class Server {
     this.app.get('/api/spa/start', (_, response) => {
       setTimeout(() => {
         response.status(statuses.start || 200).json({
-          community: {
-            name: 'linen',
-          },
+          community: serializeAccount(community),
         });
       }, 200);
     });
@@ -41,9 +44,7 @@ class Server {
       if (process.env.NODE_ENV === 'development') {
         console.log(`spa development server stopped on port ${address.port}`);
       }
-      resolve();
+      resolve(null);
     });
   }
 }
-
-module.exports = Server;
