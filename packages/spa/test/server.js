@@ -8,7 +8,9 @@ app.use(express.static(join(__dirname, 'public')));
 app.use(express.static(join(__dirname, '../dist')));
 
 app.get('/api/spa/start', (_, response) => {
-  response.status(200).json({});
+  setTimeout(() => {
+    response.status(200).json({});
+  }, 200);
 });
 
 app.listen(port, () => {

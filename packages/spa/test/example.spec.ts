@@ -17,3 +17,10 @@ test('shows a logo on page load', async ({ page }) => {
     throw new Error('Splash image is missing');
   }
 });
+
+test('show an error layout when the start api fails', async ({ page }) => {
+  await page.goto('http://localhost:8000/');
+
+  const content = await page.content();
+  expect(content).toContain('Something went wrong. Please refresh the page.');
+});
