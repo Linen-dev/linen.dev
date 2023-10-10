@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import SplashLoader from './SplashLoader';
+import SplashLayout from './SplashLayout';
 import DefaultLayout from './DefaultLayout';
 import ErrorLayout from './ErrorLayout';
 
@@ -37,6 +37,10 @@ export default function App() {
       mounted = false;
     };
   }, []);
+
+  if (state === State.Loading) {
+    return <SplashLayout />;
+  }
 
   if (state === State.Error) {
     return <ErrorLayout />;
