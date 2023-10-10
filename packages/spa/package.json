@@ -7,7 +7,7 @@
   "scripts": {
     "build": "rollup -c rollup.config.mjs",
     "build:watch": "yarn build -- --watch",
-    "start:watch": "nodemon test/server.js",
+    "start:watch": "nodemon test/app.js",
     "test": "playwright test"
   },
   "dependencies": {},
