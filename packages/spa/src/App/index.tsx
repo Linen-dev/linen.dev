@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import SplashLayout from './SplashLayout';
 import DefaultLayout from './DefaultLayout';
 import ErrorLayout from './ErrorLayout';
-import { SerializedAccount } from '@linen/types';
+import { Permissions, SerializedAccount } from '@linen/types';
 
 enum State {
   Active,
@@ -13,6 +13,7 @@ enum State {
 export default function App() {
   const [state, setState] = useState(State.Loading);
   const [currentCommunity, setCurrentCommunity] = useState<SerializedAccount>();
+  const [permissions, setPermissions] = useState<Permissions>();
 
   useEffect(() => {
     let mounted = true;
@@ -24,6 +25,7 @@ export default function App() {
           if (response.status === 200) {
             const data = await response.json();
             setCurrentCommunity(data.community);
+            setPermissions(data.permissions);
             setState(State.Active);
           } else {
             setState(State.Error);
@@ -45,7 +47,7 @@ export default function App() {
     return <SplashLayout />;
   }
 
-  if (state === State.Error || !currentCommunity) {
+  if (state === State.Error || !currentCommunity || !permissions) {
     return <ErrorLayout />;
   }
 

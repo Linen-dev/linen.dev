@@ -1,7 +1,7 @@
 import express from 'express';
 import { join } from 'path';
 import { build } from '@linen/factory';
-import { SerializedAccount } from '@linen/types';
+import { Permissions, SerializedAccount } from '@linen/types';
 import { serializeAccount } from '@linen/serializers/account';
 
 export default class Server {
@@ -9,6 +9,7 @@ export default class Server {
   server: any;
   start({ port, statuses = { start: 200 } }): Promise<{ port: number }> {
     const community: SerializedAccount = build('account', { name: 'linen' });
+    const permissions: Permissions = build('permissions');
     this.app = express();
     this.app.use(express.static(join(__dirname, 'public')));
     this.app.use(express.static(join(__dirname, '../dist')));
@@ -17,6 +18,7 @@ export default class Server {
       setTimeout(() => {
         response.status(statuses.start || 200).json({
           community: serializeAccount(community),
+          permissions,
         });
       }, 200);
     });
