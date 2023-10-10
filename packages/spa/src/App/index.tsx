@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import SplashLayout from './SplashLayout';
 import DefaultLayout from './DefaultLayout';
 import ErrorLayout from './ErrorLayout';
+import { SerializedAccount } from '@linen/types';
 
 enum State {
   Active,
@@ -11,6 +12,7 @@ enum State {
 
 export default function App() {
   const [state, setState] = useState(State.Loading);
+  const [currentCommunity, setCurrentCommunity] = useState<SerializedAccount>();
 
   useEffect(() => {
     let mounted = true;
@@ -21,6 +23,7 @@ export default function App() {
         if (mounted) {
           if (response.status === 200) {
             const data = await response.json();
+            setCurrentCommunity(data.community);
             setState(State.Active);
           } else {
             setState(State.Error);
@@ -42,8 +45,9 @@ export default function App() {
     return <SplashLayout />;
   }
 
-  if (state === State.Error) {
+  if (state === State.Error || !currentCommunity) {
     return <ErrorLayout />;
   }
-  return <DefaultLayout />;
+
+  return <DefaultLayout currentCommunity={currentCommunity} />;
 }

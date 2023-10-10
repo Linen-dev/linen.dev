@@ -1,5 +1,10 @@
 import React from 'react';
+import { SerializedAccount } from '@linen/types';
 
-export default function Header() {
-  return <header>bar</header>;
+interface Props {
+  currentCommunity: SerializedAccount;
+}
+
+export default function Header({ currentCommunity }: Props) {
+  return <header>{currentCommunity.name}</header>;
 }

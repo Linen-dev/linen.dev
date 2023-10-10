@@ -1,6 +1,11 @@
 import React from 'react';
 import Header from '../Header';
+import { SerializedAccount } from '@linen/types';
 
-export default function DefaultLayout() {
-  return <Header />;
+interface Props {
+  currentCommunity: SerializedAccount;
+}
+
+export default function DefaultLayout({ currentCommunity }: Props) {
+  return <Header currentCommunity={currentCommunity} />;
 }

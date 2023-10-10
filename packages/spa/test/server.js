@@ -10,7 +10,11 @@ class Server {
 
     this.app.get('/api/spa/start', (_, response) => {
       setTimeout(() => {
-        response.status(statuses.start || 200).json({});
+        response.status(statuses.start || 200).json({
+          community: {
+            name: 'linen',
+          },
+        });
       }, 200);
     });
 
