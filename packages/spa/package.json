@@ -15,6 +15,7 @@
     "@linen/factory": "*",
     "@linen/types": "*",
     "@linen/serializers": "*",
+    "@linen/ui": "*",
     "@playwright/test": "^1.38.1",
     "@rollup/plugin-image": "^3.0.3",
     "@rollup/plugin-replace": "^5.0.3",
