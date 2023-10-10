@@ -20,7 +20,9 @@ class Server {
           return reject();
         }
         const address = this.server.address();
-        console.log(`spa development server started on port ${address.port}`);
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`spa development server started on port ${address.port}`);
+        }
         return resolve({ port: address.port });
       });
     });
@@ -32,7 +34,9 @@ class Server {
       // we're not waiting for the server to close
       // we want specs to end faster
       this.server.close();
-      console.log(`spa development server stopped on port ${address.port}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`spa development server stopped on port ${address.port}`);
+      }
       resolve();
     });
   }
