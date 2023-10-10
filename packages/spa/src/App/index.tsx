@@ -11,7 +11,7 @@ export default function App() {
       if (mounted) {
         setLoading(false);
       }
-    }, 2000);
+    }, 100);
     return () => {
       mounted = false;
     };
