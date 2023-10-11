@@ -3,6 +3,7 @@ import { join } from 'path';
 import { build } from '@linen/factory';
 import { Permissions, SerializedAccount } from '@linen/types';
 import { serializeAccount } from '@linen/serializers/account';
+import { serializeChannel } from '@linen/serializers/channel';
 
 export default class Server {
   app: any;
@@ -10,6 +11,18 @@ export default class Server {
   start({ port, statuses = { start: 200 } }): Promise<{ port: number }> {
     const community: SerializedAccount = build('account', { name: 'linen' });
     const permissions: Permissions = build('permissions');
+    const channels = [
+      build('channel', {
+        channelName: 'general',
+        accountId: community.id,
+        displayOrder: 0,
+      }),
+      build('channel', {
+        channelName: 'issues',
+        accountId: community.id,
+        displayOrder: 1,
+      }),
+    ];
     this.app = express();
     this.app.use(express.static(join(__dirname, 'public')));
     this.app.use(express.static(join(__dirname, '../dist')));
@@ -19,6 +32,7 @@ export default class Server {
         response.status(statuses.start || 200).json({
           community: serializeAccount(community),
           permissions,
+          channels: channels.map(serializeChannel),
         });
       }, 200);
     });
