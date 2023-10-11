@@ -6,6 +6,7 @@ import {
   Permissions,
   SerializedAccount,
   SerializedChannel,
+  Settings,
 } from '@linen/types';
 
 enum State {
@@ -19,6 +20,7 @@ export default function App() {
   const [channels, setChannels] = useState<SerializedChannel[]>();
   const [currentCommunity, setCurrentCommunity] = useState<SerializedAccount>();
   const [permissions, setPermissions] = useState<Permissions>();
+  const [settings, setSettings] = useState<Settings>();
 
   useEffect(() => {
     let mounted = true;
@@ -32,6 +34,7 @@ export default function App() {
             setChannels(data.channels);
             setCurrentCommunity(data.community);
             setPermissions(data.permissions);
+            setSettings(data.settings);
             setState(State.Active);
           } else {
             setState(State.Error);
@@ -53,7 +56,13 @@ export default function App() {
     return <SplashLayout />;
   }
 
-  if (state === State.Error || !currentCommunity || !permissions || !channels) {
+  if (
+    state === State.Error ||
+    !currentCommunity ||
+    !permissions ||
+    !channels ||
+    !settings
+  ) {
     return <ErrorLayout />;
   }
 
@@ -62,6 +71,7 @@ export default function App() {
       channels={channels}
       currentCommunity={currentCommunity}
       permissions={permissions}
+      settings={settings}
     />
   );
 }
