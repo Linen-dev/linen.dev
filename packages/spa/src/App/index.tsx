@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import SplashLayout from './SplashLayout';
 import DefaultLayout from './DefaultLayout';
 import ErrorLayout from './ErrorLayout';
-import { Permissions, SerializedAccount } from '@linen/types';
+import {
+  Permissions,
+  SerializedAccount,
+  SerializedChannel,
+} from '@linen/types';
 
 enum State {
   Active,
@@ -12,6 +16,7 @@ enum State {
 
 export default function App() {
   const [state, setState] = useState(State.Loading);
+  const [channels, setChannels] = useState<SerializedChannel[]>();
   const [currentCommunity, setCurrentCommunity] = useState<SerializedAccount>();
   const [permissions, setPermissions] = useState<Permissions>();
 
@@ -24,6 +29,7 @@ export default function App() {
         if (mounted) {
           if (response.status === 200) {
             const data = await response.json();
+            setChannels(data.channels);
             setCurrentCommunity(data.community);
             setPermissions(data.permissions);
             setState(State.Active);
@@ -47,9 +53,15 @@ export default function App() {
     return <SplashLayout />;
   }
 
-  if (state === State.Error || !currentCommunity || !permissions) {
+  if (state === State.Error || !currentCommunity || !permissions || !channels) {
     return <ErrorLayout />;
   }
 
-  return <DefaultLayout currentCommunity={currentCommunity} />;
+  return (
+    <DefaultLayout
+      channels={channels}
+      currentCommunity={currentCommunity}
+      permissions={permissions}
+    />
+  );
 }
