@@ -1,8 +1,9 @@
 import React from 'react';
 import {
+  Permissions,
   SerializedAccount,
   SerializedChannel,
-  Permissions,
+  Settings,
 } from '@linen/types';
 import Component from '@linen/ui/Header';
 
@@ -10,15 +11,17 @@ interface Props {
   channels: SerializedChannel[];
   currentCommunity: SerializedAccount;
   permissions: Permissions;
+  settings: Settings;
 }
 
 export default function Header({
   currentCommunity,
   channels,
   permissions,
+  settings,
 }: Props) {
   // return (
-  //   <Component currentCommunity={currentCommunity} permissions={permissions} />
+  //   <Component channels={channels} currentCommunity={currentCommunity} permissions={permissions} settings={settings} />
   // );
   return <header>header</header>;
 }
