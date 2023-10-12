@@ -13,8 +13,22 @@ import { expireSessionCookies, setSessionCookies } from '../cookies';
 import { createCSRFToken } from '../csrf';
 import { qs } from '@linen/utilities/url';
 import { encrypt, decrypt } from '../crypto';
-import type { Session } from '../../client';
 import type MagicLoginStrategy from 'passport-magic-login';
+
+// TODO move to types
+type ISODateString = string;
+
+interface DefaultSession {
+  user?: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    id?: string | null;
+  };
+  expires: ISODateString;
+}
+
+export interface Session extends DefaultSession {}
 
 class Unauthorized extends Error {
   public status: number;

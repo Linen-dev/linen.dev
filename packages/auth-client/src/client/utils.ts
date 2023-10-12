@@ -25,6 +25,7 @@ export interface LinenAuthClientConfig {
   _getSession: (...args: any[]) => any;
 }
 
+// TODO move to types
 type ISODateString = string;
 
 interface DefaultSession {
