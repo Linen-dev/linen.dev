@@ -1,4 +1,4 @@
-import { cleanUpStorage } from '@linen/auth/client';
+import { cleanUpStorage } from '@linen/auth-client/client';
 
 export function signOut() {
   cleanUpStorage();

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useSession } from '@linen/auth/client';
+import { useSession } from '@linen/auth-client/client';
 import type { NextRouter } from 'next/router';
 
 export default function PostHogUser() {

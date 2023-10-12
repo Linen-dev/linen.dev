@@ -1,5 +1,5 @@
 import { ZodError } from 'zod';
-import { expireSessionCookies } from '@linen/auth/server';
+import { expireSessionCookies } from '@linen/auth-server/server';
 
 export function onError(error: any, req: any, res: any, _: any) {
   if (error.message === 'jwt expired') {

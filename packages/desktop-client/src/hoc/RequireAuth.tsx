@@ -1,4 +1,4 @@
-import { useSession } from '@linen/auth/client';
+import { useSession } from '@linen/auth-client/client';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect } from 'react';

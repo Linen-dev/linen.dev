@@ -4,7 +4,7 @@ import {
   getToken,
   verifyToken,
   expireSessionCookies,
-} from '@linen/auth/server';
+} from '@linen/auth-server/server';
 import { Unauthorized } from 'server/exceptions';
 import to from '@linen/utilities/await-to-js';
 

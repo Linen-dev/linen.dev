@@ -15,7 +15,7 @@
   "dependencies": {
     "@craco/craco": "^7.1.0",
     "@linen/api-client": "*",
-    "@linen/auth": "*",
+    "@linen/auth-client": "*",
     "@linen/contexts": "*",
     "@linen/hooks": "*",
     "@linen/styles": "*",

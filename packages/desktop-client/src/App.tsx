@@ -1,5 +1,5 @@
 import Toast from '@linen/ui/Toast';
-import { SessionProvider } from '@linen/auth/client';
+import { SessionProvider } from '@linen/auth-client/client';
 import { baseAuth, env } from '@/config';
 import { UsersContext } from '@linen/contexts/Users';
 import Router from '@/Router';

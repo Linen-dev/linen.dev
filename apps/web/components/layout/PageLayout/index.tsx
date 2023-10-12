@@ -23,7 +23,7 @@ import styles from './index.module.scss';
 import Link from 'next/link';
 import JoinButton from '@linen/ui/JoinButton';
 import InternalLink from 'components/Link/InternalLink';
-import { signOut, useSession } from '@linen/auth/client';
+import { signOut, useSession } from '@linen/auth-client/client';
 import usePath from 'hooks/path';
 import nextRouter, { useRouter } from 'next/router';
 import { notify } from 'utilities/notification';

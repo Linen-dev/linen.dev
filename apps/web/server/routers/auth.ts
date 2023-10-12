@@ -1,5 +1,5 @@
 import { onError } from 'server/middlewares/error';
-import { CreateRouter } from '@linen/auth/server';
+import { CreateRouter } from '@linen/auth-server/server';
 import {
   githubSignIn,
   loginPassport,

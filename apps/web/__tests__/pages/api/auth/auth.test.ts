@@ -7,7 +7,7 @@ import { v4 } from 'uuid';
 import { testApiHandler } from 'next-test-api-route-handler';
 import handler from 'pages/api/auth/[[...slug]]';
 import { login } from '__tests__/helpers';
-import { createCSRFToken } from '@linen/auth/server';
+import { createCSRFToken } from '@linen/auth-server/server';
 
 type auths = {};
 
