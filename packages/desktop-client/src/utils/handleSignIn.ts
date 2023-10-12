@@ -1,4 +1,4 @@
-import { setJwtToken } from '@linen/auth/client';
+import { setJwtToken } from '@linen/auth-client/client';
 import { baseLinen } from '@/config';
 
 export function handleSignIn(state: string) {

@@ -1,4 +1,4 @@
-import { getCsrfToken } from '@linen/auth/client';
+import { getCsrfToken } from '@linen/auth-client/client';
 import { qs } from '@linen/utilities/url';
 import { SignInMode } from '@linen/types';
 import { localStorage } from '@linen/utilities/storage';

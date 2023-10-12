@@ -1,5 +1,5 @@
 import { baseLinen } from '@/config';
-import { getJwtToken } from '@linen/auth/client';
+import { getJwtToken } from '@linen/auth-client/client';
 import ApiClient, { type AxiosRequestConfig } from '@linen/api-client';
 
 export const api = new ApiClient({

@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import PageLayout from '.';
 import { build } from '@linen/factory';
-import { SessionProvider } from '@linen/auth/client';
+import { SessionProvider } from '@linen/auth-client/client';
 
 describe('PageLayout', () => {
   it('renders the home url', () => {

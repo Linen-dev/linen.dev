@@ -24,7 +24,7 @@ import handlerAuth from 'pages/api/auth/[[...slug]]';
 import handlerRouter from 'pages/api/router';
 import handlerThreads from 'pages/api/threads/[[...slug]]';
 import { testApiHandler } from 'next-test-api-route-handler';
-import { createCSRFToken } from '@linen/auth/server';
+import { createCSRFToken } from '@linen/auth-server/server';
 
 const fakeEmail = () => `${v4()}@linen.dev`;
 

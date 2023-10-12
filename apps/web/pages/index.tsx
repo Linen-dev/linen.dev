@@ -13,7 +13,7 @@ import { getHomeUrl } from '@linen/utilities/home';
 import { getThreadUrl, qs } from '@linen/utilities/url';
 import { timeAgo } from '@linen/utilities/date';
 import { FiMenu } from '@react-icons/all-files/fi/FiMenu';
-import { signOut, useSession } from '@linen/auth/client';
+import { signOut, useSession } from '@linen/auth-client/client';
 import Link from 'next/link';
 import type { GetServerSideProps } from 'next/types';
 import { trackPageView } from 'utilities/ssr-metrics';

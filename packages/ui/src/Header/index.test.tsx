@@ -3,7 +3,7 @@ import Header from '.';
 import { render } from '@testing-library/react';
 import { build } from '@linen/factory';
 
-jest.mock('@linen/auth/client', () => ({
+jest.mock('@linen/auth-client/client', () => ({
   useSession: () => ({}),
 }));
 

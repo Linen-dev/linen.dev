@@ -1,4 +1,4 @@
-import { Passport } from '@linen/auth/server';
+import { Passport } from '@linen/auth-server/server';
 import UsersService from 'services/users';
 import SignInMailer from 'mailers/SignInMailer';
 

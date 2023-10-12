@@ -10,7 +10,7 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
 import { useEffect } from 'react';
-import { SessionProvider } from '@linen/auth/client';
+import { SessionProvider } from '@linen/auth-client/client';
 import Toast from '@linen/ui/Toast';
 import { JoinContext } from 'contexts/Join';
 import { UsersContext } from '@linen/contexts/Users';

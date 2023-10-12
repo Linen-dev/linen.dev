@@ -4,7 +4,7 @@
 
 import { testApiHandler } from 'next-test-api-route-handler';
 import handler from 'pages/api/auth/[[...slug]]';
-import { createCSRFToken } from '@linen/auth/server';
+import { createCSRFToken } from '@linen/auth-server/server';
 
 export async function login({ email, password }: any) {
   let body: any = '';

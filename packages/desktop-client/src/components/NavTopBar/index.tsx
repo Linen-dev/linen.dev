@@ -9,7 +9,7 @@ import customUsePath from '@/hooks/usePath';
 import { useNavigate, useLocation } from 'react-router-dom';
 import JoinButton from '@linen/ui/JoinButton';
 import TitleBar from '@/components/TitleBar';
-import { useSession } from '@linen/auth/client';
+import { useSession } from '@linen/auth-client/client';
 import di from '@/di';
 import { useEffect, useState } from 'react';
 

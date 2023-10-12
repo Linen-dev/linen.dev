@@ -1,4 +1,4 @@
-import { signOut, useSession } from '@linen/auth/client';
+import { signOut, useSession } from '@linen/auth-client/client';
 import CardLayout from '@linen/ui/CardLayout';
 import ProfileForm from '@linen/ui/ProfileForm';
 import axios, { AxiosRequestConfig } from 'axios';

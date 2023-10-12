@@ -1,4 +1,4 @@
-import { createCSRFToken } from '@linen/auth/server';
+import { createCSRFToken } from '@linen/auth-server/server';
 import type { GetServerSideProps } from 'next/types';
 import { trackPageView } from 'utilities/ssr-metrics';
 import Auth from '@linen/ui/Auth';

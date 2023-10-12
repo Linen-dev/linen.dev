@@ -3,7 +3,7 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from 'next/types';
-import type { Session as SessionType, JWT } from '@linen/auth/client';
+import type { Session as SessionType, JWT } from '@linen/auth-client/client';
 import { users, prisma } from '@linen/database';
 import { findAuthByEmail } from 'services/users';
 export { type SessionType };
@@ -11,7 +11,7 @@ import {
   getServerSession,
   getRawTokenFromRequest,
   getValidSessionTokenFromRequest,
-} from '@linen/auth/server';
+} from '@linen/auth-server/server';
 
 export default class Session {
   static async find(
