@@ -1,16 +1,12 @@
 [![Chat on - Linen](https://img.shields.io/badge/Chat_on-Linen-blue)](https://linen.dev/invite/linen)
 
-<p>
-  <a href="https://linen.dev/">
-    <img alt="linen-dev" src="https://static.main.linendev.com/logos/linen-black-logo.svg#gh-light-mode-only" width="108">
-  </a>
-</p>
+<a href="https://linen.dev/">
+  <img alt="linen-dev" src="https://static.main.linendev.com/logos/linen-black-logo.svg#gh-light-mode-only" width="108">
+</a>
 
-<p>
-  <a href="https://linen.dev/">
-    <img alt="linen-dev" src="https://static.main.linendev.com/logos/linen-white-logo.svg#gh-dark-mode-only" width="108">
-  </a>
-</p>
+<a href="https://linen.dev/">
+  <img alt="linen-dev" src="https://static.main.linendev.com/logos/linen-white-logo.svg#gh-dark-mode-only" width="108">
+</a>
 
 Linen is a Google-searchable community chat tool. Linen was built as an alternative to closed tools like Slack and Discord.
 
