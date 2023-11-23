@@ -2,7 +2,13 @@
 
 <p>
   <a href="https://linen.dev/">
-    <img alt="linen-dev" src="https://static.main.linendev.com/logos/linen-black-logo.svg" width="108">
+    <img alt="linen-dev" src="https://static.main.linendev.com/logos/linen-black-logo.svg#gh-light-mode-only" width="108">
+  </a>
+</p>
+
+<p>
+  <a href="https://linen.dev/">
+    <img alt="linen-dev" src="https://static.main.linendev.com/logos/linen-white-logo.svg#gh-dark-mode-only" width="108">
   </a>
 </p>
 
