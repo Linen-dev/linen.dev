@@ -1,10 +1,10 @@
 [![Chat on - Linen](https://img.shields.io/badge/Chat_on-Linen-blue)](https://linen.dev/invite/linen)
 
-<a href="https://linen.dev/">
+<a href="https://linen.dev/#gh-light-mode-only">
   <img alt="linen-dev" src="https://static.main.linendev.com/logos/linen-black-logo.svg#gh-light-mode-only" width="108">
 </a>
 
-<a href="https://linen.dev/">
+<a href="https://linen.dev/#gh-dark-mode-only">
   <img alt="linen-dev" src="https://static.main.linendev.com/logos/linen-white-logo.svg#gh-dark-mode-only" width="108">
 </a>
 
