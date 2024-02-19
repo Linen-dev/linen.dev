@@ -4,6 +4,17 @@
   justify-content: center;
 }
 
+.header {
+  background: var(--color-gray-100);
+  padding: 1rem;
+  position: relative;
+  text-align: center;
+}
+
+.header .link {
+  font-size: 1rem;
+}
+
 .grid small {
   font-size: 0.8rem;
 }

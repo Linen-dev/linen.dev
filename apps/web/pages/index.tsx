@@ -182,6 +182,13 @@ export default function Feed({
 
   return (
     <BlankLayout>
+      <header className={styles.header}>
+        Check out{' '}
+        <a className={styles.link} href="https://linen.team">
+          linen.team
+        </a>
+        , a thread-first messaging app for deep work.
+      </header>
       <div className={styles.grid}>
         <div className={styles.left}>
           <div className={styles.sticky}>
