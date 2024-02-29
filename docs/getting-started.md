@@ -167,8 +167,37 @@ npx dotenv -e .env -- mix phx.server
 
 ## (Optional) Local domain redirect testing
 
-1. Ask for invite for ngrok account
-2. Setup [ngrok](https://ngrok.io/)
-3. pick subdomain i.e kam-test.ngrok.io
-4. Update dev database to have the redirect url `update accounts set "redirectDomain"='kam-test.ngrok.io' where id = '9677cb41-033e-4c1a-9ae5-ef178606cad3';` - replace with your subdomain that you chose
-5. run ngrok tunnel `ngrok http --region=us --hostname=kam-test.ngrok.io 3000`
+Local domain redirect testing is where you have a Public URL pointing to your locally running Linen instance.
+
+In case you need to set up local domain redirect testing, you have two options. You could use either **Tunnelmole**, an open source tunneling tool, or **ngrok**, a popular closed source tunneling tool.
+
+### Tunnelmole Setup
+
+[Tunnelmole](https://github.com/robbie-cahill/tunnelmole-client) makes it easy to expose your local development server to the internet.
+
+1. Install Tunnelmole:
+- **NPM**: Enter `npm install -g tunnelmole` in your console.
+- **Linux**: Enter `curl -s https://tunnelmole.com/sh/install-linux.sh | sudo bash` in your console.
+- **Mac**: Enter `curl -s https://tunnelmole.com/sh/install-mac.sh --output install-mac.sh && sudo bash install-mac.sh` in your console.
+- **Windows**: If you have NodeJS, install with NPM. If not, download the `exe` file for Windows [here](https://tunnelmole.com/downloads/tmole.exe) and put it somewhere in your PATH.
+
+2. After installation, run Tunnelmole: `tmole 3000`
+
+```
+➜  ~ tmole 8000
+http://bvdo5f-ip-49-183-170-144.tunnelmole.net is forwarding to localhost:3000
+https://bvdo5f-ip-49-183-170-144.tunnelmole.net is forwarding to localhost:3000
+```
+3. Take note of the URL which is forwarding to your server. This will be used in the next step.
+
+4. Update your dev database to have the new redirect URL: `update accounts set "redirectDomain"='bvdo5f-ip-49-183-170-144.tunnelmole.net' where id ='xxxx';` - replace `'xxxx'` with your account id and `'bvdo5f-ip-49-183-170-144.tunnelmole.net'` with the URL that was shown after running the `tmole` command.
+
+### ngrok Setup
+
+[ngrok](https://ngrok.io/) is another popular choice for tunneling, although it is not open source.
+
+1. Ask for an invite for an ngrok account.
+2. Setup ngrok account.
+3. Pick a subdomain, for example, 'kam-test.ngrok.io'.
+4. Update your dev database to have the redirect URL `update accounts set "redirectDomain"='kam-test.ngrok.io' where id = '9677cb41-033e-4c1a-9ae5-ef178606cad3';` - replace with your chosen subdomain.
+5. Run the ngrok tunnel: `ngrok http --region=us --hostname=kam-test.ngrok.io 3000`.
