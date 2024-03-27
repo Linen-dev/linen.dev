@@ -1,3 +1,3 @@
 FROM postgres:13
-RUN apt-get update 
-RUN apt install postgresql-13-pgvector
+RUN apt-get update --fix-missing
+RUN apt install postgresql-13-pgvector -y
