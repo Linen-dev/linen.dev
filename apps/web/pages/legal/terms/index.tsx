@@ -1,5 +1,9 @@
 import Link from 'next/link';
 
+export const config = {
+  unstable_runtimeJS: false,
+};
+
 export default function Privacy() {
   return (
     <div className="relative py-16">

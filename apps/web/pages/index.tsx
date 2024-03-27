@@ -1,319 +1,466 @@
-import React, { useState } from 'react';
-import BlankLayout from '@linen/ui/BlankLayout';
-import styles from './index.module.scss';
-import Row from '@linen/ui/Row';
-import RowSkeleton from '@linen/ui/RowSkeleton';
-import { SerializedAccount, SerializedThread, Settings } from '@linen/types';
-import LinenLogo from '@linen/ui/LinenLogo';
-import useInfiniteScroll from 'react-infinite-scroll-hook';
-import Modal from '@linen/ui/Modal';
-import Nav from '@linen/ui/Nav';
-import { FiHash } from '@react-icons/all-files/fi/FiHash';
-import { getHomeUrl } from '@linen/utilities/home';
-import { getThreadUrl, qs } from '@linen/utilities/url';
-import { timeAgo } from '@linen/utilities/date';
-import { FiMenu } from '@react-icons/all-files/fi/FiMenu';
-import { signOut, useSession } from '@linen/auth-client/client';
+import linenExamplePage from '../public/kotlin.png';
+import Image from 'next/image';
 import Link from 'next/link';
-import type { GetServerSideProps } from 'next/types';
-import { trackPageView } from 'utilities/ssr-metrics';
+import Head from 'next/head';
+import Footer from '../components/Footer';
+import LinenLogo from '@linen/ui/LinenLogo';
+import YCombinatorLogo from '@linen/ui/YCombinatorLogo';
+import { prisma } from '@linen/database';
+import { AiFillGithub } from '@react-icons/all-files/ai/AiFillGithub';
+import classNames from 'classnames';
+import { GoCheck } from '@react-icons/all-files/go/GoCheck';
 
-enum ModalView {
-  NONE,
-  MENU,
-}
+export const config = {
+  unstable_runtimeJS: false,
+};
 
-function Communities({ communities }: { communities: SerializedAccount[] }) {
+const tiers = [
+  {
+    name: 'Starter',
+    id: 'tier-starter',
+    href: '#',
+    priceMonthly: '$150',
+    description:
+      'Up to 5,000 members. Perfect for small communities or personal projects.',
+    features: [
+      'Up to 5,000 members',
+      'Google Indexable',
+      'Unlimited history retention',
+      'Branded community',
+      'Priority Support',
+      'Custom domain',
+      'Sitemap generation',
+      'Import Slack and Discord conversations',
+    ],
+    mostPopular: false,
+  },
+  {
+    name: 'Business',
+    id: 'tier-business',
+    href: '#',
+    priceMonthly: '$250',
+    description: 'Up to 20,000 members. Perfect for growing communities.',
+    features: [
+      'Up to 20,000 members',
+      'Google Indexable',
+      'Unlimited history retention',
+      'Branded community',
+      'Priority Support',
+      'Custom domain',
+      'Sitemap generation',
+      'Import Slack and Discord conversations',
+    ],
+    mostPopular: true,
+  },
+  {
+    name: 'Enterprise',
+    id: 'tier-enterprise',
+    href: '#',
+    priceMonthly: '$400',
+    description: 'Unlimited members. Perfect for large communities.',
+    features: [
+      'Unlimited members',
+      'Google Indexable',
+      'Unlimited history retention',
+      'Branded community',
+      'Priority Support',
+      'Custom domain',
+      'Sitemap generation',
+      'Import Slack and Discord conversations',
+    ],
+    mostPopular: false,
+  },
+];
+
+const Home = (props: { accounts: Props[] }) => {
+  const accounts = props.accounts;
   return (
-    <>
-      <Nav.Group>Communities</Nav.Group>
-      {communities.map((community) => {
-        return (
+    <div className="mb-10 pb-10">
+      <Head>
+        <title>Linen | Front page for your Slack and Discord Communities</title>
+      </Head>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
+          <div className="flex justify-start lg:w-0 lg:flex-1">
+            <Link href="/" passHref>
+              <LinenLogo />
+            </Link>
+          </div>
           <a
-            href={getHomeUrl(community)}
-            key={community.id}
+            className="hidden sm:flex flex-row items-center mr-4 whitespace-nowrap text-base font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+            href="https://github.com/linen-dev/linen.dev"
             target="_blank"
             rel="noreferrer"
           >
-            <Nav.Item>
-              <FiHash />
-              {community.name}
-            </Nav.Item>
+            <div className="pr-2">
+              <AiFillGithub />
+            </div>
+            Star us on Github
           </a>
-        );
-      })}
-    </>
-  );
-}
-
-const FEED_PRODUCTION_URL = 'https://static.main.linendev.com/api/feed';
-const FEED_DEVELOPMENT_URL = 'http://localhost:3000/api/feed';
-
-const FEED_URL =
-  process.env.NODE_ENV === 'production'
-    ? FEED_PRODUCTION_URL
-    : FEED_DEVELOPMENT_URL;
-
-interface Props {
-  threads: SerializedThread[];
-  settings: Settings[];
-  communities: SerializedAccount[];
-  cursor: string | null;
-}
-
-export default function Feed({
-  threads: initialThreads,
-  settings: initialSettings,
-  communities: initialCommunities,
-  cursor: initialCursor,
-}: Props) {
-  const [modal, setModal] = useState<ModalView>(ModalView.NONE);
-  const [cursor, setCursor] = useState<string | null>(initialCursor);
-  const [loading, setLoading] = useState(false);
-  const [more, setMore] = useState(!!cursor);
-  const [threads, setThreads] = useState<SerializedThread[]>(initialThreads);
-  const [settings, setSettings] = useState<Settings[]>(initialSettings);
-  const [communities, setCommunities] =
-    useState<SerializedAccount[]>(initialCommunities);
-  const close = () => setModal(ModalView.NONE);
-  const session = useSession();
-
-  async function fetchFeed() {
-    setLoading(true);
-    fetch(`${FEED_URL}?${qs({ cursor })}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    })
-      .then((response) => response.json())
-      .then(
-        ({
-          threads: newThreads,
-          settings: newSettings,
-          communities: newCommunities,
-          cursor,
-        }: {
-          threads: SerializedThread[];
-          settings: Settings[];
-          communities: SerializedAccount[];
-          cursor: string | null;
-        }) => {
-          setLoading(false);
-          setCursor(cursor || null);
-          setThreads((threads) => [...threads, ...newThreads]);
-          setSettings((settings) => {
-            const ids = settings.map((setting) => setting.communityId);
-            const settingsToAdd = newSettings.filter(
-              (setting) => !ids.includes(setting.communityId)
-            );
-            return [...settings, ...settingsToAdd];
-          });
-          setCommunities((communities) => {
-            const ids = communities.map((community) => community.id);
-            const communitiesToAdd = newCommunities.filter(
-              (community) => !ids.includes(community.id)
-            );
-            return [...communities, ...communitiesToAdd];
-          });
-          setMore(!!cursor);
-        }
-      );
-  }
-
-  const [sentryRef] = useInfiniteScroll({
-    loading,
-    hasNextPage: more,
-    onLoadMore: fetchFeed,
-    disabled: loading || !more,
-    rootMargin: '0px 0px 640px 0px',
-    delayInMs: 0,
-  });
-
-  function WhatIsLinen() {
-    return (
-      <>
-        <div className={styles.actions}>
-          {session.status === 'authenticated' ? (
-            <>
-              <Link className={styles.link} href="/getting-started">
-                Get started
+          <div className="flex items-center justify-end md:flex-1 lg:w-0">
+            <Link
+              className="whitespace-nowrap text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
+              href="/signin"
+              passHref
+            >
+              Sign in
+            </Link>
+            <div className="hidden md:block ml-8">
+              <Link
+                className="whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700"
+                href="/signup"
+                passHref
+              >
+                Get Started
               </Link>
-              <a className={styles.link} onClick={() => signOut()}>
-                Sign out
-              </a>
-            </>
-          ) : (
-            <>
-              <Link className={styles.link} href="/signin">
-                Log in
-              </Link>
-              <Link className={styles.link} href="/signup">
-                Sign up
-              </Link>
-            </>
-          )}
-        </div>
-        <h1>What is Linen?</h1>
-        <p>
-          <small>
-            Linen is a search-engine friendly community platform. We offer two
-            way integrations with existing Slack/Discord communities and make
-            those conversations Google-searchable.
-          </small>
-        </p>
-        <h2>What is this page?</h2>
-        <p>
-          <small>
-            This page aggregates conversations from across all types of
-            communities into a single feed. This way, we can showcase
-            interesting content/discussions in different communities.
-          </small>
-        </p>
-        <a
-          className={styles.link}
-          href="https://linen.dev/landing"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Read more
-        </a>
-      </>
-    );
-  }
-
-  return (
-    <BlankLayout>
-      <header className={styles.header}>
-        Check out{' '}
-        <a className={styles.link} href="https://linen.team">
-          linen.team
-        </a>
-        , a thread-first messaging app for deep work.
-      </header>
-      <div className={styles.grid}>
-        <div className={styles.left}>
-          <div className={styles.sticky}>
-            <a href="/landing" target="_blank">
-              <div className={styles.logo}>
-                <LinenLogo /> <small>Feed</small>
-              </div>
-            </a>
-            <Nav>
-              <Communities communities={communities.slice(0, 20)} />
-            </Nav>
-          </div>
-        </div>
-        <main className={styles.center}>
-          <div className={styles.logo}>
-            <LinenLogo /> <small>Feed</small>
-            <FiMenu
-              className={styles.menu}
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                setModal(ModalView.MENU);
-              }}
-            />
-          </div>
-          <div className={styles.mobileWhatIsLinen}>
-            <WhatIsLinen />
-          </div>
-          <div>
-            {threads.map((thread) => {
-              const community = communities.find(
-                (community) => community.id === thread.channel?.accountId
-              ) as SerializedAccount;
-              const setting = settings.find(
-                (setting) => setting.communityId === thread.channel?.accountId
-              ) as Settings;
-              const url = getThreadUrl({
-                isSubDomainRouting: false,
-                settings: setting,
-                incrementId: thread.incrementId,
-                slug: thread.slug,
-                LINEN_URL:
-                  process.env.NODE_ENV === 'production'
-                    ? 'https://www.linen.dev'
-                    : 'http://localhost:3000',
-              });
-              const message = thread.messages[0];
-              return (
-                <div className={styles.wrapper} key={thread.id}>
-                  <a
-                    className={styles.overlay}
-                    href={url}
-                    target="_blank"
-                    rel="noreferrer"
-                  ></a>
-                  <div className={styles.item}>
-                    <Row
-                      className={styles.row}
-                      thread={thread}
-                      currentUser={null}
-                      isSubDomainRouting={false}
-                      settings={setting}
-                      showActions={false}
-                      truncate={message.body.length > 280}
-                      subheader={
-                        <>
-                          {timeAgo(Number(thread.lastReplyAt))}
-                          <a
-                            href={getHomeUrl(community)}
-                            target="_blank"
-                            rel="noreferrer"
-                            key={community.id}
-                            className={styles.subheader}
-                          >
-                            #{community.name}
-                          </a>
-                        </>
-                      }
-                      onReaction={() => {
-                        window.location.href = url;
-                      }}
-                      activeUsers={[]}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div ref={sentryRef} />
-          {more &&
-            [...Array(5)].map((_, index) => (
-              <RowSkeleton key={`row-skeleton-${index}`} />
-            ))}
-        </main>
-        <div className={styles.right}>
-          <div className={styles.sticky}>
-            <WhatIsLinen />
+            </div>
           </div>
         </div>
       </div>
-      <Modal open={modal === ModalView.MENU} close={close} size="full">
-        <div className={styles.modal}>
-          <FiMenu className={styles.menu} onClick={close} />
-          <Communities communities={communities} />
+
+      <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
+        <div className="sm:text-center">
+          <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 dark:text-gray-50 sm:text-5xl md:text-6xl">
+            <span className="block xl:inline">
+              Make Slack and Discord communities{' '}
+            </span>
+            <span className="block text-blue-600 xl:inline">
+              Google-searchable
+            </span>
+          </h1>
+          <p className="mt-3 text-base text-gray-500 dark:text-gray-400 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl ">
+            Linen syncs your Slack and Discord threads to an SEO friendly
+            website that allows your community to discover you through search
+            engines and reduces the number of repeat questions.
+          </p>
+          <div className="mt-5 sm:mt-8 sm:flex sm:justify-center">
+            <div className="rounded-md shadow">
+              <Link
+                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10"
+                href="/signup"
+                passHref
+              >
+                Get Started
+              </Link>
+            </div>
+            <div className="mt-3 sm:mt-0 sm:ml-3">
+              <a
+                href="https://slack-chats.kotlinlang.org"
+                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 md:py-4 md:text-lg md:px-10"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Live demo
+              </a>
+            </div>
+          </div>
+          <div className="max-w-5xl mx-auto px-4 flex justify-center mt-8">
+            <p className="px-2">
+              Backed by <b>Y Combinator</b>
+            </p>
+            <YCombinatorLogo />
+          </div>
+          <div className="flex justify-center my-20 shadow-lg">
+            <Image
+              className="rounded-md"
+              alt="Linen Example Page"
+              src={linenExamplePage}
+            />
+          </div>
+          <div className="bg-blue-700 mt-20 rounded-md">
+            <div className="max-w-7xl mx-auto py-12 px-4 sm:py-16 sm:px-6 lg:px-8 lg:py-20">
+              <div className="max-w-3xl mx-auto text-center">
+                <h2 className="text-2xl font-extrabold text-white sm:text-4xl">
+                  Trusted by the largest communities
+                </h2>
+                <p className="mt-3 text-xl text-blue-200 sm:mt-4">
+                  Retain your community knowledge and improve your SEO
+                </p>
+              </div>
+              <dl className="mt-10 text-center sm:max-w-3xl sm:mx-auto sm:grid sm:grid-cols-2 sm:gap-8">
+                <div className="flex flex-col mt-10 sm:mt-0">
+                  <dt className="order-2 mt-2 text-lg leading-6 font-medium text-blue-200">
+                    Messages Synced
+                  </dt>
+                  <dd className="order-1 text-4xl md:text-5xl font-extrabold text-white">
+                    7,500,000+
+                  </dd>
+                </div>
+                <div className="flex flex-col mt-10 sm:mt-0">
+                  <dt className="order-2 mt-2 text-lg leading-6 font-medium text-blue-200">
+                    Members
+                  </dt>
+                  <dd className="order-1 text-4xl md:text-5xl font-extrabold text-white">
+                    250,000+
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </div>
         </div>
-      </Modal>
-    </BlankLayout>
+
+        <div className="flex flex-col items-center mt-10">
+          <h1 className="text-2xl tracking-tight font-extrabold text-gray-900 dark:text-gray-100 sm:text-5xl md:text-4xl">
+            Featured Communities
+          </h1>
+        </div>
+
+        <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-10">
+          {accounts.map((a, index) => {
+            let url = a.premium
+              ? 'https://' + a.redirectDomain
+              : a.discordDomain
+              ? 'https://linen.dev/d/' + a.discordDomain
+              : 'https://linen.dev/s/' + a.slackDomain;
+
+            // TODO:remove this once supabase sets up domain to discord.supabase.com
+            if (url.includes('supabase')) {
+              url = 'https://839993398554656828.linen.dev/';
+            }
+            return (
+              <CommunityCard
+                url={url}
+                communityName={a.name}
+                description="Community"
+                logoUrl={a.logoUrl}
+                brandColor={a.brandColor}
+                key={a.name + index}
+              ></CommunityCard>
+            );
+          })}
+        </div>
+
+        <div className="grid grid-col-1 gap-3 mx-auto text-gray-700 dark:text-gray-300 prose prose-lg max-w-4xl mt-10">
+          <LandingH2>
+            Make your Slack/Discord threads Google searchable
+          </LandingH2>
+          <p>
+            Linen syncs all your threads in your public channels and threads to
+            linen.dev/s/your_slack_workspace_name. This makes your Slack/Discord
+            contents available for your community members without requiring a
+            login.
+          </p>
+          {/* <LandingH2>Free to setup and use</LandingH2>
+          <p>
+            Linen is free to set up and install. Once you go through the 10
+            minute setup process and wait for the syncing you will be able to
+            make your community&apos;s threads free of charge.
+          </p> */}
+          <LandingH2>
+            Generate organic content for your website and domain
+          </LandingH2>
+          <p>
+            The paid edition puts Linen behind your subdomain where you can
+            generate organic SEO friendly content that is relevant for your
+            domain. You will get a 301 redirect from our subdomain to yours to
+            give all the SEO benefits. You also will be able to customize your
+            Linen page with your custom logo and branding.
+          </p>
+          <LandingH2>Scale your community and reduce support burden</LandingH2>
+          <p>
+            Slack/Discord communities are great for chatting and engaging but
+            over time they become overwhelming. As a community grows so does the
+            number of repeat questions. As previously a former open source
+            maintainer I wanted to minimize the number of repeat questions and
+            encourage the community to search.
+          </p>
+          <LandingH2>A better experience for your community</LandingH2>
+          <p>
+            Linen is a great way to make your community content more
+            discoverable. No longer do you need to login to your Slack/Discord
+            workspace to view your community&apos;s content. You can link
+            specific conversations in github issues without requiring a sign in
+            to get the context of the issue.
+          </p>
+          <LandingH2>Community Privacy</LandingH2>
+          <p>
+            Linen only syncs conversations in the public channels. We only pull
+            the display name and profile picture from Slack/Discord and we do
+            not store community member&apos;s email or private information. Upon
+            request we will delete any community member&apos;s information and
+            messages within 14 days. Finally we have the options of anonymizing
+            your community member&apos;s display name with a fake randomly
+            generated string like `many-ancient-parrot`,
+            `adventurous-billowy-kangaroo`, and `benedict-cumberbatch`.
+          </p>
+        </div>
+        <div className="relative isolate px-6 py-24 sm:py-32 lg:px-8">
+          <div className="py-24 sm:py-32">
+            <div className="mx-auto max-w-7xl px-6 lg:px-8">
+              <div className="mx-auto max-w-4xl text-center">
+                <h2 className="text-base font-semibold leading-7 text-blue-600">
+                  Pricing
+                </h2>
+                <p className="mt-2 text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-5xl">
+                  Upgrade for branded community
+                </p>
+              </div>
+              <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-gray-300">
+                Hosting your own branded community on your website can boost
+                your online presence through SEO and ease the load on your
+                support team by encouraging members to find answers on Google.{' '}
+              </p>
+              <div className="isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+                {tiers.map((tier, tierIdx) => (
+                  <div
+                    key={tier.id}
+                    className={classNames(
+                      tier.mostPopular
+                        ? 'lg:z-10 lg:rounded-b-none'
+                        : 'lg:mt-8',
+                      tierIdx === 0 ? 'lg:rounded-r-none' : '',
+                      tierIdx === tiers.length - 1 ? 'lg:rounded-l-none' : '',
+                      'flex flex-col justify-between rounded-3xl bg-white p-8 ring-1 ring-gray-200 xl:p-10'
+                    )}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-x-4">
+                        <h3
+                          id={tier.id}
+                          className={classNames(
+                            tier.mostPopular
+                              ? 'text-blue-600'
+                              : 'text-gray-900',
+                            'text-lg font-semibold leading-8'
+                          )}
+                        >
+                          {tier.name}
+                        </h3>
+                        {tier.mostPopular ? (
+                          <p className="rounded-full bg-blue-600/10 px-2.5 py-1 text-xs font-semibold leading-5 text-blue-600">
+                            Most popular
+                          </p>
+                        ) : null}
+                      </div>
+                      <p className="mt-6 flex items-baseline gap-x-1">
+                        <span className="text-4xl font-bold tracking-tight text-gray-900">
+                          {tier.priceMonthly}
+                        </span>
+                        <span className="text-sm font-semibold leading-6 text-gray-600">
+                          /month
+                        </span>
+                      </p>
+                      <p className="mt-4 text-sm leading-6 text-gray-600">
+                        {tier.description}
+                      </p>
+                      <ul
+                        role="list"
+                        className="mt-8 space-y-3 text-sm leading-6 text-gray-600"
+                      >
+                        {tier.features.map((feature) => (
+                          <li key={feature} className="flex gap-x-3">
+                            <GoCheck
+                              className="h-6 w-5 flex-none text-blue-600"
+                              aria-hidden="true"
+                            />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <a
+                      href={tier.href}
+                      aria-describedby={tier.id}
+                      className={classNames(
+                        tier.mostPopular
+                          ? 'bg-blue-600 text-white shadow-sm hover:bg-blue-500'
+                          : 'text-blue-600 ring-1 ring-inset ring-blue-200 hover:ring-blue-300',
+                        'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
+                      )}
+                    >
+                      Get Started today
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+interface H2Props {
+  children: React.ReactNode;
+}
+
+function LandingH2({ children }: H2Props) {
+  return (
+    <h2 className="text-1xl tracking-tight font-extrabold text-gray-800 dark:text-gray-200 sm:text-2xl pt-2">
+      {children}
+    </h2>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  try {
-    await trackPageView(context);
-    const response = await fetch(FEED_URL, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    });
-    const data = await response.json();
-    const { threads, settings, communities, cursor = null } = data;
-    return {
-      props: { threads, settings, communities, cursor },
-    };
-  } catch (exception) {
-    return {
-      props: { threads: [], settings: [], communities: [], cursor: null },
-    };
-  }
+const CommunityCard = ({
+  url,
+  brandColor,
+  logoUrl,
+}: {
+  url: string;
+  communityName: string;
+  description: string;
+  brandColor: string;
+  logoUrl: string;
+}) => {
+  return (
+    <a
+      className="flex items-center justify-center rounded py-8"
+      style={{
+        backgroundColor: brandColor,
+      }}
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+    >
+      <Image src={logoUrl} alt="Logo" width="200"></Image>
+    </a>
+  );
 };
+
+type Props = {
+  logoUrl: string;
+  name: string;
+  brandColor: string;
+  redirectDomain: string;
+  premium: boolean;
+  slackDomain: string;
+  discordDomain: string;
+};
+
+export async function getStaticProps() {
+  const accounts = await prisma.accounts.findMany({
+    where: {
+      NOT: [
+        {
+          logoUrl: null,
+        },
+      ],
+      syncStatus: 'DONE',
+      redirectDomain: { not: null },
+    },
+    select: {
+      logoUrl: true,
+      name: true,
+      premium: true,
+      brandColor: true,
+      redirectDomain: true,
+    },
+  });
+
+  const goodLookingLogos = accounts.filter((a) => a.logoUrl?.includes('.svg'));
+  // since we use 3 columns we want it to only show numbers divisible by 3
+  const remainders = goodLookingLogos.slice(
+    0,
+    goodLookingLogos.length - (goodLookingLogos.length % 3)
+  );
+
+  return {
+    props: { accounts: remainders },
+  };
+}
+
+export default Home;

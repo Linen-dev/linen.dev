@@ -1,5 +1,9 @@
 import CardLayout from '@linen/ui/CardLayout';
 
+export const config = {
+  unstable_runtimeJS: false,
+};
+
 const faqs = [
   {
     question: 'How do I make sure our Linen content show up at Google?',
