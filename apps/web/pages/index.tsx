@@ -4,7 +4,6 @@ import Link from 'next/link';
 import Head from 'next/head';
 import Footer from '../components/Footer';
 import LinenLogo from '@linen/ui/LinenLogo';
-import YCombinatorLogo from '@linen/ui/YCombinatorLogo';
 import { prisma } from '@linen/database';
 import { AiFillGithub } from '@react-icons/all-files/ai/AiFillGithub';
 import classNames from 'classnames';
@@ -154,12 +153,6 @@ const Home = (props: { accounts: Props[] }) => {
                 Live demo
               </a>
             </div>
-          </div>
-          <div className="max-w-5xl mx-auto px-4 flex justify-center mt-8">
-            <p className="px-2">
-              Backed by <b>Y Combinator</b>
-            </p>
-            <YCombinatorLogo />
           </div>
           <div className="flex justify-center my-20 shadow-lg">
             <Image
