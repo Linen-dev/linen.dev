@@ -1,4 +1,3 @@
-import React from 'react';
 import Button from '@linen/ui/Button';
 import Toast from '@linen/ui/Toast';
 import Layout from '@linen/ui/SplitLayout';
@@ -120,7 +119,7 @@ export function GettingStartedPage({
                 onClick={() => (window.location.href = '/onboarding')}
               >
                 <FiPlus />
-                Add a free community
+                Create new community
               </Button>
               <Button
                 rounded="full"
