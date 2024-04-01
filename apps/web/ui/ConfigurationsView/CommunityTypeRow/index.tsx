@@ -37,33 +37,27 @@ export default function CommunityTypeRow({
   const [type, setType] = useState(initialType);
   return (
     <>
-      {disabled ? (
-        <small>Premium feature</small>
-      ) : (
-        <>
-          <Label htmlFor="community-type-row">
-            Community visibility
-            <Label.Description>{description(type)}</Label.Description>
-          </Label>
-          <NativeSelect
-            style={{ width: 'auto' }}
-            id="type"
-            icon={icon(type)}
-            theme="blue"
-            options={[
-              { label: 'Public', value: AccountType.PUBLIC },
-              { label: 'Private', value: AccountType.PRIVATE },
-            ]}
-            defaultValue={type}
-            onChange={(event: React.SyntheticEvent) => {
-              const node = event.target as HTMLSelectElement;
-              const type = node.value as AccountType;
-              setType(type);
-              onChange(type);
-            }}
-          />
-        </>
-      )}
+      <Label htmlFor="community-type-row">
+        Community visibility
+        <Label.Description>{description(type)}</Label.Description>
+      </Label>
+      <NativeSelect
+        style={{ width: 'auto' }}
+        id="type"
+        icon={icon(type)}
+        theme="blue"
+        options={[
+          { label: 'Public', value: AccountType.PUBLIC },
+          { label: 'Private', value: AccountType.PRIVATE },
+        ]}
+        defaultValue={type}
+        onChange={(event: React.SyntheticEvent) => {
+          const node = event.target as HTMLSelectElement;
+          const type = node.value as AccountType;
+          setType(type);
+          onChange(type);
+        }}
+      />
     </>
   );
 }

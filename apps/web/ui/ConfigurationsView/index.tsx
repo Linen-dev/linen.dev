@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import Header from './Header';
 import { AccountType, SerializedAccount } from '@linen/types';
 import styles from './index.module.scss';
@@ -12,7 +12,6 @@ import Toast from '@/Toast';
 import RemoveCommunity from './RemoveCommunity';
 import ChannelsConfig from './ChannelsConfig';
 import type { ApiClient } from '@linen/api-client';
-import ApiKeys from './ApiKeys';
 
 export default function ConfigurationsView({
   currentCommunity,
@@ -57,8 +56,6 @@ export default function ConfigurationsView({
               });
           }}
         />
-        <hr className={styles.my3} />
-        <ApiKeys currentCommunity={currentCommunity} />
         <hr className={styles.my3} />
         <RemoveCommunity currentCommunity={currentCommunity} api={api} />
       </div>
