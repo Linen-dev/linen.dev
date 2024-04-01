@@ -9,13 +9,11 @@ import useInfiniteScroll from 'react-infinite-scroll-hook';
 import NProgress from 'nprogress';
 import Thread from '@/Thread';
 import Empty from '../Empty';
-import Chat from '../Chat';
 import Grid from '@/GridContent';
 import Footer from '../Footer';
 import classNames from 'classnames';
 import PinnedThread from '../PinnedThread';
 import { createMessageWrapper } from '../utilities/createMessageWrapper';
-import { createThreadWrapper } from '../utilities/createThreadWrapper';
 import {
   onResolve,
   Permissions,
@@ -39,8 +37,6 @@ import debounce from '@linen/utilities/debounce';
 import { getSelectedText } from '@linen/utilities/document';
 import Row from '@/Row';
 import ChatLayout from '@/ChatLayout';
-import AddThreadModal from '@/AddThreadModal';
-import EditThreadModal from '@/EditThreadModal';
 import { getFormData } from '@linen/utilities/files';
 import type { ApiClient } from '@linen/api-client';
 import PaginationNumbers from '@/PaginationNumbers';
@@ -388,25 +384,6 @@ export default function Channel({
     }
   }
 
-  const debouncedCreateThread = useCallback(
-    debounce(api.createThread, 100),
-    []
-  );
-
-  const sendMessage = createThreadWrapper({
-    currentUser: permissions.is_member ? currentUser : null,
-    allUsers,
-    currentChannel,
-    setUploads,
-    setThreads,
-    scroll() {
-      scrollToTop(scrollableRootRef.current as HTMLDivElement);
-    },
-    currentCommunity,
-    startSignUp,
-    createThread: debouncedCreateThread,
-  });
-
   const debouncedCreateMessage = useCallback(
     debounce(api.createMessage, 100),
     []
@@ -499,39 +476,6 @@ export default function Channel({
               }}
               content={
                 <>
-                  {/* <Header
-                    className={classNames(styles.header, {
-                      [styles.pinned]: !!pinnedThread,
-                    })}
-                    channel={currentChannel}
-                    currentUser={currentUser}
-                    permissions={permissions}
-                    onAddClick={showAddThreadModal}
-                    handleOpenIntegrations={showIntegrationsModal}
-                    handleOpenMembers={showMembersModal}
-                    onHideChannelClick={showHideChannelModal}
-                    api={api}
-                  > */}
-                  {!currentChannel.readonly && permissions.chat && (
-                    <Chat
-                      channel={currentChannel}
-                      currentUser={currentUser}
-                      onDrop={handleDrop}
-                      sendMessage={sendMessage}
-                      progress={progress}
-                      uploads={uploads}
-                      uploading={uploading}
-                      uploadFiles={currentUser ? uploadFiles : undefined}
-                      useUsersContext={useUsersContext}
-                      fetchMentions={(term?: string) => {
-                        if (!currentUser) {
-                          return Promise.resolve([]);
-                        }
-                        if (!term) return Promise.resolve([]);
-                        return api.fetchMentions(term, currentCommunity.id);
-                      }}
-                    />
-                  )}
                   {pinnedThread && (
                     <PinnedThread onClick={() => selectThread(pinnedThread.id)}>
                       <Row
@@ -547,7 +491,6 @@ export default function Channel({
                       />
                     </PinnedThread>
                   )}
-                  {/* </Header> */}
                   {threads.length === 0 ? (
                     <Empty
                       onInvite={
@@ -672,72 +615,6 @@ export default function Channel({
           [styles['is-expanded']]: collapsed,
         }}
       />
-
-      <AddThreadModal
-        api={api}
-        communityId={currentCommunity.id}
-        currentUser={currentUser}
-        currentChannel={currentChannel}
-        open={modal === ModalView.ADD_THREAD}
-        close={() => setModal(ModalView.NONE)}
-        onSend={({ channelId, title, message }) => {
-          setModal(ModalView.NONE);
-          return sendMessage({
-            message,
-            title,
-            files: uploads,
-            channelId,
-          }).then(() => {
-            setUploads([]);
-          });
-        }}
-        progress={progress}
-        uploading={uploading}
-        uploads={uploads}
-        uploadFiles={uploadFiles}
-      />
-
-      {editedThread && editedMessage && (
-        <EditThreadModal
-          api={api}
-          communityId={currentCommunity.id}
-          currentUser={currentUser}
-          currentThread={editedThread}
-          open={modal === ModalView.EDIT_THREAD}
-          close={() => {
-            setModal(ModalView.NONE);
-            setEditedMessage(undefined);
-            setEditedThread(undefined);
-          }}
-          onSend={async ({
-            title,
-            message,
-          }: {
-            title: string;
-            message: string;
-          }) => {
-            setModal(ModalView.NONE);
-            await editMessage({
-              id: editedMessage.id,
-              body: message,
-            });
-            return editThread({
-              id: editedThread.id,
-              message,
-              title,
-              files: uploads,
-            }).then(() => {
-              setUploads([]);
-              setEditedMessage(undefined);
-              setEditedThread(undefined);
-            });
-          }}
-          progress={progress}
-          uploading={uploading}
-          uploads={uploads}
-          uploadFiles={uploadFiles}
-        />
-      )}
     </>
   );
 }

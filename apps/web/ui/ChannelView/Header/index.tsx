@@ -1,10 +1,8 @@
 import React from 'react';
-import Icon from '@/Icon';
 import StickyHeader from '@/StickyHeader';
 import styles from './index.module.scss';
 import { SerializedUser } from '@linen/types';
-import { FiEdit3 } from '@react-icons/all-files/fi/FiEdit3';
-import { Permissions, SerializedChannel } from '@linen/types';
+import { SerializedChannel } from '@linen/types';
 import IntegrationsModalUI from '@/IntegrationsModal';
 import type { ApiClient } from '@linen/api-client';
 
@@ -13,8 +11,6 @@ interface Props {
   channel: SerializedChannel;
   children?: React.ReactNode;
   currentUser?: SerializedUser | null;
-  permissions: Permissions;
-  onAddClick?(): void;
   api: ApiClient;
 }
 
@@ -23,8 +19,6 @@ export default function Header({
   channel,
   children,
   currentUser,
-  permissions,
-  onAddClick,
   api,
 }: Props) {
   return (
@@ -39,15 +33,6 @@ export default function Header({
             key={channel.id}
           />
         </div>
-        {currentUser && (
-          <div className={styles.actions}>
-            {permissions.chat && onAddClick && (
-              <Icon onClick={onAddClick}>
-                <FiEdit3 />
-              </Icon>
-            )}
-          </div>
-        )}
       </div>
       {children}
     </StickyHeader>

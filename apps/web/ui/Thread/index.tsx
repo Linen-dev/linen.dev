@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import Header from './Header';
 import Summary from './Summary';
 import Messages from './Messages';
-import MessageForm from '@/MessageForm';
 import {
   onResolve,
   Permissions,
@@ -261,43 +260,7 @@ function Thread({
             </div>
           </div>
         </div>
-        {chat && !currentChannel.readonly && (
-          <div className={styles.chat}>
-            <MessageForm
-              id={`thread-message-form-${thread.id}`}
-              currentUser={currentUser}
-              onSend={(message: string, files: UploadedFile[]) => {
-                onSend?.();
-                const promise = sendMessage({
-                  message,
-                  files,
-                  channelId,
-                  threadId: id,
-                }).then(() => {
-                  setUploads([]);
-                });
-                handleScroll();
-                return promise;
-              }}
-              onCloseThread={
-                manage && state === ThreadState.OPEN
-                  ? () => updateThread({ state: ThreadState.CLOSE })
-                  : undefined
-              }
-              onReopenThread={
-                manage && state === ThreadState.CLOSE
-                  ? () => updateThread({ state: ThreadState.OPEN })
-                  : undefined
-              }
-              progress={progress}
-              uploading={uploading}
-              uploads={uploads}
-              upload={uploadFiles}
-              useUsersContext={useUsersContext}
-              fetchMentions={fetchMentions}
-            />
-          </div>
-        )}
+
         {expanded && !currentUser && (
           <div className={styles.footer}>
             <PoweredByLinen />
