@@ -28,13 +28,10 @@ import CommunityLink from '@/CommunityLink';
 import AddCommunityLink from './AddCommunityLink';
 import FindCommunityLink from './FindCommunityLink';
 import { timestamp } from '@linen/utilities/date';
-import { DMs } from './DMs';
 import useInboxWebsockets from '@linen/hooks/websockets-inbox';
-import MenuGroup from './MenuGroup';
 import ChannelsGroup from './ChannelsGroup';
 import MenuIcon from './MenuIcon';
 import PoweredByLinen from '@/PoweredByLinen';
-import AnalyticsGroup from './AnalyticsGroup';
 import EditChannelModal from '@/EditChannelModal';
 import type { ApiClient } from '@linen/api-client';
 import NewCommunityModal from '@/NewCommunityModal';
@@ -318,13 +315,6 @@ export default function DesktopNavBar({
       >
         <Nav className={styles.navbar}>
           <div>
-            <MenuGroup
-              currentUser={currentUser}
-              currentUrl={routerAsPath}
-              permissions={permissions}
-              paths={paths}
-              Link={Link}
-            />
             <ChannelsGroup
               channelName={channelName}
               channels={channels}
@@ -361,19 +351,6 @@ export default function DesktopNavBar({
               api={api}
               CustomRouterPush={CustomRouterPush}
             />
-            {currentUser && permissions.chat && (
-              <DMs
-                channelName={channelName}
-                debouncedUpdateReadStatus={debouncedUpdateReadStatus}
-                dms={dms}
-                highlights={highlights}
-                permissions={permissions}
-                setHighlights={setHighlights}
-                Link={Link}
-                api={api}
-                onWriteMessage={onWriteMessage}
-              />
-            )}
             {permissions.manage && (
               <Nav.Group
                 onClick={() => toggleSettings((showSettings) => !showSettings)}
@@ -410,13 +387,6 @@ export default function DesktopNavBar({
                 </Link>
               </>
             )}
-            <AnalyticsGroup
-              currentUser={currentUser}
-              currentUrl={routerAsPath}
-              permissions={permissions}
-              paths={paths}
-              Link={Link}
-            />
           </div>
           {!currentUser && <PoweredByLinen />}
         </Nav>
