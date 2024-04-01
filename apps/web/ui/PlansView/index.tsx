@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Tiers from '@/Tiers';
 import { SerializedAccount, Period } from '@linen/types';
 import { FiZap } from '@react-icons/all-files/fi/FiZap';
@@ -55,7 +55,7 @@ export default function PlansView({
           <p className={styles.description}>
             Choose an affordable plan that matches your community size and
             unlock additional features of the platform.{' '}
-            <span className={styles.underline}>7-day free trial.</span>
+            <span className={styles.underline}>14-day free trial.</span>
           </p>
           <div className={styles.period}>
             <span>monthly</span>
