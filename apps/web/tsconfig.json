@@ -14,7 +14,11 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": "." // this must be specified if "paths" is specified.
+    "baseUrl": ".", // this must be specified if "paths" is specified.
+    "paths": {
+      "@linen/ui/*": ["./ui/*"],
+      "@/*": ["./ui/*"]
+    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.css"],
   "exclude": ["node_modules", "cdk"]

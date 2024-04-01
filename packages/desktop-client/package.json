@@ -20,7 +20,6 @@
     "@linen/hooks": "*",
     "@linen/styles": "*",
     "@linen/types": "*",
-    "@linen/ui": "*",
     "@linen/utilities": "*",
     "@react-icons/all-files": "^4.1.0",
     "@tanstack/eslint-plugin-query": "^4.29.4",

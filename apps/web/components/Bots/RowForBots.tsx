@@ -49,5 +49,5 @@ export function RowForBots({ Row }: { Row: (...args: any) => JSX.Element }) {
     );
   }
 
-  return WrapperRow;
+  return WrapperRow as any;
 }

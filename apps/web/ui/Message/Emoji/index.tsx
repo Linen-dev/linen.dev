@@ -1,4 +1,3 @@
-import React from 'react';
 import classNames from 'classnames';
 // @ts-ignore
 import EMOJIS from './utilities/emojis.json';
@@ -37,7 +36,9 @@ export default function Emoji({ text }: Props) {
     return null;
   }
   const name = unwrap(text);
+  // @ts-ignore
   if (EMOJIS[name]) {
+    // @ts-ignore
     return <>{EMOJIS[name]}</>;
   }
   const letter = getLetter(name);
