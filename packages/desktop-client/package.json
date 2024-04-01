@@ -17,7 +17,6 @@
     "@linen/api-client": "*",
     "@linen/auth-client": "*",
     "@linen/contexts": "*",
-    "@linen/hooks": "*",
     "@linen/styles": "*",
     "@linen/types": "*",
     "@linen/utilities": "*",

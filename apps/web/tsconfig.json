@@ -17,7 +17,8 @@
     "baseUrl": ".", // this must be specified if "paths" is specified.
     "paths": {
       "@linen/ui/*": ["./ui/*"],
-      "@/*": ["./ui/*"]
+      "@/*": ["./ui/*"],
+      "@linen/hooks/*": ["./hooks/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.css"],

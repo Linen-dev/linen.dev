@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Toast from '@/Toast';
-import useWebsockets from '@linen/hooks/websockets';
 import useKeyboard from '@linen/hooks/keyboard';
 import { localStorage } from '@linen/utilities/storage';
 import {
@@ -26,7 +25,6 @@ import { copyToClipboard } from '@linen/utilities/clipboard';
 import ChatView from './ChatView';
 import ForumView from './ForumView';
 import TopicView from './TopicView';
-import usePresenceWebsockets from '@linen/hooks/websockets-presence';
 
 const SHORTCUTS_ENABLED = false;
 
@@ -43,10 +41,8 @@ export default function ChannelView({
   pathCursor,
   isBot,
   permissions,
-  queryIntegration,
   setThreads,
   setTopics,
-  playNotificationSound,
   useUsersContext,
   usePath,
   routerPush,
@@ -69,10 +65,8 @@ export default function ChannelView({
   pathCursor: string | null;
   isBot: boolean;
   permissions: Permissions;
-  queryIntegration?: any;
   setThreads: React.Dispatch<React.SetStateAction<SerializedThread[]>>;
   setTopics: React.Dispatch<React.SetStateAction<SerializedTopic[]>>;
-  playNotificationSound: (volume: number) => Promise<void>;
   useUsersContext: () => [SerializedUser[], any];
   usePath(options: any): any;
   routerPush(path: string): void;
@@ -208,59 +202,6 @@ export default function ChannelView({
     [threads, currentThreadId, currentUser]
   );
 
-  const auth = permissions.auth || null;
-  const authId = auth?.id;
-
-  async function updateUserThreadStatusesOnWebsocketEvents(payload: any) {
-    const channelId = payload.channel_id;
-    const threadId = payload.thread_id;
-    if (threadId && currentChannel.id === channelId) {
-      const thread = threads.find((thread) => thread.id === threadId);
-      if (!thread) {
-        // get full thread from an endpoint and push it to threads
-        try {
-          // FIXME
-          const thread = await api.getThread({
-            id: threadId,
-            accountId: currentCommunity.id,
-          });
-          setThreads((threads) => [...threads, thread]);
-        } catch (exception) {
-          if (process.env.NODE_ENV === 'development') {
-            console.error(exception);
-          }
-        }
-      }
-    }
-  }
-
-  useWebsockets({
-    room: authId && `user:${authId}`,
-    permissions,
-    token,
-    onNewMessage: updateUserThreadStatusesOnWebsocketEvents,
-  });
-
-  const [activeUsers, setActiveUsers] = useState<string[]>([]);
-
-  token &&
-    usePresenceWebsockets({
-      communityId: currentCommunity.id,
-      permissions,
-      token,
-      onPresenceState(state: any) {
-        const users = Object.keys(state);
-        setActiveUsers(users);
-      },
-      onPresenceDiff(state: any) {
-        setActiveUsers((users) => {
-          const joins = Object.keys(state.joins);
-          const leaves = Object.keys(state.leaves);
-          return [...joins, ...users.filter((id) => !leaves.includes(id))];
-        });
-      },
-    });
-
   useEffect(() => {
     if (currentUser && window.Notification) {
       const permission = localStorage.get('notification.permission');
@@ -275,82 +216,6 @@ export default function ChannelView({
       }
     }
   }, []);
-
-  const onSocket = (payload: any) => {
-    try {
-      if (payload.is_reply) {
-        const threadId = payload.thread_id;
-        const messageId = payload.message_id;
-        const imitationId = payload.imitation_id;
-        const message: SerializedMessage =
-          payload.message && JSON.parse(payload.message);
-        if (!message) {
-          return;
-        }
-        setThreads((threads) => {
-          const index = threads.findIndex(({ id }) => id === threadId);
-          const newThreads = [...threads];
-          if (index > -1) {
-            newThreads[index].messages = [
-              ...newThreads[index].messages.filter(
-                ({ id }) => id !== imitationId && id !== messageId
-              ),
-              message,
-            ];
-          }
-          return newThreads;
-        });
-
-        if (currentChannel.viewType === 'TOPIC') {
-          setTopics((topics) => {
-            return [
-              ...topics.filter((topic) => topic.messageId !== imitationId),
-              {
-                threadId: threadId,
-                messageId: messageId,
-                sentAt: message.sentAt,
-                usersId: message.usersId,
-              },
-            ];
-          });
-        }
-
-        updateUserThreadStatusesOnWebsocketEvents(payload);
-      }
-
-      if (payload.is_thread) {
-        const threadId = payload.thread_id;
-        const imitationId = payload.imitation_id;
-        const thread: SerializedThread =
-          payload.thread && JSON.parse(payload.thread);
-        if (!thread) {
-          return;
-        }
-        setThreads((threads) => [
-          ...threads.filter(({ id }) => id !== imitationId && id !== threadId),
-          thread,
-        ]);
-
-        if (currentChannel.viewType === 'TOPIC') {
-          setTopics((topics) => {
-            return [
-              ...topics.filter((topic) => topic.threadId !== imitationId),
-              {
-                threadId: threadId,
-                messageId: thread.messages[0].id,
-                sentAt: thread.sentAt,
-                usersId: thread.messages[0].usersId,
-              },
-            ];
-          });
-        }
-      }
-    } catch (e) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log(e);
-      }
-    }
-  };
 
   function onSelectThread(threadId?: string) {
     setCurrentThreadId(threadId);
@@ -923,8 +788,6 @@ export default function ChannelView({
     <ChannelContext.Provider value={currentChannel}>
       {currentChannel.viewType === 'FORUM' && (
         <ForumView
-          queryIntegration={queryIntegration}
-          playNotificationSound={playNotificationSound}
           useUsersContext={useUsersContext}
           usePath={usePath}
           routerPush={routerPush}
@@ -959,19 +822,16 @@ export default function ChannelView({
           onSelectThread={onSelectThread}
           editThread={editThread}
           updateThread={updateThread}
-          onThreadMessage={onSocket}
           token={token}
           pathCursor={pathCursor}
           startSignUp={startSignUp}
-          activeUsers={activeUsers}
+          activeUsers={[]}
         />
       )}
       {currentChannel.viewType === 'TOPIC' && (
         <TopicView
           topics={topics}
           setTopics={setTopics}
-          queryIntegration={queryIntegration}
-          playNotificationSound={playNotificationSound}
           useUsersContext={useUsersContext}
           usePath={usePath}
           routerPush={routerPush}
@@ -1005,17 +865,14 @@ export default function ChannelView({
           onSelectThread={onSelectThread}
           editThread={editThread}
           updateThread={updateThread}
-          onThreadMessage={onSocket}
           token={token}
           pathCursor={pathCursor}
           startSignUp={startSignUp}
-          activeUsers={activeUsers}
+          activeUsers={[]}
         />
       )}
       {currentChannel.viewType === 'CHAT' && (
         <ChatView
-          queryIntegration={queryIntegration}
-          playNotificationSound={playNotificationSound}
           useUsersContext={useUsersContext}
           usePath={usePath}
           routerPush={routerPush}
@@ -1050,11 +907,10 @@ export default function ChannelView({
           onSelectThread={onSelectThread}
           editThread={editThread}
           updateThread={updateThread}
-          onThreadMessage={onSocket}
           token={token}
           pathCursor={pathCursor}
           startSignUp={startSignUp}
-          activeUsers={activeUsers}
+          activeUsers={[]}
         />
       )}
     </ChannelContext.Provider>

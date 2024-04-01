@@ -5598,11 +5598,6 @@
     pg-protocol "*"
     pg-types "^2.2.0"
 
-"@types/phoenix@^1.5.4":
-  version "1.5.4"
-  resolved "https://registry.npmjs.org/@types/phoenix/-/phoenix-1.5.4.tgz"
-  integrity sha512-L5eZmzw89eXBKkiqVBcJfU1QGx9y+wurRIEgt0cuLH0hwNtVUxtx+6cu0R2STwWj468sjXyBYPYDtGclUd1kjQ==
-
 "@types/prettier@^2.1.5":
   version "2.7.1"
   resolved "https://registry.npmjs.org/@types/prettier/-/prettier-2.7.1.tgz"
@@ -14793,11 +14788,6 @@ pgvector@^0.1.5:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/pgvector/-/pgvector-0.1.5.tgz#13709152456364b5b3fcc661e38ca002aa3d97bb"
   integrity sha512-T1SeomH5PkSpMHmnW8CVh6hwjkrjx/xkEMkW0MBFyxMkIEcu6pw5pQW8CNwsVXeJIE3zPdLCqYHqn1GwwT4lXw==
-
-phoenix@^1.6.15:
-  version "1.6.15"
-  resolved "https://registry.npmjs.org/phoenix/-/phoenix-1.6.15.tgz"
-  integrity sha512-O6AG5jTkZOOkdd/GOSCsM4v3bzBoyRnC5bEi57KhX/Daba6FvnBRzt0nhEeRRiVQGLSxDlyb0dUe9CkYWMZd8g==
 
 pickleparser@^0.1.0:
   version "0.1.0"

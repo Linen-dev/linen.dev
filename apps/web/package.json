@@ -12,7 +12,8 @@
     "test:coverage": "jest --coverage",
     "db:migrate": "npx prisma generate && npx prisma migrate dev",
     "db:migrate:test": "dotenv -e .env.test -- npx prisma generate && npx prisma migrate dev",
-    "db:seed": "ts-node --skip-project bin/seed.ts"
+    "db:seed": "ts-node --skip-project bin/seed.ts",
+    "typecheck": "tsc -P tsconfig.types.json --noEmit --watch "
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.348.0",
@@ -24,7 +25,6 @@
     "@linen/contexts": "*",
     "@linen/database": "*",
     "@linen/factory": "*",
-    "@linen/hooks": "*",
     "@linen/integration-email": "*",
     "@linen/integration-github": "*",
     "@linen/integration-linear": "*",

@@ -15,14 +15,12 @@ import {
   ThreadState,
   UploadedFile,
 } from '@linen/types';
-import useThreadWebsockets from '@linen/hooks/websockets-thread';
 import { scrollToBottom } from '@linen/utilities/scroll';
 import styles from './index.module.scss';
 import { getFormData } from '@linen/utilities/files';
 import PoweredByLinen from '@/PoweredByLinen';
 import EditMessageModal from '@/EditMessageModal';
 import type { ApiClient } from '@linen/api-client';
-import { TypingFunctions, UsersTyping } from './UsersTyping';
 
 interface Props {
   thread: SerializedThread;
@@ -161,30 +159,6 @@ function Thread({
     setModal(ModalView.EDIT_MESSAGE_MODAL);
   }
 
-  const { userTyping, usersTyping } = useThreadWebsockets({
-    id: thread.id,
-    token,
-    permissions,
-    onMessage(
-      message: SerializedMessage,
-      messageId: string,
-      imitationId: string
-    ) {
-      onMessage(thread.id, message, messageId, imitationId);
-      handleScroll();
-      if (currentUser?.id) {
-        api.notificationsMark({ threadId: thread.id });
-      }
-    },
-  });
-
-  const { onKeyDown, onKeyUp } = TypingFunctions({
-    currentUser,
-    isUserTyping,
-    setUserTyping,
-    userTyping,
-  });
-
   function isThreadCreator(
     currentUser: SerializedUser | null,
     thread: SerializedThread
@@ -321,10 +295,7 @@ function Thread({
               upload={uploadFiles}
               useUsersContext={useUsersContext}
               fetchMentions={fetchMentions}
-              onKeyDown={onKeyDown}
-              onKeyUp={onKeyUp}
             />
-            <UsersTyping usersTyping={usersTyping} currentUser={currentUser} />
           </div>
         )}
         {expanded && !currentUser && (

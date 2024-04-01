@@ -10,7 +10,6 @@ import {
   SerializedTopic,
   SerializedUser,
 } from '@linen/types';
-import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
 import { FiSettings } from '@react-icons/all-files/fi/FiSettings';
 import { FiSliders } from '@react-icons/all-files/fi/FiSliders';
@@ -28,7 +27,6 @@ import CommunityLink from '@/CommunityLink';
 import AddCommunityLink from './AddCommunityLink';
 import FindCommunityLink from './FindCommunityLink';
 import { timestamp } from '@linen/utilities/date';
-import useInboxWebsockets from '@linen/hooks/websockets-inbox';
 import ChannelsGroup from './ChannelsGroup';
 import MenuIcon from './MenuIcon';
 import PoweredByLinen from '@/PoweredByLinen';
@@ -239,19 +237,6 @@ export default function DesktopNavBar({
   // the logic for connecting to websockets should be moved to the top level container
   // after connecting, we could use an internal event bus to pass to those events
   // and manage the logic in internal components
-  useWebsockets({
-    room: userId && `user:${userId}`,
-    permissions,
-    token,
-    onNewMessage,
-  });
-
-  useInboxWebsockets({
-    communityId: permissions.accountId!,
-    token,
-    permissions,
-    onNewMessage,
-  });
 
   useEffect(() => {
     let mounted = true;

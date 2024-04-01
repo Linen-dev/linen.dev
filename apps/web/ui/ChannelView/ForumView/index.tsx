@@ -32,7 +32,6 @@ import {
 import { SerializedMessage } from '@linen/types';
 import { scrollToTop } from '@linen/utilities/scroll';
 import useMode from '@linen/hooks/mode';
-import useWebsockets from '@linen/hooks/websockets';
 import styles from './index.module.scss';
 import Layouts from '@/Layouts';
 import { timestamp } from '@linen/utilities/date';
@@ -47,7 +46,6 @@ import type { ApiClient } from '@linen/api-client';
 import PaginationNumbers from '@/PaginationNumbers';
 import { useViewport } from '@linen/hooks/useViewport';
 import { getThreadUrl } from '@linen/utilities/url';
-import { TypingFunctions } from '@/Thread/UsersTyping';
 
 const useLayoutEffect =
   typeof window !== 'undefined' ? useClientLayoutEffect : () => {};
@@ -89,7 +87,6 @@ interface Props {
     messageId: string,
     imitationId: string
   ): void;
-  onThreadMessage(payload: any): void;
   onDrop({
     source,
     target,
@@ -132,8 +129,6 @@ interface Props {
     body: string;
   }): Promise<SerializedMessage | void>;
   updateThread({ state, title }: { state?: ThreadState; title?: string }): void;
-  queryIntegration?: string;
-  playNotificationSound: (volume: number) => Promise<void>;
   useUsersContext(): any;
   usePath(options: any): any;
   routerPush(path: string): void;
@@ -180,11 +175,7 @@ export default function Channel({
   onRemind,
   onSelectThread,
   updateThread,
-  onThreadMessage,
   sendReaction,
-  // injection
-  queryIntegration,
-  playNotificationSound,
   useUsersContext,
   usePath,
   routerPush,
@@ -262,26 +253,6 @@ export default function Channel({
     debounce(api.updateReadStatus),
     []
   );
-
-  const { userTyping, usersTyping } = useWebsockets({
-    room: `room:lobby:${currentChannel.id}`,
-    token,
-    permissions,
-    onNewMessage(payload: any) {
-      playNotificationSound(0.2);
-      onThreadMessage(payload);
-      // scroll by msg height
-    },
-  });
-
-  const [isUserTyping, setUserTyping] = useState(false);
-
-  const { onKeyDown, onKeyUp } = TypingFunctions({
-    currentUser,
-    isUserTyping,
-    setUserTyping,
-    userTyping,
-  });
 
   useEffect(() => {
     let mounted = true;
@@ -559,9 +530,6 @@ export default function Channel({
                         if (!term) return Promise.resolve([]);
                         return api.fetchMentions(term, currentCommunity.id);
                       }}
-                      onKeyDown={onKeyDown}
-                      onKeyUp={onKeyUp}
-                      usersTyping={usersTyping}
                     />
                   )}
                   {pinnedThread && (

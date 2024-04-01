@@ -19,7 +19,6 @@ import { useRouter } from 'next/router';
 import { useJoinContext } from 'contexts/Join';
 import usePath from 'hooks/path';
 import ChannelForBots from 'components/Bots/ChannelForBots';
-import { playNotificationSound } from 'utilities/playNotificationSound';
 import { scrollToBottom } from '@linen/utilities/scroll';
 import { SerializedTopic } from '@linen/types';
 
@@ -116,10 +115,8 @@ export default function Channel(props: ChannelProps) {
         setThreads={setThreads}
         topics={topics}
         setTopics={setTopics}
-        queryIntegration={router.query.integration}
         api={api}
         startSignUp={startSignUp}
-        playNotificationSound={playNotificationSound}
         useUsersContext={useUsersContext}
         usePath={usePath}
         routerPush={router.push}

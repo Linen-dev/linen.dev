@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import Thread from '@/Thread';
 import Breadcrumb from './Breadcrumb';
 import { sendMessageWrapper } from './utilities/sendMessageWrapper';
@@ -17,7 +17,6 @@ import styles from './index.module.scss';
 import type { ApiClient } from '@linen/api-client';
 import { CustomLinkHelper } from '@linen/utilities/custom-link';
 import debounce from '@linen/utilities/debounce';
-import usePresenceWebsockets from '@linen/hooks/websockets-presence';
 
 interface Props {
   thread: SerializedThread;
@@ -143,26 +142,6 @@ export default function Content({
     createMessage: debouncedCreateMessage,
   });
 
-  const [activeUsers, setActiveUsers] = useState<string[]>([]);
-
-  token &&
-    usePresenceWebsockets({
-      communityId: currentCommunity.id,
-      permissions,
-      token,
-      onPresenceState(state: any) {
-        const users = Object.keys(state);
-        setActiveUsers(users);
-      },
-      onPresenceDiff(state: any) {
-        setActiveUsers((users) => {
-          const joins = Object.keys(state.joins);
-          const leaves = Object.keys(state.leaves);
-          return [...joins, ...users.filter((id) => !leaves.includes(id))];
-        });
-      },
-    });
-
   return (
     <div className={styles.wrapper}>
       <Thread
@@ -206,7 +185,7 @@ export default function Content({
             settings={settings}
           />
         }
-        activeUsers={activeUsers}
+        activeUsers={[]}
       />
     </div>
   );
