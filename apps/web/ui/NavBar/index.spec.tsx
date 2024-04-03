@@ -1,7 +1,6 @@
-import React from 'react';
 import NavBar from '.';
 import { render } from '@testing-library/react';
-import { build } from '@linen/factory';
+import { build } from '@linen/factory-client';
 import { Mode } from '@linen/hooks/mode';
 import type { ApiClient } from '@linen/api-client';
 

@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { testApiHandler } from 'next-test-api-route-handler';
 import handler from 'pages/api/signup';
 

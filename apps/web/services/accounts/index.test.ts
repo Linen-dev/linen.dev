@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import accountsService from '.';
 import { accounts, auths } from '@linen/database';
 import { create } from '@linen/factory';

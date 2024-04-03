@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import * as api from 'pages/api/signin';
 import { createAuth } from '@linen/factory';
 import { v4 } from 'uuid';

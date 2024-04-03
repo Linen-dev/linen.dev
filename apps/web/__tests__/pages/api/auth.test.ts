@@ -1,5 +1,9 @@
+/**
+ * @jest-environment node
+ */
+
 import handler from 'pages/api/signup';
-import { build } from '@linen/factory';
+import { build } from '@linen/factory-client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { sendNotification } from 'services/slack';
 import { v4 } from 'uuid';

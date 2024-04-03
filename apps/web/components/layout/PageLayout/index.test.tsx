@@ -1,7 +1,6 @@
-import React from 'react';
 import { render } from '@testing-library/react';
 import PageLayout from '.';
-import { build } from '@linen/factory';
+import { build } from '@linen/factory-client';
 import { SessionProvider } from '@linen/auth-client/client';
 
 describe('PageLayout', () => {

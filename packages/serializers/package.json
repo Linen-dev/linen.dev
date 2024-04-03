@@ -13,6 +13,7 @@
     "@linen/scripts": "*",
     "@linen/database": "*",
     "@linen/factory": "*",
+    "@linen/factory-client": "*",
     "@linen/types": "*",
     "@linen/utilities": "*",
     "uuid": "^9.0.0"

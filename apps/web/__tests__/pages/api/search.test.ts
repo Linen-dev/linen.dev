@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { accounts, AccountType, users } from '@linen/database';
 import {
   createAccount,

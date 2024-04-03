@@ -1,5 +1,5 @@
 import { serializeThread } from './thread';
-import { build } from '@linen/factory';
+import { build } from '@linen/factory-client';
 
 describe('#serialize', () => {
   it('serializes reactions with count greater than 0', () => {

@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { createAccount, createChannel } from '@linen/factory';
 import {
   SerializedThread,
@@ -42,6 +46,9 @@ describe('topic view', () => {
         params: {
           communityName: account.redirectDomain as string,
           channelName: channel.channelName,
+        },
+        req: {
+          headers: {},
         },
       } as any,
       isSubdomain

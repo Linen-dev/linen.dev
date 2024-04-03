@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { accounts, prisma } from '@linen/database';
 import { create } from '@linen/factory';
 import { newDiscordIntegration } from './discord';

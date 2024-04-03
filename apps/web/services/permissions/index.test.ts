@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import PermissionsService from '.';
 import Session from '../session';
 

@@ -16,13 +16,17 @@ const customJestConfig = {
   // if using TypeScript with a baseUrl set to the root directory then you need the below for alias' to work
   moduleDirectories: ['node_modules', '<rootDir>/'],
   moduleNameMapper: {
-    '@linen/hooks/(.*)/(.*)': '<rootDir>/../../packages/hooks/dist/$1/$2',
+    '@linen/hooks/(.*)/(.*)': '<rootDir>/hooks/$1/$2',
+    '@linen/hooks/(.*)': '<rootDir>/hooks/$1',
+    '@linen/ui/(.*)': '<rootDir>/ui/$1',
     '@linen/(.*)/(.*)': '<rootDir>/../../packages/$1/dist/$2',
     '@linen/(.*)': '<rootDir>/../../packages/$1',
     '^axios$': require.resolve('axios'),
     '^uuid$': require.resolve('uuid'),
     '^jose$': require.resolve('jose'),
     '@panva/hkdf': require.resolve('@panva/hkdf'),
+    '@/(.*)$': '<rootDir>/ui/$1',
+    '\\.(css|scss)$': 'identity-obj-proxy',
   },
   testEnvironment: 'jest-environment-jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],

@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { ChatType } from '@linen/types';
 import MessagesService from '.';
 import { create } from '@linen/factory';

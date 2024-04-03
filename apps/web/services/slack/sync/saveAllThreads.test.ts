@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 jest.mock('services/slack/api');
 jest.mock('services/aws/s3');
 import { conversationHistory, conversationReplies } from '__mocks__/slack-api';

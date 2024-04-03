@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { accounts } from '@linen/database';
 import { create } from '@linen/factory';
 import { ApiKeysService } from './api-keys';

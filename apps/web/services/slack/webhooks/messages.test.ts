@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 jest.mock('services/events/eventNewThread');
 import { accounts, channels } from '@linen/database';
 import { v4 } from 'uuid';

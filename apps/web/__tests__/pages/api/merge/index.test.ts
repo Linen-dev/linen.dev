@@ -1,5 +1,10 @@
+/**
+ * @jest-environment node
+ */
+
 import * as api from 'pages/api/merge';
-import { build, create } from '@linen/factory';
+import { create } from '@linen/factory';
+import { build } from '@linen/factory-client';
 
 describe('create', () => {
   it('returns 400 if from param is empty', async () => {

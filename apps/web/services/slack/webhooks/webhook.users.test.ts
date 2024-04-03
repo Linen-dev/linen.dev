@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { prisma } from '@linen/database';
 import { createAccount, createUser } from '@linen/factory';
 import { handleWebhook } from 'services/slack/webhooks';

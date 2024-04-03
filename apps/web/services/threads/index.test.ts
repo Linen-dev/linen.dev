@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { ChatType, ThreadState } from '@linen/types';
 import ThreadsServices from '.';
 import { create } from '@linen/factory';

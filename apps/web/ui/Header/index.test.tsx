@@ -1,7 +1,6 @@
-import React from 'react';
 import Header from '.';
 import { render } from '@testing-library/react';
-import { build } from '@linen/factory';
+import { build } from '@linen/factory-client';
 
 jest.mock('@linen/auth-client/client', () => ({
   useSession: () => ({}),

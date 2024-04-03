@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { accounts, channels, threads, prisma } from '@linen/database';
 import { v4 as random } from 'uuid';
 import { threadGetServerSideProps } from 'services/ssr/threads';

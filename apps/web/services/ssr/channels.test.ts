@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 jest.mock('services/session');
 import { accounts, channels, threads } from '@linen/database';
 import { v4 as random } from 'uuid';

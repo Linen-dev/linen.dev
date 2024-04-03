@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { processMessage } from './userJoined';
 
 describe('processMessage', () => {

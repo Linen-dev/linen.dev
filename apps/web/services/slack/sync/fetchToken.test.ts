@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 jest.mock('@linen/database');
 jest.mock('services/slack/api');
 import { fetchToken } from './fetchToken';

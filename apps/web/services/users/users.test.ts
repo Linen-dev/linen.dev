@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import UsersServices from '.';
 import { Roles } from '@linen/types';
 import { prisma } from '@linen/database';

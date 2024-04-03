@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 jest.mock('services/slack/api');
 
 import { syncChannels } from './syncChannels';

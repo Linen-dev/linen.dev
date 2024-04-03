@@ -1,5 +1,10 @@
+/**
+ * @jest-environment node
+ */
+
 import * as api from 'pages/api/move/thread/channel';
-import { build, create } from '@linen/factory';
+import { create } from '@linen/factory';
+import { build } from '@linen/factory-client';
 
 describe('create', () => {
   it('returns 400 when threadId is missing', async () => {

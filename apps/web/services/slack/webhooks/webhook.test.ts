@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 jest.mock('services/users');
 jest.mock('services/events/eventNewThread');
 import { handleWebhook } from 'services/slack/webhooks';

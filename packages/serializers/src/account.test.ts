@@ -1,5 +1,5 @@
 import { serializeAccount } from './account';
-import { build } from '@linen/factory';
+import { build } from '@linen/factory-client';
 import { AccountType } from '@linen/types';
 
 describe('#serialize', () => {

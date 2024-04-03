@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 jest.mock('services/slack/api');
 import { syncUsers } from './syncUsers';
 import * as fetch_all_conversations from 'services/slack/api';

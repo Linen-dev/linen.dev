@@ -1,5 +1,5 @@
 import { addReaction } from './reaction';
-import { build } from '@linen/factory';
+import { build } from '@linen/factory-client';
 
 describe('#addReaction', () => {
   it('adds a reaction to a message', () => {
