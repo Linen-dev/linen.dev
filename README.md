@@ -8,59 +8,33 @@
   <img alt="linen-dev" src="https://static.main.linendev.com/logos/linen-white-logo.svg#gh-dark-mode-only" width="108">
 </a>
 
-Linen is a Google-searchable community chat tool. Linen was built as an alternative to closed tools like Slack and Discord.
+Make Slack and Discord communities Google-searchable
 
-### Philosophy
+Linen syncs your Slack and Discord threads to an SEO friendly website that allows your community to discover you through search engines and reduces the number of repeat questions.
 
-Modern communities are built on chat, Slack and Discord is great to get fast realtime answers from teams but it can become a chaotic blackhole of information. Historically these communities existed in forums where they had better structure and search-engine friendliness. We believe the future of communiation is in a hybrid model where you have all the benefits of a real time chat as well as the organizational benefits of a forum.
-
-Linen is free and offers unlimited message retention you can sign up at Linen.community.
-
-Linen cloud edition: https://linen.dev
-Join our public community: https://linen.dev/s/linen
-
-#### Development Philosophy
-
-Ship the smallest functioning feature that makes the users' lives better and then iterate.
-
-### See project [roadmap](https://github.com/orgs/Linen-dev/projects/2)
+Retain your community knowledge and improve your SEO
 
 ### Core Features:
 
-- **Search engine friendly**: Linen communities have over 50,000 pages indexed on Google with over 10,000,000 search impressions. Most chat apps are not search engine friendly because they are very JS heavy. We made Linen search engine friendly by offering a sitemap, conditionally rendering a static version of our page to search engines, and using cursor based pagination so pages will be consistant.
-- **Customer support tooling**: Most communities often become a customer support channel. All of our threads have a open close state. We have a feed where you can browse all open/closed conversations in one place instead of having to worry about which channels and conversations your team have missed.
-- **Async first**: Chat can be very noisy especially with large communities. By having a feed of conversations that you are participating in you don't have to worry about missing messages. We also repurposed @mentions from a notification to a async notification where it shows up in your feed. We replaced it with !mention which will send a push notification to you.
-- **Import communities**: Linen support imports from all of your public Slack/Discord conversations, attachments, emojis, and members.
-- **Single account across multiple communities**: Linen let's you join multiple communities with a single login without multiple emails and passwords.
-- **Private communities**: In addition to public communities we also support private communities that require a password login to access the content. We use this feature for internal team discussions.
-- **Move threads and messages**: Linen let's you drag and drop messages and merge them into a single thread as well as move threads between channels.
-- **Discord Forum Support**: Linen will sync Discord and make the search engine friendly
-- **Private Channels**: Channels that are invite only within the community.
-- **Direct messages**: Direct messages within the community.
+**Search engine friendly**
+Linen syncs all your threads in your public channels and threads to linen.dev/s/your_slack_workspace_name. This makes your Slack/Discord contents available for your community members without requiring a login.
 
-### Roadmap:
+**Generate organic content for your website and domain**
+The paid edition puts Linen behind your subdomain where you can generate organic SEO friendly content that is relevant for your domain. You will get a 301 redirect from our subdomain to yours to give all the SEO benefits. You also will be able to customize your Linen page with your custom logo and branding.
 
-- **Github integration**: Most open source communities use github issues to manage their tickets. We want to let you tag a conversation with a github issue and it will auto post a message when the ticket is closed or has an update.
-- **Improved search**: Currently search is done via full text search with postgres. There are a lot more improvements to be made here we are considering hosting a separate search service
-- **Desktop/Mobile client**: We want to support a desktop and mobile client for Linen so you can get push notifications for when there are urgent things.
-- **Botting**: We want to support botting and automation where you can build and add your custom bots
+**Scale your community and reduce support burden**
+Slack/Discord communities are great for chatting and engaging but over time they become overwhelming. As a community grows so does the number of repeat questions. As previously a former open source maintainer I wanted to minimize the number of repeat questions and encourage the community to search.
 
-### Misc Features:
+**A better experience for your community**
+Linen is a great way to make your community content more discoverable. No longer do you need to login to your Slack/Discord workspace to view your community's content. You can link specific conversations in github issues without requiring a sign in to get the context of the issue.
 
-1. Markdown message support
-2. Custom community branding
-3. Custom domain hosting for Cloud edition
-4. Attachments support
-5. Emoji support
+**Community Privacy**
+Linen only syncs conversations in the public channels. We only pull the display name and profile picture from Slack/Discord and we do not store community member's email or private information. Upon request we will delete any community member's information and messages within 14 days. Finally we have the options of anonymizing your community member's display name with a fake randomly generated string like `many-ancient-parrot`, `adventurous-billowy-kangaroo`, and `benedict-cumberbatch`.
 
 ### How to contribute
 
-- [Contributing](./CONTRIBUTING.md)
+[Contributing](./CONTRIBUTING.md)
 
 #### Developers Docs
 
-- [Getting Started](./docs/getting-started.md)
-
-### Destkop client releases
-
-https://github.com/Linen-dev/desktop-client/releases
+[Getting Started](./docs/getting-started.md)

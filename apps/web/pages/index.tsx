@@ -194,183 +194,166 @@ const Home = (props: { accounts: Props[] }) => {
           </div>
         </div>
 
-        <div className="flex flex-col items-center mt-10">
-          <h1 className="text-2xl tracking-tight font-extrabold text-gray-900 dark:text-gray-100 sm:text-5xl md:text-4xl">
-            Featured Communities
-          </h1>
+        <div className="py-24">
+          <div className="flex flex-col items-center mt-10">
+            <h1 className="text-2xl tracking-tight font-extrabold text-gray-900 dark:text-gray-100 sm:text-5xl md:text-4xl">
+              Featured Communities
+            </h1>
+          </div>
+
+          <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-10">
+            {accounts.map((a, index) => {
+              let url = a.premium
+                ? 'https://' + a.redirectDomain
+                : a.discordDomain
+                ? 'https://linen.dev/d/' + a.discordDomain
+                : 'https://linen.dev/s/' + a.slackDomain;
+
+              // TODO:remove this once supabase sets up domain to discord.supabase.com
+              if (url.includes('supabase')) {
+                url = 'https://839993398554656828.linen.dev/';
+              }
+              return (
+                <CommunityCard
+                  url={url}
+                  communityName={a.name}
+                  description="Community"
+                  logoUrl={a.logoUrl}
+                  brandColor={a.brandColor}
+                  key={a.name + index}
+                ></CommunityCard>
+              );
+            })}
+          </div>
         </div>
 
-        <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-10">
-          {accounts.map((a, index) => {
-            let url = a.premium
-              ? 'https://' + a.redirectDomain
-              : a.discordDomain
-              ? 'https://linen.dev/d/' + a.discordDomain
-              : 'https://linen.dev/s/' + a.slackDomain;
-
-            // TODO:remove this once supabase sets up domain to discord.supabase.com
-            if (url.includes('supabase')) {
-              url = 'https://839993398554656828.linen.dev/';
-            }
-            return (
-              <CommunityCard
-                url={url}
-                communityName={a.name}
-                description="Community"
-                logoUrl={a.logoUrl}
-                brandColor={a.brandColor}
-                key={a.name + index}
-              ></CommunityCard>
-            );
-          })}
-        </div>
-
-        <div className="grid grid-col-1 gap-3 mx-auto text-gray-700 dark:text-gray-300 prose prose-lg max-w-4xl mt-10">
-          <LandingH2>
-            Make your Slack/Discord threads Google searchable
-          </LandingH2>
-          <p>
-            Linen syncs all your threads in your public channels and threads to
-            linen.dev/s/your_slack_workspace_name. This makes your Slack/Discord
-            contents available for your community members without requiring a
-            login.
-          </p>
-          {/* <LandingH2>Free to setup and use</LandingH2>
-          <p>
-            Linen is free to set up and install. Once you go through the 10
-            minute setup process and wait for the syncing you will be able to
-            make your community&apos;s threads free of charge.
-          </p> */}
-          <LandingH2>
-            Generate organic content for your website and domain
-          </LandingH2>
-          <p>
-            The paid edition puts Linen behind your subdomain where you can
-            generate organic SEO friendly content that is relevant for your
-            domain. You will get a 301 redirect from our subdomain to yours to
-            give all the SEO benefits. You also will be able to customize your
-            Linen page with your custom logo and branding.
-          </p>
-          <LandingH2>Scale your community and reduce support burden</LandingH2>
-          <p>
-            Slack/Discord communities are great for chatting and engaging but
-            over time they become overwhelming. As a community grows so does the
-            number of repeat questions. As previously a former open source
-            maintainer I wanted to minimize the number of repeat questions and
-            encourage the community to search.
-          </p>
-          <LandingH2>A better experience for your community</LandingH2>
-          <p>
-            Linen is a great way to make your community content more
-            discoverable. No longer do you need to login to your Slack/Discord
-            workspace to view your community&apos;s content. You can link
-            specific conversations in github issues without requiring a sign in
-            to get the context of the issue.
-          </p>
-          <LandingH2>Community Privacy</LandingH2>
-          <p>
-            Linen only syncs conversations in the public channels. We only pull
-            the display name and profile picture from Slack/Discord and we do
-            not store community member&apos;s email or private information. Upon
-            request we will delete any community member&apos;s information and
-            messages within 14 days. Finally we have the options of anonymizing
-            your community member&apos;s display name with a fake randomly
-            generated string like `many-ancient-parrot`,
-            `adventurous-billowy-kangaroo`, and `benedict-cumberbatch`.
-          </p>
-        </div>
-        <div className="relative isolate px-6 py-24 sm:py-32 lg:px-8">
-          <div className="py-24 sm:py-32">
-            <div className="mx-auto max-w-7xl px-6 lg:px-8">
-              <div className="mx-auto max-w-4xl text-center">
+        <div className="grid grid-col-1 gap-3 mx-auto text-gray-700 dark:text-gray-300 prose prose-lg max-w-4xl mt-10 py-24">
+          {[
+            {
+              title: 'Features',
+              description: 'Make your Slack/Discord threads Google searchable',
+              body: 'Linen syncs all your threads in your public channels and threads to linen.dev/s/your_slack_workspace_name. This makes your Slack/Discord contents available for your community members without requiring a login.',
+            },
+            {
+              description:
+                'Generate organic content for your website and domain',
+              body: 'The paid edition puts Linen behind your subdomain where you can generate organic SEO friendly content that is relevant for your domain. You will get a 301 redirect from our subdomain to yours to give all the SEO benefits. You also will be able to customize your Linen page with your custom logo and branding.',
+            },
+            {
+              description: 'Scale your community and reduce support burden',
+              body: 'Slack/Discord communities are great for chatting and engaging but over time they become overwhelming. As a community grows so does the number of repeat questions. As previously a former open source maintainer I wanted to minimize the number of repeat questions and encourage the community to search.',
+            },
+            {
+              description: 'A better experience for your community',
+              body: "Linen is a great way to make your community content more discoverable. No longer do you need to login to your Slack/Discord workspace to view your community's content. You can link specific conversations in github issues without requiring a sign in to get the context of the issue.",
+            },
+            {
+              description: 'Community Privacy',
+              body: "Linen only syncs conversations in the public channels. We only pull the display name and profile picture from Slack/Discord and we do not store community member's email or private information. Upon request we will delete any community member's information and messages within 14 days. Finally we have the options of anonymizing your community member's display name with a fake randomly generated string like `many-ancient-parrot`, `adventurous-billowy-kangaroo`, and `benedict-cumberbatch`.",
+            },
+          ].map((_, index) => (
+            <div className="mx-auto max-w-4xl text-center" key={index}>
+              {!!_.title && (
                 <h2 className="text-base font-semibold leading-7 text-blue-600">
-                  Pricing
+                  {_.title}
                 </h2>
-                <p className="mt-2 text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-5xl">
-                  Upgrade for branded community
-                </p>
-              </div>
-              <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-gray-300">
-                Hosting your own branded community on your website can boost
-                your online presence through SEO and ease the load on your
-                support team by encouraging members to find answers on Google.{' '}
+              )}
+              <p className="mt-2 text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100 ">
+                {_.description}
               </p>
-              <div className="isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-                {tiers.map((tier, tierIdx) => (
-                  <div
-                    key={tier.id}
+              <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-gray-300">
+                {_.body}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="relative isolate px-6 py-24 lg:px-8">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mx-auto max-w-4xl text-center">
+              <h2 className="text-base font-semibold leading-7 text-blue-600">
+                Pricing
+              </h2>
+              <p className="mt-2 text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-5xl">
+                Upgrade for branded community
+              </p>
+            </div>
+            <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600 dark:text-gray-300">
+              Hosting your own branded community on your website can boost your
+              online presence through SEO and ease the load on your support team
+              by encouraging members to find answers on Google.{' '}
+            </p>
+            <div className="isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+              {tiers.map((tier, tierIdx) => (
+                <div
+                  key={tier.id}
+                  className={classNames(
+                    tier.mostPopular ? 'lg:z-10 lg:rounded-b-none' : 'lg:mt-8',
+                    tierIdx === 0 ? 'lg:rounded-r-none' : '',
+                    tierIdx === tiers.length - 1 ? 'lg:rounded-l-none' : '',
+                    'flex flex-col justify-between rounded-3xl bg-white p-8 ring-1 ring-gray-200 xl:p-10'
+                  )}
+                >
+                  <div>
+                    <div className="flex items-center justify-between gap-x-4">
+                      <h3
+                        id={tier.id}
+                        className={classNames(
+                          tier.mostPopular ? 'text-blue-600' : 'text-gray-900',
+                          'text-lg font-semibold leading-8'
+                        )}
+                      >
+                        {tier.name}
+                      </h3>
+                      {tier.mostPopular ? (
+                        <p className="rounded-full bg-blue-600/10 px-2.5 py-1 text-xs font-semibold leading-5 text-blue-600">
+                          Most popular
+                        </p>
+                      ) : null}
+                    </div>
+                    <p className="mt-6 flex items-baseline gap-x-1">
+                      <span className="text-4xl font-bold tracking-tight text-gray-900">
+                        {tier.priceMonthly}
+                      </span>
+                      <span className="text-sm font-semibold leading-6 text-gray-600">
+                        /month
+                      </span>
+                    </p>
+                    <p className="text-sm leading-6 text-gray-600 italic ">
+                      2 months off when billed yearly
+                    </p>
+                    <p className="mt-4 text-sm leading-6 text-gray-600">
+                      {tier.description}
+                    </p>
+                    <ul
+                      role="list"
+                      className="mt-8 space-y-3 text-sm leading-6 text-gray-600"
+                    >
+                      {tier.features.map((feature) => (
+                        <li key={feature} className="flex gap-x-3">
+                          <GoCheck
+                            className="h-6 w-5 flex-none text-blue-600"
+                            aria-hidden="true"
+                          />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <a
+                    href={tier.href}
+                    aria-describedby={tier.id}
                     className={classNames(
                       tier.mostPopular
-                        ? 'lg:z-10 lg:rounded-b-none'
-                        : 'lg:mt-8',
-                      tierIdx === 0 ? 'lg:rounded-r-none' : '',
-                      tierIdx === tiers.length - 1 ? 'lg:rounded-l-none' : '',
-                      'flex flex-col justify-between rounded-3xl bg-white p-8 ring-1 ring-gray-200 xl:p-10'
+                        ? 'bg-blue-600 text-white shadow-sm hover:bg-blue-500'
+                        : 'text-blue-600 ring-1 ring-inset ring-blue-200 hover:ring-blue-300',
+                      'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
                     )}
                   >
-                    <div>
-                      <div className="flex items-center justify-between gap-x-4">
-                        <h3
-                          id={tier.id}
-                          className={classNames(
-                            tier.mostPopular
-                              ? 'text-blue-600'
-                              : 'text-gray-900',
-                            'text-lg font-semibold leading-8'
-                          )}
-                        >
-                          {tier.name}
-                        </h3>
-                        {tier.mostPopular ? (
-                          <p className="rounded-full bg-blue-600/10 px-2.5 py-1 text-xs font-semibold leading-5 text-blue-600">
-                            Most popular
-                          </p>
-                        ) : null}
-                      </div>
-                      <p className="mt-6 flex items-baseline gap-x-1">
-                        <span className="text-4xl font-bold tracking-tight text-gray-900">
-                          {tier.priceMonthly}
-                        </span>
-                        <span className="text-sm font-semibold leading-6 text-gray-600">
-                          /month
-                        </span>
-                      </p>
-                      <p className="text-sm leading-6 text-gray-600 italic ">
-                        2 months off when billed yearly
-                      </p>
-                      <p className="mt-4 text-sm leading-6 text-gray-600">
-                        {tier.description}
-                      </p>
-                      <ul
-                        role="list"
-                        className="mt-8 space-y-3 text-sm leading-6 text-gray-600"
-                      >
-                        {tier.features.map((feature) => (
-                          <li key={feature} className="flex gap-x-3">
-                            <GoCheck
-                              className="h-6 w-5 flex-none text-blue-600"
-                              aria-hidden="true"
-                            />
-                            {feature}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <a
-                      href={tier.href}
-                      aria-describedby={tier.id}
-                      className={classNames(
-                        tier.mostPopular
-                          ? 'bg-blue-600 text-white shadow-sm hover:bg-blue-500'
-                          : 'text-blue-600 ring-1 ring-inset ring-blue-200 hover:ring-blue-300',
-                        'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
-                      )}
-                    >
-                      Get Started today
-                    </a>
-                  </div>
-                ))}
-              </div>
+                    Get Started today
+                  </a>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -379,18 +362,6 @@ const Home = (props: { accounts: Props[] }) => {
     </div>
   );
 };
-
-interface H2Props {
-  children: React.ReactNode;
-}
-
-function LandingH2({ children }: H2Props) {
-  return (
-    <h2 className="text-1xl tracking-tight font-extrabold text-gray-800 dark:text-gray-200 sm:text-2xl pt-2">
-      {children}
-    </h2>
-  );
-}
 
 const CommunityCard = ({
   url,
@@ -413,7 +384,14 @@ const CommunityCard = ({
       target="_blank"
       rel="noreferrer"
     >
-      <Image src={logoUrl} alt="Logo" width="200"></Image>
+      <div className="relative py-8 w-full">
+        <Image
+          src={logoUrl}
+          alt="Logo"
+          fill
+          style={{ maxWidth: 200, margin: 'auto' }}
+        ></Image>
+      </div>
     </a>
   );
 };
@@ -434,10 +412,10 @@ export async function getStaticProps() {
       NOT: [
         {
           logoUrl: null,
+          redirectDomain: null,
         },
       ],
       syncStatus: 'DONE',
-      redirectDomain: { not: null },
     },
     select: {
       logoUrl: true,
