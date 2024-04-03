@@ -5,12 +5,37 @@ import { prisma } from '@linen/database';
 import { getHostFromHeaders } from '@linen/utilities/domain';
 import { cors, preflight } from 'utilities/cors';
 
+async function checkDomain(host: string) {
+  if (process.env.NODE_ENV === 'development') {
+    return true;
+  }
+  const domain = host.substring(host.lastIndexOf('/') + 1);
+  if (domain === 'linen.dev' || domain === 'www.linen.dev') {
+    return true;
+  }
+  const exist = await prisma.accounts.findFirst({
+    where: { redirectDomain: domain },
+  });
+  if (exist) {
+    return true;
+  }
+  return false;
+}
+
 async function create(request: NextApiRequest, response: NextApiResponse) {
   const { email, origin } = JSON.parse(request.body);
 
   if (!email) {
     return response.status(400).json({ error: 'Email is required' });
   }
+
+  const host = origin || getHostFromHeaders(request.headers);
+  const isValidDomain = await checkDomain(host);
+
+  if (!isValidDomain) {
+    return response.status(400).json({ error: 'Invalid domain' });
+  }
+
   try {
     const token = generateToken();
 
@@ -29,7 +54,7 @@ async function create(request: NextApiRequest, response: NextApiResponse) {
 
     await ResetPasswordMailer.send({
       to: email,
-      host: origin || getHostFromHeaders(request.headers),
+      host,
       token,
     });
   } catch (exception) {
