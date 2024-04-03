@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import classNames from 'classnames';
 import { SerializedAccount, Period } from '@linen/types';
 import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
@@ -24,21 +24,6 @@ interface Props {
   currentCommunity: SerializedAccount;
 }
 
-const ENTERPRISE_PLAN = {
-  name: 'Community',
-  description: 'Dedicated support and infrastructure for your community.',
-  features: [
-    'Unlimited members',
-    'Custom domain',
-    'Custom branding',
-    'SEO benefits',
-    'Private communities',
-    'Analytics',
-    'Priority Support',
-  ],
-  price: 'Custom',
-};
-
 export default function Tiers({
   currentCommunity,
   tiers,
@@ -48,7 +33,7 @@ export default function Tiers({
   return (
     <div className={styles.grid}>
       {tiers.map((tier) => {
-        const active = tier.name === 'Vici';
+        const active = false; // tier.name === 'Vici';
 
         const onSubmit = (event: any) => {
           event.preventDefault();
@@ -100,7 +85,7 @@ export default function Tiers({
                 {tier.features.map((feature) => (
                   <li key={feature}>
                     <FiCheck />
-                    {feature}
+                    <span>{feature}</span>
                   </li>
                 ))}
               </ul>
@@ -108,28 +93,6 @@ export default function Tiers({
           </Card>
         );
       })}
-      <Card
-        title={ENTERPRISE_PLAN.name}
-        description={ENTERPRISE_PLAN.description}
-        price="Custom"
-      >
-        <a
-          href="mailto:help@linen.dev?subject=Linen Enterprise"
-          className={styles.button}
-        >
-          Contact us
-        </a>
-        <div>
-          <ul className={styles.list}>
-            {ENTERPRISE_PLAN.features.map((feature) => (
-              <li key={feature}>
-                <FiCheck />
-                {feature}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Card>
     </div>
   );
 }

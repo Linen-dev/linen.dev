@@ -26,7 +26,7 @@ const tiers = [
       'Google Indexable',
       'Unlimited history retention',
       'Branded community',
-      'Priority Support',
+      'Community Support',
       'Custom domain',
       'Sitemap generation',
       'Import Slack and Discord conversations',
@@ -62,10 +62,11 @@ const tiers = [
       'Google Indexable',
       'Unlimited history retention',
       'Branded community',
-      'Priority Support',
+      '24-hour support response time',
       'Custom domain',
       'Sitemap generation',
       'Import Slack and Discord conversations',
+      'Optional: Your company featured on the Linen.dev website and GitHub readme',
     ],
     mostPopular: false,
   },
@@ -333,6 +334,9 @@ const Home = (props: { accounts: Props[] }) => {
                         <span className="text-sm font-semibold leading-6 text-gray-600">
                           /month
                         </span>
+                      </p>
+                      <p className="text-sm leading-6 text-gray-600 italic ">
+                        2 months off when billed yearly
                       </p>
                       <p className="mt-4 text-sm leading-6 text-gray-600">
                         {tier.description}

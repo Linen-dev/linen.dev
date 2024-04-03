@@ -11,35 +11,48 @@ const stripe = new Stripe(process.env.STRIPE_API_KEY!, {
 function getMembersCount({ price }: { price: string }): string {
   if (price === '150' || price === '1500') {
     return '5,000';
-  } else if (price === '200' || price === '2000') {
-    return '10,000';
   } else if (price === '250' || price === '2500') {
-    return '15,000';
-  } else if (price === '300' || price === '3000') {
     return '20,000';
+  } else if (price === '400' || price === '4000') {
+    return 'Unlimited';
   }
-  return 'Unlimited';
+  return '5,000';
+}
+
+function extraFeatures({ price }: { price: string }): string[] {
+  if (price === '150' || price === '1500') {
+    return ['Community Support'];
+  } else if (price === '250' || price === '2500') {
+    return ['Priority Support'];
+  } else if (price === '400' || price === '4000') {
+    return [
+      '24-hour support response time',
+      'Optional: Your company featured on the Linen.dev website and GitHub readme',
+      'Prioritized feature requests',
+    ];
+  }
+  return [];
 }
 
 function serializeProduct(product: any) {
   const { id, name, description, metadata, default_price } = product;
-  const { price, currency, period } = metadata;
+  const { price, period } = metadata;
   return {
     id,
     name,
     description,
     price,
     priceId: default_price,
-    currency,
     period,
     features: [
       `Up to ${getMembersCount({ price })} members`,
+      'Google Indexable',
+      'Unlimited history retention',
+      'Branded community',
       'Custom domain',
-      'Custom branding',
-      'SEO benefits',
-      'Private communities',
-      'Analytics',
-      'Priority Support',
+      'Sitemap generation',
+      'Import Slack and Discord conversations',
+      ...extraFeatures({ price }),
     ],
   };
 }
@@ -95,7 +108,7 @@ export async function create({
       },
     ],
     subscription_data: {
-      trial_period_days: 7,
+      trial_period_days: 14,
     },
     metadata: {
       communityId,

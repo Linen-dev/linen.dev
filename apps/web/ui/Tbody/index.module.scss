@@ -1,6 +1,6 @@
 .tbody > :not([hidden]) ~ :not([hidden]) {
   border-top-width: 1px;
   border-bottom-width: 1px;
-  background-color: var(--color-white);
+  background-color: var(--color-background);
   border-color: var(--color-gray-200);
 }
