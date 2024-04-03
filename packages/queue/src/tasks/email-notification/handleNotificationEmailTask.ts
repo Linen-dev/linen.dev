@@ -2,11 +2,7 @@ import NotificationMailer from '@linen/web/mailers/NotificationMailer';
 import { getCommunityUrl } from '@linen/serializers/settings';
 import { getLinenUrl } from '@linen/utilities/domain';
 import { appendProtocol } from '@linen/utilities/url';
-import React from 'react';
-import * as ReactDOMServer from 'react-dom/server';
-import Message from '@linen/ui/Message';
-import { emailNotificationPayloadType, MessageFormat } from '@linen/types';
-import { serializeUser } from '@linen/serializers/user';
+import { emailNotificationPayloadType } from '@linen/types';
 import { format as formatDate } from '@linen/utilities/date';
 import { prisma } from '@linen/database';
 
@@ -134,15 +130,11 @@ async function sendEmailNotification(
 
     // build links and notify
     const links = threads.map((t) => {
-      const text = ReactDOMServer.renderToStaticMarkup(
-        React.createElement(Message, {
-          text: t.body.length > 200 ? t.body.substring(0, 200) + '...' : t.body,
-          mentions: t.mentions
-            .filter((u) => u.users)
-            .map((u) => serializeUser(u.users!)),
-          format: MessageFormat.LINEN,
-        })
-      );
+      const text = t.mentions.reduce((prev, curr) => {
+        return curr.users?.id
+          ? prev.split(curr.users?.id).join(curr.users?.displayName || 'user')
+          : prev;
+      }, t.body);
       return {
         date: formatDate(new Date(t.sentAt).toISOString(), 'PPpp'),
         text,

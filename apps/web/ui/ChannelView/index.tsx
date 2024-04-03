@@ -867,7 +867,6 @@ export default function ChannelView({
           updateThread={updateThread}
           token={token}
           pathCursor={pathCursor}
-          startSignUp={startSignUp}
           activeUsers={[]}
         />
       )}
