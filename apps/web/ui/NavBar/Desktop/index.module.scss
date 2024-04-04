@@ -49,8 +49,8 @@
 .navbar {
   background-color: var(--color-background);
   color: var(--color-text);
-  max-height: calc(100vh - var(--push-height));
-  min-height: calc(100vh - var(--push-height));
+  max-height: calc(100vh - var(--push-height) - 32px);
+  min-height: calc(100vh - var(--push-height) - 32px);
   overflow-y: hidden;
   width: 200px;
   padding: 0.5rem 0 0;

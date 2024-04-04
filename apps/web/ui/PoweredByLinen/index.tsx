@@ -1,4 +1,3 @@
-import React from 'react';
 import classNames from 'classnames';
 import styles from './index.module.scss';
 
@@ -12,7 +11,7 @@ export default function PoweredByLinen({ className }: Props) {
       className={classNames(styles.link, className)}
       target="_blank"
       rel="noreferrer"
-      href="https://www.linen.dev/landing"
+      href="https://www.linen.dev"
     >
       Powered by
       <div className={styles.image} />

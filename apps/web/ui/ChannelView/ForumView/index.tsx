@@ -10,7 +10,6 @@ import NProgress from 'nprogress';
 import Thread from '@/Thread';
 import Empty from '../Empty';
 import Grid from '@/GridContent';
-import Footer from '../Footer';
 import classNames from 'classnames';
 import PinnedThread from '../PinnedThread';
 import { createMessageWrapper } from '../utilities/createMessageWrapper';
@@ -547,10 +546,9 @@ export default function Channel({
                       settings={settings}
                       page={pathCursor ? Number(pathCursor) : null}
                     />
-                    {!currentUser && <Footer />}
                   </>
                 ) : (
-                  <>{!currentUser && <Footer />}</>
+                  <></>
                 )
               }
             />

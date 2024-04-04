@@ -373,8 +373,8 @@ export default function DesktopNavBar({
               </>
             )}
           </div>
-          {!currentUser && <PoweredByLinen />}
         </Nav>
+        {!currentUser && <PoweredByLinen />}
       </div>
       {editedChannel && (
         <EditChannelModal
