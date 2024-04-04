@@ -185,10 +185,10 @@ function PageLayout({
           api={api}
           InternalLink={InternalLink}
           JoinButton={JoinButton({
-            startSignUp,
+            // startSignUp,
             status,
-            api,
-            reload: router.reload,
+            // api,
+            // reload: router.reload,
           })}
           Link={Link}
           signOut={signOut}
