@@ -72,8 +72,14 @@ const tiers = [
   },
 ];
 
-const Home = (props: { accounts: Props[] }) => {
+const Home = (props: {
+  accounts: Props[];
+  messages: string;
+  members: string;
+}) => {
   const accounts = props.accounts;
+  const messages = props.messages;
+  const members = props.members;
   return (
     <div className="mb-10 pb-10">
       <Head>
@@ -178,7 +184,7 @@ const Home = (props: { accounts: Props[] }) => {
                     Messages Synced
                   </dt>
                   <dd className="order-1 text-4xl md:text-5xl font-extrabold text-white">
-                    7,500,000+
+                    {messages}+
                   </dd>
                 </div>
                 <div className="flex flex-col mt-10 sm:mt-0">
@@ -186,7 +192,7 @@ const Home = (props: { accounts: Props[] }) => {
                     Members
                   </dt>
                   <dd className="order-1 text-4xl md:text-5xl font-extrabold text-white">
-                    250,000+
+                    {members}+
                   </dd>
                 </div>
               </dl>
@@ -203,19 +209,9 @@ const Home = (props: { accounts: Props[] }) => {
 
           <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-10">
             {accounts.map((a, index) => {
-              let url = a.premium
-                ? 'https://' + a.redirectDomain
-                : a.discordDomain
-                ? 'https://linen.dev/d/' + a.discordDomain
-                : 'https://linen.dev/s/' + a.slackDomain;
-
-              // TODO:remove this once supabase sets up domain to discord.supabase.com
-              if (url.includes('supabase')) {
-                url = 'https://839993398554656828.linen.dev/';
-              }
               return (
                 <CommunityCard
-                  url={url}
+                  url={'https://' + a.redirectDomain}
                   communityName={a.name}
                   description="Community"
                   logoUrl={a.logoUrl}
@@ -376,7 +372,7 @@ const CommunityCard = ({
 }) => {
   return (
     <a
-      className="flex items-center justify-center rounded py-8"
+      className="flex items-center justify-center rounded"
       style={{
         backgroundColor: brandColor,
       }}
@@ -384,12 +380,12 @@ const CommunityCard = ({
       target="_blank"
       rel="noreferrer"
     >
-      <div className="relative py-8 w-full">
+      <div className="relative h-28 w-52 m-2">
         <Image
           src={logoUrl}
           alt="Logo"
           fill
-          style={{ maxWidth: 200, margin: 'auto' }}
+          style={{ objectFit: 'contain' }}
         ></Image>
       </div>
     </a>
@@ -406,16 +402,25 @@ type Props = {
   discordDomain: string;
 };
 
+function makeNumberPretty(num: number) {
+  // Check if the number is greater than or equal to 1 million
+  if (num >= 1000000) {
+    // Divide the number by 1 million and round it to the nearest integer
+    const millions = Math.round(num / 1000000);
+    // Return the formatted string with millions and commas
+    return millions.toLocaleString() + ',000,000';
+  } else {
+    // Return the formatted string with commas
+    return num.toLocaleString();
+  }
+}
+
 export async function getStaticProps() {
   const accounts = await prisma.accounts.findMany({
     where: {
-      NOT: [
-        {
-          logoUrl: null,
-          redirectDomain: null,
-        },
-      ],
-      syncStatus: 'DONE',
+      logoUrl: { not: null },
+      redirectDomainPropagate: true,
+      redirectDomain: { notIn: ['linen.linentest.com'] },
     },
     select: {
       logoUrl: true,
@@ -424,17 +429,20 @@ export async function getStaticProps() {
       brandColor: true,
       redirectDomain: true,
     },
+    orderBy: [
+      {
+        createdAt: 'asc',
+      },
+    ],
   });
 
-  const goodLookingLogos = accounts.filter((a) => a.logoUrl?.includes('.svg'));
-  // since we use 3 columns we want it to only show numbers divisible by 3
-  const remainders = goodLookingLogos.slice(
-    0,
-    goodLookingLogos.length - (goodLookingLogos.length % 3)
-  );
+  const messages = makeNumberPretty(await prisma.messages.count());
+  const members = makeNumberPretty(await prisma.users.count());
+
+  const remainders = accounts.slice(0, accounts.length - (accounts.length % 3));
 
   return {
-    props: { accounts: remainders },
+    props: { accounts: remainders, messages, members },
   };
 }
 
