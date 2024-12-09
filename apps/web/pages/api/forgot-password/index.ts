@@ -9,7 +9,13 @@ async function checkDomain(host: string) {
   if (process.env.NODE_ENV === 'development') {
     return true;
   }
-  const domain = host.substring(host.lastIndexOf('/') + 1);
+  let domain = host;
+  try {
+    const url = new URL(host);
+    domain = url.hostname;
+  } catch (error) {
+    console.error('Invalid URL:', error);
+  }
   if (domain === 'linen.dev' || domain === 'www.linen.dev') {
     return true;
   }
